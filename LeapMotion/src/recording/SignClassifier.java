@@ -1,5 +1,6 @@
 package recording;
 
+import java.io.File;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +19,7 @@ import weka.core.Instances;
 public class SignClassifier {
 	
 	private FastVector fvWekaAttributes;
-	private final Classifier cls = new J48();
+	private Classifier cls;
 	private Instances trainingSet;
 	
 	@SuppressWarnings({ "unchecked" })
@@ -60,15 +61,21 @@ public class SignClassifier {
 			 // add the instance
 			 trainingSet.add(trainingInstance);
 		 }	 
-		 	
-         // train classifier
+		 
 		 try {
+			 File f = new File("ASL.model");
+			 if(f.exists() && !f.isDirectory()) { 
+				// deserialize model
+				 cls= (Classifier) weka.core.SerializationHelper.read("ASL.model");
+			 }
+			 else{
+				// train classifier
+			cls=new J48();
 			cls.buildClassifier(trainingSet);
-			 // evaluate classifier and print some statistics
-			// Evaluation eval = new Evaluation(trainingSet);
-//			 double array=eval.evaluateModelOnce(cls, testInstance);
-//			 double y = cls.classifyInstance(testInstance);
-	//		 System.out.println(eval.toSummaryString("\nResults\n======\n", false));
+			// serialize model
+			 weka.core.SerializationHelper.write("ASL.model", cls);
+			//serializeClassifier();
+			 }
 		} catch (Exception e) {
 			System.err.println("Error during classifier building:"+ e);
 		}
