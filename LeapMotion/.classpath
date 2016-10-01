@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
+	<classpathentry kind="lib" path="C:/Users/omari/Downloads/Leap_Motion_SDK_Windows_2.3.1/LeapDeveloperKit_2.3.1+31549_win/LeapSDK/lib/LeapJava.jar" sourcepath="">
+		<attributes>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="C:/Users/omari/Downloads/Leap_Motion_SDK_Windows_2.3.1/LeapDeveloperKit_2.3.1+31549_win/LeapSDK/lib/x64"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="core.jar"/>
+	<classpathentry kind="lib" path="C:/Users/omari/Downloads/sqlite-jdbc-3.8.11.2.jar"/>
+	<classpathentry kind="lib" path="C:/Program Files/Weka-3-8/weka.jar"/>
+	<classpathentry kind="lib" path="C:/Users/omari/Downloads/javaml-0.1.7/javaml-0.1.7/javaml-0.1.7.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
