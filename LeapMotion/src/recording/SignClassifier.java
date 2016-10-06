@@ -8,7 +8,7 @@ import java.util.Map;
 
 import database.SignedDB;
 import weka.classifiers.Classifier;
-import weka.classifiers.trees.J48;
+import weka.classifiers.bayes.NaiveBayes;
 import weka.core.Attribute;
 import weka.core.DenseInstance;
 import weka.core.FastVector;
@@ -70,7 +70,7 @@ public class SignClassifier {
 			 }
 			 else{
 				// train classifier
-			cls=new J48();
+			cls=new NaiveBayes();
 			cls.buildClassifier(trainingSet);
 			// serialize model
 			 weka.core.SerializationHelper.write("ASL.model", cls);
@@ -93,5 +93,28 @@ public class SignClassifier {
 			System.err.println("Error during classifier building:" + e);
 		}
 		return null;
+	}
+	
+	public double score(Map<String, Float> data, char c){
+		try {
+			 Instance sampleInstance = new DenseInstance(60);
+			 	for(int i=0; i<60;i++){
+			 		sampleInstance.setValue((Attribute)fvWekaAttributes.elementAt(i), data.get("feat"+i));
+			 	}
+			 	sampleInstance.setDataset(trainingSet); 	
+			 	 return getProbabilityForChar(sampleInstance, c);
+		} catch (Exception e) {
+			System.err.println("Error during classifier building:" + e);
+		}
+		return 0.0;
+	}
+	
+	public double getProbabilityForChar(Instance sampleInstance, char c) throws Exception{
+			int position=trainingSet.classAttribute().indexOfValue(Character.toString(c));
+			 // Get the likelihood of each classes
+		 	 // fDistribution[0] is the probability of being “positive”
+		 	 // fDistribution[1] is the probability of being “negative”
+			double[] fDistribution = cls.distributionForInstance(sampleInstance);	
+			return fDistribution[position];
 	}
 }

@@ -16,7 +16,8 @@ public class Page extends PApplet{
 	private int stateOfProgram = stateWelcomeScreenDisplay;
 	private final Controller controller = new Controller();
 	private final SignClassifier signClass= new SignClassifier();
-	private int count=0;
+	private String[] imageArray={"ASL/a.gif","ASL/b.gif"}; 
+	int currentImage=0;
 	private PImage img;
 	
 	 public static void main(String[] args) {
@@ -24,11 +25,11 @@ public class Page extends PApplet{
 	    }
 
 	    public void settings(){
-	    	size(1000, 1000);
+	    	size(600, 600);
 	    }
 
 	    public void setup(){
-	    	size(1000, 1000);
+	    	size(600, 600);
 	    }
 
 	public void draw(){
@@ -37,7 +38,7 @@ public class Page extends PApplet{
 	   doStateWelcomeScreenDisplay();
 	   break;
 	case stateShowInstructions:
-	 //  displayLeapInfo();
+	  // displayLeapInfo();
 		signAlphabet();
 	   break;
 	  }
@@ -50,17 +51,28 @@ public class Page extends PApplet{
 	}
 	 
 	void signAlphabet(){
-		  img = loadImage("ASL/a.gif");  // Load the image into the program
+		  //img = loadImage("ASL/a.gif");  // Load the image into the program
+			img = loadImage(imageArray[currentImage]);
 		  //image(img,0,0);
 		  image(img, 0, 0, img.width/2, img.height/2);
 		  //background(img);
 		  Frame frame = controller.frame();
 		  if(frame.hands().count()>0){
 		  Map<String, Float> data=new HandData().getHandPosition(controller);
-		  if(data!=null && signClass.classify(data).equals("a")){
-			  count++;
-			  if(count>5)
-			  text( "Success!", 50, 50 );
+		  if(data!=null){
+			  double score = signClass.score(data,imageArray[currentImage].charAt(4));
+			  //text(Double.toString(score),100,50);
+			  System.out.println(score);
+			  
+			  if(score>0.95 && score<1.05){
+				  if(this.currentImage==1)
+					  this.currentImage=0;
+				  else
+					  this.currentImage=1;
+				  
+				  background(0);
+			  }
+			  
 		  	}
 		  }
 		}
