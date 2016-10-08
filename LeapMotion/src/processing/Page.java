@@ -5,6 +5,7 @@ import com.leapmotion.leap.Controller;
 import com.leapmotion.leap.Frame;
 
 import processing.core.PApplet;
+import processing.core.PFont;
 import processing.core.PImage;
 import recording.SignClassifier;
 
@@ -12,12 +13,17 @@ public class Page extends PApplet{
 	
 	final int stateWelcomeScreenDisplay=0;
 	final int stateShowInstructions= 1;
-
 	private int stateOfProgram = stateWelcomeScreenDisplay;
+	
+	private int buttonX, buttonY, buttonW, buttonH;
+	
+	PFont f;                           // STEP 1 Declare PFont variable
+	
 	private final Controller controller = new Controller();
 	private final SignClassifier signClass= new SignClassifier();
-	private String[] imageArray={"ASL/a.gif","ASL/b.gif"}; 
-	int currentImage=0;
+	
+	private char[] alphabet = "abcdefghijklmnopqrstuvwxyz".toCharArray();
+	private int currentLetterPosition=0;
 	private PImage img;
 	
 	 public static void main(String[] args) {
@@ -25,11 +31,11 @@ public class Page extends PApplet{
 	    }
 
 	    public void settings(){
-	    	size(600, 600);
+	    	size(700, 700);
 	    }
-
+	    
 	    public void setup(){
-	    	size(600, 600);
+	    	f = createFont("Arial",16,true); // STEP 2 Create Font
 	    }
 
 	public void draw(){
@@ -46,33 +52,42 @@ public class Page extends PApplet{
 
 	void doStateWelcomeScreenDisplay(){
 	   background(0);
-	   text("Welcome", 100, 50);
-	   //createStartButton();
+ 	  // Some basic parameters for a button
+	    	 buttonW = 335;
+	    	 buttonH = 100;
+	    	 textSize(buttonH);
+	    	 buttonX = (width-buttonW)/2;
+	    	 buttonY = (height-buttonH)/2;
+	    	// Show the button
+	    	fill(255);
+	    	rect(buttonX, buttonY, buttonW, buttonH);
+	    	fill(0);
+	    	text("START", buttonX+10, buttonY+buttonH-10);
 	}
 	 
-	void signAlphabet(){
-		  //img = loadImage("ASL/a.gif");  // Load the image into the program
-			img = loadImage(imageArray[currentImage]);
-		  //image(img,0,0);
+	void signAlphabet(){	
+		  background(0);
+		  char currentLetter=alphabet[currentLetterPosition];
+		  img = loadImage("ASL/"+currentLetter + ".gif");// Load the image into the program
 		  image(img, 0, 0, img.width/2, img.height/2);
+		  textFont(f,16);                  // STEP 3 Specify font to be used
+		  fill(255);                         // STEP 4 Specify font color 
+		  textAlign(CENTER);
+		  text("Sign the letter: " + Character.toUpperCase(currentLetter) +" " + currentLetter,600,600);   // STEP 5 Display Text
 		  //background(img);
 		  Frame frame = controller.frame();
 		  if(frame.hands().count()>0){
 		  Map<String, Float> data=new HandData().getHandPosition(controller);
 		  if(data!=null){
-			  double score = signClass.score(data,imageArray[currentImage].charAt(4));
+			  double score = signClass.score(data,currentLetter);
 			  //text(Double.toString(score),100,50);
 			  System.out.println(score);
-			  
 			  if(score>0.95 && score<1.05){
-				  if(this.currentImage==1)
-					  this.currentImage=0;
-				  else
-					  this.currentImage=1;
-				  
+				  this.currentLetterPosition++;
+				  if(this.currentLetterPosition==26)
+					  this.currentLetterPosition=0;	  
 				  background(0);
 			  }
-			  
 		  	}
 		  }
 		}
@@ -85,12 +100,11 @@ public class Page extends PApplet{
 	  if(frame.hands().count()>0){
 		  Map<String, Float> data=new HandData().getHandPosition(controller);
 		  text( "Letter:" + signClass.classify(data), 50, 150);
-		  //System.out.println();
 	  }
 	}
 	
 	public void mousePressed() {
-		  //line(mouseX, 10, mouseX, 90);
+		if (mouseX > buttonX && mouseX < buttonX+buttonW && mouseY > buttonY && mouseY < buttonY+buttonH)
 		stateOfProgram=stateShowInstructions;
 		}
 }
