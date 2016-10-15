@@ -109,7 +109,7 @@ public class SignClassifier {
 		return 0.0;
 	}
 	
-	public double getProbabilityForChar(Instance sampleInstance, char c) throws Exception{
+	private double getProbabilityForChar(Instance sampleInstance, char c) throws Exception{
 			int position=trainingSet.classAttribute().indexOfValue(Character.toString(c));
 			 // Get the likelihood of each classes
 		 	 // fDistribution[0] is the probability of being “positive”

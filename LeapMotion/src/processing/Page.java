@@ -1,47 +1,59 @@
 package processing;
+import java.awt.Font;
 import java.util.Map;
 
 import com.leapmotion.leap.Controller;
 import com.leapmotion.leap.Frame;
 
+import g4p_controls.G4P;
+import g4p_controls.GAlign;
+import g4p_controls.GButton;
+import g4p_controls.GCScheme;
+import g4p_controls.GEditableTextControl;
+import g4p_controls.GEvent;
+import g4p_controls.GImageButton;
+import g4p_controls.GLabel;
+import g4p_controls.GTextField;
 import processing.core.PApplet;
 import processing.core.PFont;
-import processing.core.PImage;
 import recording.SignClassifier;
 
 public class Page extends PApplet{
 	
-	final int stateWelcomeScreenDisplay=0;
-	final int stateShowInstructions= 1;
+	private final int stateWelcomeScreenDisplay=0;
+	final private int stateShowInstructions= 1;
 	private int stateOfProgram = stateWelcomeScreenDisplay;
-	
-	private int buttonX, buttonY, buttonW, buttonH;
 	
 	PFont f;                           // STEP 1 Declare PFont variable
 	
 	private final Controller controller = new Controller();
 	private final SignClassifier signClass= new SignClassifier();
 	
-	private char[] alphabet = "abcdefghijklmnopqrstuvwxyz".toCharArray();
+	private final char[] alphabet = "abcdefghijklmnopqrstuvwxyz".toCharArray();
 	private int currentLetterPosition=0;
-	private PImage img;
+	
+	@SuppressWarnings("unused")
+	private GImageButton imgButton; 
+	private GTextField textfield; 
+	private GButton startButton;
+	private GLabel welcomeLabel;
 	
 	 public static void main(String[] args) {
 	        PApplet.main("processing.Page");
 	    }
 
 	    public void settings(){
-	    	size(700, 700);
+	    	size(480, 320);
 	    }
 	    
-	    public void setup(){
+	    public void setup(){    	
+	    	  createWelcomeGUI();
 	    	f = createFont("Arial",16,true); // STEP 2 Create Font
 	    }
 
 	public void draw(){
 	  switch(stateOfProgram) {
 	case stateWelcomeScreenDisplay:
-	   doStateWelcomeScreenDisplay();
 	   break;
 	case stateShowInstructions:
 	  // displayLeapInfo();
@@ -49,50 +61,26 @@ public class Page extends PApplet{
 	   break;
 	  }
 	}
-
-	void doStateWelcomeScreenDisplay(){
-	   background(0);
- 	  // Some basic parameters for a button
-	    	 buttonW = 335;
-	    	 buttonH = 100;
-	    	 textSize(buttonH);
-	    	 buttonX = (width-buttonW)/2;
-	    	 buttonY = (height-buttonH)/2;
-	    	// Show the button
-	    	fill(255);
-	    	rect(buttonX, buttonY, buttonW, buttonH);
-	    	fill(0);
-	    	text("START", buttonX+10, buttonY+buttonH-10);
-	}
 	 
 	void signAlphabet(){	
-		  background(0);
-		  char currentLetter=alphabet[currentLetterPosition];
-		  img = loadImage("ASL/"+currentLetter + ".gif");// Load the image into the program
-		  image(img, 0, 0, img.width/2, img.height/2);
-		  textFont(f,16);                  // STEP 3 Specify font to be used
-		  fill(255);                         // STEP 4 Specify font color 
-		  textAlign(CENTER);
-		  text("Sign the letter: " + Character.toUpperCase(currentLetter) +" " + currentLetter,600,600);   // STEP 5 Display Text
-		  //background(img);
+		createSignAlphabetGUI();
 		  Frame frame = controller.frame();
 		  if(frame.hands().count()>0){
 		  Map<String, Float> data=new HandData().getHandPosition(controller);
 		  if(data!=null){
-			  double score = signClass.score(data,currentLetter);
-			  //text(Double.toString(score),100,50);
-			  System.out.println(score);
-			  if(score>0.95 && score<1.05){
+			  double score = signClass.score(data,alphabet[currentLetterPosition]);
+			  println(score);
+			  if(score>0.1){
 				  this.currentLetterPosition++;
 				  if(this.currentLetterPosition==26)
 					  this.currentLetterPosition=0;	  
-				  background(0);
 			  }
 		  	}
 		  }
 		}
 
-	void displayLeapInfo(){
+	@SuppressWarnings("unused")
+	private void displayLeapInfo(){
 	  background(0);
 	  Frame frame = controller.frame();
 	  text( frame.hands().count() + " Hands", 50, 50 );
@@ -103,8 +91,41 @@ public class Page extends PApplet{
 	  }
 	}
 	
-	public void mousePressed() {
-		if (mouseX > buttonX && mouseX < buttonX+buttonW && mouseY > buttonY && mouseY < buttonY+buttonH)
-		stateOfProgram=stateShowInstructions;
+	private void createWelcomeGUI(){
+		  G4P.messagesEnabled(true);
+		  G4P.setGlobalColorScheme(GCScheme.BLUE_SCHEME);
+		  G4P.setCursor(ARROW);
+		  surface.setTitle("Sketch Window");
+		  welcomeLabel = new GLabel(this, 161, 67, 80, 100);
+		  welcomeLabel.setFont(new Font("Dialog", Font.PLAIN, 16));
+		  welcomeLabel.setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
+		  welcomeLabel.setText("Welcome");
+		  welcomeLabel.setTextBold();
+		  welcomeLabel.setOpaque(false);
+		  startButton = new GButton(this, 129, 136, 150, 30);
+		  startButton.setText("Click to Start");
+		  startButton.setTextBold();
+		  startButton.setLocalColorScheme(GCScheme.RED_SCHEME);
+		  startButton.addEventHandler(this, "handleButtonEvents");
 		}
+	
+	private void createSignAlphabetGUI(){
+		char currentLetter= alphabet[currentLetterPosition];
+		  String imageName= "ASL/" + currentLetter + ".gif";	
+		  imgButton = new GImageButton(this, 104, 57, 300, 200, new String[] { imageName, imageName, imageName } );
+		  textfield = new GTextField(this, 176, 280, 160, 30, G4P.SCROLLBARS_NONE);
+		  textfield.setText("Sign the letter: " + Character.toUpperCase(currentLetter) +" " + currentLetter);
+		  textfield.setOpaque(true);
+	}
+
+	public void handleButtonEvents(GButton button, GEvent event) { 
+		 println("button1 - GButton >> GEvent." + event + " @ " + millis());
+		 welcomeLabel=null;
+		 startButton=null;
+			stateOfProgram=stateShowInstructions;
+	}
+	
+	public void handleButtonEvents(GImageButton button, GEvent event) { /* Not called*/ }
+
+	public void handleTextEvents(GEditableTextControl textcontrol, GEvent event) { /* Not called */ }
 }
