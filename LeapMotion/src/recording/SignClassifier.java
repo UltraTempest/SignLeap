@@ -8,7 +8,7 @@ import java.util.Map;
 
 import database.SignedDB;
 import weka.classifiers.Classifier;
-import weka.classifiers.bayes.NaiveBayes;
+import weka.classifiers.functions.LibSVM;
 import weka.core.Attribute;
 import weka.core.DenseInstance;
 import weka.core.FastVector;
@@ -19,8 +19,8 @@ import weka.core.Instances;
 public class SignClassifier {
 	
 	private FastVector fvWekaAttributes;
-	private Classifier cls;
-	private Instances trainingSet;
+	protected Classifier cls;
+	protected Instances trainingSet;
 	
 	@SuppressWarnings({ "unchecked" })
 		public SignClassifier(){
@@ -70,11 +70,13 @@ public class SignClassifier {
 			 }
 			 else{
 				// train classifier
-			cls=new NaiveBayes();
+			//cls=new IBk();
+			//cls=new NaiveBayes();
+			//cls=new J48();
+			cls=new LibSVM();
 			cls.buildClassifier(trainingSet);
 			// serialize model
 			 weka.core.SerializationHelper.write("ASL.model", cls);
-			//serializeClassifier();
 			 }
 		} catch (Exception e) {
 			System.err.println("Error during classifier building:"+ e);
@@ -83,7 +85,7 @@ public class SignClassifier {
 	
 	public String classify(Map<String, Float> data){
 		try {
-			 Instance sampleInstance = new DenseInstance(60);
+			 Instance sampleInstance = new DenseInstance(61);
 			 	for(int i=0; i<60;i++){
 			 		sampleInstance.setValue((Attribute)fvWekaAttributes.elementAt(i), data.get("feat"+i));
 			 	}
@@ -97,7 +99,7 @@ public class SignClassifier {
 	
 	public double score(Map<String, Float> data, char c){
 		try {
-			 Instance sampleInstance = new DenseInstance(60);
+			 Instance sampleInstance = new DenseInstance(61);
 			 	for(int i=0; i<60;i++){
 			 		sampleInstance.setValue((Attribute)fvWekaAttributes.elementAt(i), data.get("feat"+i));
 			 	}
