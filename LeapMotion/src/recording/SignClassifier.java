@@ -8,8 +8,6 @@ import java.util.Map;
 
 import database.SignedDB;
 import weka.classifiers.Classifier;
-import weka.classifiers.functions.LibSVM;
-import weka.classifiers.lazy.IBk;
 import weka.classifiers.trees.J48;
 import weka.core.Attribute;
 import weka.core.DenseInstance;
