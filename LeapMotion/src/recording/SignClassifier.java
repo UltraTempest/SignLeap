@@ -9,6 +9,8 @@ import java.util.Map;
 import database.SignedDB;
 import weka.classifiers.Classifier;
 import weka.classifiers.functions.LibSVM;
+import weka.classifiers.lazy.IBk;
+import weka.classifiers.trees.J48;
 import weka.core.Attribute;
 import weka.core.DenseInstance;
 import weka.core.FastVector;
@@ -72,8 +74,8 @@ public class SignClassifier {
 				// train classifier
 			//cls=new IBk();
 			//cls=new NaiveBayes();
-			//cls=new J48();
-			cls=new LibSVM();
+			cls=new J48();
+			//cls=new LibSVM();
 			cls.buildClassifier(trainingSet);
 			// serialize model
 			 weka.core.SerializationHelper.write("ASL.model", cls);
