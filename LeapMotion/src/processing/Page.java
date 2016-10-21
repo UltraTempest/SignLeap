@@ -67,8 +67,12 @@ public class Page extends PApplet{
 		  Map<String, Float> data=new HandData().getHandPosition(controller);
 		  if(data!=null){
 			  double score = signClass.score(data,alphabet[currentLetterPosition]);
+			  if(score>0.1)
+				  text("Close!",50,50);
+			  else
+				  text("",50,50);
 			  println(score);
-			  if(score>0.1){
+			  if(score>0.7){
 				  this.currentLetterPosition++;
 				  if(this.currentLetterPosition==26)
 					  this.currentLetterPosition=0;	  
