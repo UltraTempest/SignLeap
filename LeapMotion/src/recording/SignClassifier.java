@@ -8,7 +8,6 @@ import java.util.Map;
 
 import database.SignedDB;
 import weka.classifiers.Classifier;
-import weka.classifiers.meta.FilteredClassifier;
 import weka.classifiers.trees.J48;
 import weka.core.Attribute;
 import weka.core.DenseInstance;
@@ -73,8 +72,7 @@ public class SignClassifier {
 				// train classifier
 			//cls=new IBk();
 			//cls=new NaiveBayes();
-			//cls=new J48();
-			cls = new FilteredClassifier();
+			cls=new J48();
 			//cls=new LibSVM();
 			cls.buildClassifier(trainingSet);
 			// serialize model
