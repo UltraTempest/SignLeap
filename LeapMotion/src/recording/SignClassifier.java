@@ -5,9 +5,14 @@ import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import database.SignedDB;
 import weka.classifiers.Classifier;
+import weka.classifiers.Evaluation;
+import weka.classifiers.bayes.NaiveBayes;
+import weka.classifiers.functions.SMO;
+import weka.classifiers.lazy.IBk;
 import weka.classifiers.trees.J48;
 import weka.core.Attribute;
 import weka.core.DenseInstance;
@@ -18,13 +23,15 @@ import weka.core.Instances;
 @SuppressWarnings({"deprecation", "rawtypes"})
 public class SignClassifier {
 	
+	private final String language= "isl";
+	private final String hand ="right";
 	private FastVector fvWekaAttributes;
-	protected Classifier cls;
-	protected Instances trainingSet;
+	private Classifier cls;
+	private Instances trainingSet;
 	
 	@SuppressWarnings({ "unchecked" })
 		public SignClassifier(){
-		SimpleEntry<List<ArrayList<Double>>, List<Character>> entry=new SignedDB().getAllData();
+		SimpleEntry<List<ArrayList<Double>>, List<Character>> entry=new SignedDB().getAllData(language, hand);
 		List<ArrayList<Double>> data= entry.getKey();
 		List<Character> target=entry.getValue();
 		
@@ -63,34 +70,68 @@ public class SignClassifier {
 		 }	 
 		 
 		 try {
-			 File f = new File("ASL.model");
+			 String filename=language +"_" +  hand +  ".model";
+			 File f = new File(filename);
 			 if(f.exists() && !f.isDirectory()) { 
 				// deserialize model
-				 cls= (Classifier) weka.core.SerializationHelper.read("ASL.model");
+				 cls= (Classifier) weka.core.SerializationHelper.read(filename);
 			 }
 			 else{
 				// train classifier
-			//cls=new IBk();
+			cls=new IBk();
 			//cls=new NaiveBayes();
-			cls=new J48();
+			//cls=new J48();
 			//cls=new LibSVM();
 			cls.buildClassifier(trainingSet);
 			// serialize model
-			 weka.core.SerializationHelper.write("ASL.model", cls);
+			 weka.core.SerializationHelper.write(filename, cls);
 			 }
 		} catch (Exception e) {
 			System.err.println("Error during classifier building:"+ e);
 		}
 	}
 	
+	public void evaluate() throws Exception{
+		
+		// training using a collection of classifiers (NaiveBayes, SMO (AKA SVM), KNN and Decision trees.)
+        String[] algorithms = {"nb","smo","knn","j48"};
+        for(int w=0; w<algorithms.length;w++){
+            if(algorithms[w].equals("nb"))
+            cls = new NaiveBayes();
+            if(algorithms[w].equals("smo"))
+            cls = new SMO();
+            if(algorithms[w].equals("knn"))
+            cls = new IBk();
+            if(algorithms[w].equals("j48"))
+            cls = new J48();
+
+        System.out.println("==========================================================================");
+        System.out.println("training using " + algorithms[w] + " classifier");
+
+        Evaluation eval = new Evaluation(trainingSet);
+        //perform 10 fold cross validation
+        eval.crossValidateModel(cls, trainingSet, 10, new Random(1));
+        String output = eval.toSummaryString();
+        System.out.println(output);
+
+        String classDetails = eval.toClassDetailsString();
+        System.out.println(classDetails);
+
+        }
+	}
+	
+	public double classifyInstance(Instance data){
+			try {
+				return cls.classifyInstance(data);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			return 0.0;
+	}
+	
 	public String classify(Map<String, Float> data){
 		try {
-			 Instance sampleInstance = new DenseInstance(61);
-			 	for(int i=0; i<60;i++){
-			 		sampleInstance.setValue((Attribute)fvWekaAttributes.elementAt(i), data.get("feat"+i));
-			 	}
-			 	sampleInstance.setDataset(trainingSet);
-			return trainingSet.classAttribute().value((int)  cls.classifyInstance(sampleInstance));
+			return trainingSet.classAttribute().value((int)  cls.classifyInstance(createInstanceFromData(data)));
 		} catch (Exception e) {
 			System.err.println("Error during classifier building:" + e);
 		}
@@ -99,12 +140,7 @@ public class SignClassifier {
 	
 	public double score(Map<String, Float> data, char c){
 		try {
-			 Instance sampleInstance = new DenseInstance(61);
-			 	for(int i=0; i<60;i++){
-			 		sampleInstance.setValue((Attribute)fvWekaAttributes.elementAt(i), data.get("feat"+i));
-			 	}
-			 	sampleInstance.setDataset(trainingSet); 	
-			 	 return getProbabilityForChar(sampleInstance, c);
+			return getProbabilityForChar(createInstanceFromData(data), c);
 		} catch (Exception e) {
 			System.err.println("Error during classifier building:" + e);
 		}
@@ -113,10 +149,21 @@ public class SignClassifier {
 	
 	private double getProbabilityForChar(Instance sampleInstance, char c) throws Exception{
 			int position=trainingSet.classAttribute().indexOfValue(Character.toString(c));
-			 // Get the likelihood of each classes
-		 	 // fDistribution[0] is the probability of being “positive”
-		 	 // fDistribution[1] is the probability of being “negative”
 			double[] fDistribution = cls.distributionForInstance(sampleInstance);	
 			return fDistribution[position];
+	}
+	
+	private Instance createInstanceFromData(Map<String, Float> data){
+		 Instance sampleInstance = new DenseInstance(61);
+		 	for(int i=0; i<60;i++){
+		 		sampleInstance.setValue((Attribute)fvWekaAttributes.elementAt(i), data.get("feat"+i));
+		 	}
+		 	sampleInstance.setDataset(trainingSet);
+		 	sampleInstance.setClassMissing();
+		 	return sampleInstance;
+	}
+	
+	public Instances getTrainingSet(){
+		return trainingSet;
 	}
 }

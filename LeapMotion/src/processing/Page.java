@@ -16,6 +16,7 @@ import g4p_controls.GLabel;
 import g4p_controls.GTextArea;
 import g4p_controls.GTextField;
 import processing.core.PApplet;
+import recording.HandData;
 import recording.SignClassifier;
 
 public class Page extends PApplet{
@@ -60,14 +61,14 @@ public class Page extends PApplet{
 	  }
 	}
 	 
-	void signAlphabet(){	
+	private void signAlphabet(){	
 		createSignAlphabetGUI();
 		  Frame frame = controller.frame();
 		  if(frame.hands().count()>0){
 		  Map<String, Float> data=new HandData().getHandPosition(controller);
 		  if(data!=null){
 			  double score = signClass.score(data,alphabet[currentLetterPosition]);
-			  if(score>0.1)
+			  if(score>0.9)
 				  text("Close!",50,50);
 			  else
 				  text("",50,50);
@@ -116,8 +117,8 @@ public class Page extends PApplet{
 		}
 	
 	private void createSignAlphabetGUI(){
-		char currentLetter= alphabet[currentLetterPosition];
-		  String imageName= "ASL/" + currentLetter + ".gif";	
+		  char currentLetter= alphabet[currentLetterPosition];
+		  String imageName= "ISLpersonAlphabetImages/" + currentLetter + ".jpg";	
 		  imgButton = new GImageButton(this, 104, 57, 300, 200, new String[] { imageName, imageName, imageName } );
 		  textfield = new GTextField(this, 176, 280, 160, 30, G4P.SCROLLBARS_NONE);
 		  textfield.setText("Sign the letter: " + Character.toUpperCase(currentLetter) +" " + currentLetter);

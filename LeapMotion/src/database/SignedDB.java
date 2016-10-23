@@ -10,15 +10,14 @@ import java.util.Map.Entry;
 
 public class SignedDB
 {
-	public void insertSignValues(char sign, Map<String, Float> features, String table)
+	public void insertSignValues(String db,char sign, Map<String, Float> features, String table)
 	  {
 	    Connection conn = null;
 	    Statement stmt = null;
 	    try {
 	      Class.forName("org.sqlite.JDBC");
-	      conn = DriverManager.getConnection("jdbc:sqlite:Databases/signed_data.db");
+	      conn = DriverManager.getConnection("jdbc:sqlite:Databases/" + db);
 	      conn.setAutoCommit(false);
-	      System.out.println("Opened database successfully");
 	      
 	      stmt = conn.createStatement();
 	      StringBuilder insertion= new StringBuilder();
@@ -42,24 +41,25 @@ public class SignedDB
 	      System.err.println( e.getClass().getName() + ": " + e.getMessage() );
 	      System.exit(0);
 	    }
-	    System.out.println("Records created successfully");
 	  }
 	
 	@SuppressWarnings("unchecked")
-	public SimpleEntry<List<ArrayList<Double>>, List<Character>> getAllData(){
+	public SimpleEntry<List<ArrayList<Double>>, List<Character>> getAllData(String langauge, String hand){
 		  Connection conn = null;
 		    Statement stmt = null;
 		    try {
 		      Class.forName("org.sqlite.JDBC");
-		      conn = DriverManager.getConnection("jdbc:sqlite:Databases/asl_data.db");
+		      if(hand!=null)
+		      conn = DriverManager.getConnection("jdbc:sqlite:Databases/" + langauge + "_" + hand + "_data.db");
+		      else
+		    	  conn = DriverManager.getConnection("jdbc:sqlite:Databases/" + langauge + "_data.db");
 		      conn.setAutoCommit(false);
-		      System.out.println("Opened database successfully");
 		      stmt = conn.createStatement();
 		      
 		      List<ArrayList<Double>> data=new ArrayList<ArrayList<Double>>();
 		      List<Character> target=new ArrayList<Character>();
 		      
-		      ResultSet rs = stmt.executeQuery( "SELECT * FROM tagged_data;" );
+		      ResultSet rs = stmt.executeQuery( "SELECT * FROM alpha_data" );
 		      
 		      ArrayList<Double> list=new ArrayList<Double>(60);
 		      while(rs.next()){
@@ -68,7 +68,11 @@ public class SignedDB
 		    	 }
 		    	 data.add((ArrayList<Double>) list.clone());
 		    	 list.clear();
-		    	 target.add(rs.getString("sign").charAt(0));
+		    	 String signString= rs.getString("sign");
+		    	 if(signString.isEmpty())
+		    		 target.add('?');
+		    	 else
+		    	 target.add(signString.charAt(0));
 		      }
 		      
 		      stmt.close();
