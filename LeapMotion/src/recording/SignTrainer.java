@@ -16,9 +16,9 @@ public class SignTrainer {
 
 class Trainer{
 	
-	int NUM_SAMPLES = 1000;
-	long SAMPLE_DELAY = (long) 0.1;
-	int NUM_FEATURES = 60;
+	private final int NUM_SAMPLES = 1000;
+	private final long SAMPLE_DELAY = (long) 0.1;
+	public static final int NUM_FEATURES = 60;
 
 	private char getCharToTrain(Scanner scan){
 		System.out.println("Enter char to train: ");

@@ -17,25 +17,36 @@ import g4p_controls.GTextArea;
 import g4p_controls.GTextField;
 import processing.core.PApplet;
 import recording.HandData;
+import recording.HandData.Handedness;
 import recording.SignClassifier;
 
 public class Page extends PApplet{
 	
 	private final int stateWelcomeScreenDisplay=0;
-	final private int stateShowInstructions= 1;
+	final private int stateMainMenu= 1;
+	private final int stateSignAlphabet=2;
+	private final int stateSignNumbers=3;
 	private int stateOfProgram = stateWelcomeScreenDisplay;
 	
 	private final Controller controller = new Controller();
-	private final SignClassifier signClass= new SignClassifier();
 	
-	private final char[] alphabet = "abcdefghijklmnopqrstuvwxyz".toCharArray();
+	private Handedness hand;
+	private SignClassifier signClass;
+	private SignClassifier leftSignClass=new SignClassifier(Handedness.LEFT.toString());
+	private SignClassifier rightSignClass=new SignClassifier(Handedness.RIGHT.toString());
+	
+	private final String alphabet="Alphabet";
+	private final String numbers="Numbers";
+	private final String imageType=".jpg";
+	private final char[] alphabetArray = "abcdefghijklmnopqrstuvwxyz".toCharArray();
+	private final char[] numbersArray = {0,1,2,3,4,5,6,7,8,9,10};
 	private int currentLetterPosition=0;
 	
 	@SuppressWarnings("unused")
 	private GImageButton imgButton; 
 	private GTextField textfield; 
 	private GLabel welcomeLabel;
-	private GTextArea textarea1; 
+	private GTextArea signInstructions; 
 	
 	 public static void main(String[] args) {
 	        PApplet.main("processing.Page");
@@ -54,10 +65,16 @@ public class Page extends PApplet{
 	case stateWelcomeScreenDisplay:
 		checkIfHandPlacedOverLeap();
 	   break;
-	case stateShowInstructions:
+	case stateMainMenu:
 	  // displayLeapInfo();
 		signAlphabet();
 	   break;
+	case stateSignAlphabet:
+		signAlphabet();
+		   break;
+	  case stateSignNumbers:
+		  signNumbers();
+		  break;
 	  }
 	}
 	 
@@ -67,7 +84,7 @@ public class Page extends PApplet{
 		  if(frame.hands().count()>0){
 		  Map<String, Float> data=new HandData().getHandPosition(controller);
 		  if(data!=null){
-			  double score = signClass.score(data,alphabet[currentLetterPosition]);
+			  double score = signClass.score(data,alphabetArray[currentLetterPosition]);
 			  if(score>0.9)
 				  text("Close!",50,50);
 			  else
@@ -76,6 +93,27 @@ public class Page extends PApplet{
 			  if(score>0.7){
 				  this.currentLetterPosition++;
 				  if(this.currentLetterPosition==26)
+					  this.currentLetterPosition=0;	  
+			  }
+		  	}
+		  }
+		}
+	
+	private void signNumbers(){	
+		createSignNumberGUI();
+		  Frame frame = controller.frame();
+		  if(frame.hands().count()>0){
+		  Map<String, Float> data=new HandData().getHandPosition(controller);
+		  if(data!=null){
+			  double score = signClass.score(data,numbersArray[currentLetterPosition]);
+			  if(score>0.9)
+				  text("Close!",50,50);
+			  else
+				  text("",50,50);
+			  println(score);
+			  if(score>0.7){
+				  this.currentLetterPosition++;
+				  if(this.currentLetterPosition==10)
 					  this.currentLetterPosition=0;	  
 			  }
 		  	}
@@ -97,7 +135,12 @@ public class Page extends PApplet{
 	private void checkIfHandPlacedOverLeap(){
 	  Frame frame = controller.frame();
 	  if(frame.hands().count()>0){
-		  stateOfProgram=stateShowInstructions;
+		  hand=new HandData().GetHandedness(frame.hands().frontmost());
+		  if(hand.equals(Handedness.RIGHT))
+			  signClass=rightSignClass;
+			  else
+				  signClass=leftSignClass;
+		  stateOfProgram=stateMainMenu;
 	  }
 	}
 	
@@ -110,26 +153,34 @@ public class Page extends PApplet{
 		  welcomeLabel.setText("Welcome");
 		  welcomeLabel.setTextBold();
 		  welcomeLabel.setOpaque(false);
-		  textarea1 = new GTextArea(this, 162, 135, 160, 80, G4P.SCROLLBARS_NONE);
-		  textarea1.setText("Place your hand over the Leap Motion to begin!");
-		  textarea1.setOpaque(true);
-		  textarea1.addEventHandler(this, "textarea1_change1");
+		  signInstructions = new GTextArea(this, 162, 135, 160, 80, G4P.SCROLLBARS_NONE);
+		  signInstructions.setText("Place your hand over the Leap Motion to begin!");
+		  signInstructions.setOpaque(true);
+		  signInstructions.addEventHandler(this, "textarea1_change1");
 		}
 	
 	private void createSignAlphabetGUI(){
-		  char currentLetter= alphabet[currentLetterPosition];
-		  String imageName= "ISLpersonAlphabetImages/" + currentLetter + ".jpg";	
+		  char currentLetter= alphabetArray[currentLetterPosition];
+		  String imageName= SignClassifier.language +  "/" + hand.toString() +"/" + alphabet + "/" + currentLetter + imageType;	
 		  imgButton = new GImageButton(this, 104, 57, 300, 200, new String[] { imageName, imageName, imageName } );
 		  textfield = new GTextField(this, 176, 280, 160, 30, G4P.SCROLLBARS_NONE);
 		  textfield.setText("Sign the letter: " + Character.toUpperCase(currentLetter) +" " + currentLetter);
 		  textfield.setOpaque(true);
 	}
+	
+	private void createSignNumberGUI(){
+		  int currentNumber= numbersArray[currentLetterPosition];
+		  String imageName= SignClassifier.language +  "/" + hand.toString() +"/" + numbers + "/" + currentNumber + imageType;	
+		  imgButton = new GImageButton(this, 104, 57, 300, 200, new String[] { imageName, imageName, imageName } );
+		  textfield = new GTextField(this, 176, 280, 160, 30, G4P.SCROLLBARS_NONE);
+		  textfield.setText("Sign the number: ");
+		  textfield.setOpaque(true);
+	}
 
 	public void handleButtonEvents(GButton button, GEvent event) { 
-		 println("button1 - GButton >> GEvent." + event + " @ " + millis());
 		 welcomeLabel=null;
-		 textarea1=null;
-			stateOfProgram=stateShowInstructions;
+		 signInstructions=null;
+			stateOfProgram=stateMainMenu;
 	}
 	
 	public void handleButtonEvents(GImageButton button, GEvent event) { /* Not called*/ 
@@ -138,7 +189,6 @@ public class Page extends PApplet{
 		this.currentLetterPosition++;
 	}
 
-	public void handleTextEvents(GEditableTextControl textcontrol, GEvent event) { /* Not called */ }
-	
+	public void handleTextEvents(GEditableTextControl textcontrol, GEvent event) { /* Not called */ }	
 	public void textarea1_change1(GTextArea textarea, GEvent event) { /* Not called */ }
 }

@@ -65,4 +65,23 @@ public class HandData {
 	            		
 	    return calibrated_finger_bones;
 	}
+	
+	public enum Handedness {
+	    LEFT ("left"),
+	    RIGHT ("right");
+
+	    private final String name;       
+
+	    private Handedness(String s) {
+	        name = s;
+	    }
+
+	    public String toString() {
+	       return this.name;
+	    }
+	}
+
+	public Handedness GetHandedness(Hand hand) {
+		return hand.isLeft() ? Handedness.LEFT : Handedness.RIGHT;	
+	}
 }

@@ -23,21 +23,20 @@ import weka.core.Instances;
 @SuppressWarnings({"deprecation", "rawtypes"})
 public class SignClassifier {
 	
-	private final String language= "isl";
-	private final String hand ="right";
+	public static final String language= "ISL";
 	private FastVector fvWekaAttributes;
 	private Classifier cls;
 	private Instances trainingSet;
 	
 	@SuppressWarnings({ "unchecked" })
-		public SignClassifier(){
+		public SignClassifier(String hand){
 		SimpleEntry<List<ArrayList<Double>>, List<Character>> entry=new SignedDB().getAllData(language, hand);
 		List<ArrayList<Double>> data= entry.getKey();
 		List<Character> target=entry.getValue();
 		
 		// Declare the feature vector
-		 fvWekaAttributes = new FastVector(61);
-		 for(int i=0;i<60;i++){
+		 fvWekaAttributes = new FastVector(Trainer.NUM_FEATURES+1);
+		 for(int i=0;i<Trainer.NUM_FEATURES;i++){
 			fvWekaAttributes.addElement(new Attribute("feat"+i));
 		 }
 		 
@@ -59,8 +58,8 @@ public class SignClassifier {
 		 
 		 for(int i=0; i<data.size();i++){
 			// Create the instance
-			 Instance trainingInstance = new DenseInstance(61);
-			 for(int j=0; j<60;j++){
+			 Instance trainingInstance = new DenseInstance(Trainer.NUM_FEATURES+1);
+			 for(int j=0; j<Trainer.NUM_FEATURES;j++){
 			 trainingInstance.setValue((Attribute)fvWekaAttributes.elementAt(j), data.get(i).get(j));
 			 }
 			 trainingInstance.setValue((Attribute)fvWekaAttributes.elementAt(60),String.valueOf(target.get(i)));
@@ -154,8 +153,8 @@ public class SignClassifier {
 	}
 	
 	private Instance createInstanceFromData(Map<String, Float> data){
-		 Instance sampleInstance = new DenseInstance(61);
-		 	for(int i=0; i<60;i++){
+		 Instance sampleInstance = new DenseInstance(Trainer.NUM_FEATURES+1);
+		 	for(int i=0; i<Trainer.NUM_FEATURES;i++){
 		 		sampleInstance.setValue((Attribute)fvWekaAttributes.elementAt(i), data.get("feat"+i));
 		 	}
 		 	sampleInstance.setDataset(trainingSet);
