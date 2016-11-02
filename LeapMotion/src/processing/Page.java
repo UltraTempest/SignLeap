@@ -7,15 +7,14 @@ import com.leapmotion.leap.Frame;
 
 import g4p_controls.G4P;
 import g4p_controls.GAlign;
-import g4p_controls.GButton;
 import g4p_controls.GCScheme;
 import g4p_controls.GEditableTextControl;
 import g4p_controls.GEvent;
-import g4p_controls.GImageButton;
 import g4p_controls.GLabel;
-import g4p_controls.GTextArea;
 import g4p_controls.GTextField;
+import g4p_controls.GTimer;
 import processing.core.PApplet;
+import processing.core.PImage;
 import recording.HandData;
 import recording.HandData.Handedness;
 import recording.SignClassifier;
@@ -32,8 +31,8 @@ public class Page extends PApplet{
 	
 	private Handedness hand;
 	private SignClassifier signClass;
-	private SignClassifier leftSignClass=new SignClassifier(Handedness.LEFT.toString());
-	private SignClassifier rightSignClass=new SignClassifier(Handedness.RIGHT.toString());
+	private SignClassifier leftSignClass=new SignClassifier(Handedness.LEFT.toString(), "alpha");
+	private SignClassifier rightSignClass=new SignClassifier(Handedness.RIGHT.toString(), "alpha");
 	
 	private final String alphabet="Alphabet";
 	private final String numbers="Numbers";
@@ -42,22 +41,23 @@ public class Page extends PApplet{
 	private final char[] numbersArray = {0,1,2,3,4,5,6,7,8,9,10};
 	private int currentLetterPosition=0;
 	
-	@SuppressWarnings("unused")
-	private GImageButton imgButton; 
-	private GTextField textfield; 
-	private GLabel welcomeLabel;
-	private GTextArea signInstructions; 
+	private PImage img;
+	private GTextField instruction;
+	private GLabel score;
+	private GTimer scoreTimer; 
+	private GLabel PreferredHandText; 
 	
 	 public static void main(String[] args) {
 	        PApplet.main("processing.Page");
 	    }
 
 	    public void settings(){
-	    	size(480, 320);
+	    	size(960, 640);
 	    }
 	    
-	    public void setup(){    	
-	    	  createWelcomeGUI();
+	    public void setup(){    
+	    	background(230);
+	    	createWelcomeGUI();
 	    }
 
 	public void draw(){
@@ -81,10 +81,11 @@ public class Page extends PApplet{
 	private void signAlphabet(){	
 		createSignAlphabetGUI();
 		  Frame frame = controller.frame();
+		  char currentLetter=alphabetArray[currentLetterPosition];
 		  if(frame.hands().count()>0){
 		  Map<String, Float> data=new HandData().getHandPosition(controller);
 		  if(data!=null){
-			  double score = signClass.score(data,alphabetArray[currentLetterPosition]);
+			  double score = signClass.score(data,currentLetter);
 			  if(score>0.9)
 				  text("Close!",50,50);
 			  else
@@ -97,7 +98,7 @@ public class Page extends PApplet{
 			  }
 		  	}
 		  }
-		}
+	}
 	
 	private void signNumbers(){	
 		createSignNumberGUI();
@@ -140,55 +141,66 @@ public class Page extends PApplet{
 			  signClass=rightSignClass;
 			  else
 				  signClass=leftSignClass;
+		  
+		  background(230);
+		  PreferredHandText.setVisible(false);
+		  PreferredHandText.dispose();
 		  stateOfProgram=stateMainMenu;
 	  }
 	}
 	
 	private void createWelcomeGUI(){
 		  G4P.setGlobalColorScheme(GCScheme.BLUE_SCHEME);
-		  surface.setTitle("Sketch Window");
-		  welcomeLabel = new GLabel(this, 161, 67, 80, 100);
-		  welcomeLabel.setFont(new Font("Dialog", Font.PLAIN, 16));
-		  welcomeLabel.setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
-		  welcomeLabel.setText("Welcome");
-		  welcomeLabel.setTextBold();
-		  welcomeLabel.setOpaque(false);
-		  signInstructions = new GTextArea(this, 162, 135, 160, 80, G4P.SCROLLBARS_NONE);
-		  signInstructions.setText("Place your hand over the Leap Motion to begin!");
-		  signInstructions.setOpaque(true);
-		  signInstructions.addEventHandler(this, "textarea1_change1");
+		  surface.setTitle("Sketch Window");  
+		  PreferredHandText = new GLabel(this, 3, 497, 950, 139);
+		  PreferredHandText.setTextAlign(GAlign.CENTER, GAlign.BOTTOM);
+		  PreferredHandText.setText("Place your preferred hand over the Leap Motion to begin!");
+		  PreferredHandText.setFont(new Font("Dialog", Font.PLAIN, 58));
+		  PreferredHandText.setOpaque(false);
+		  String logoFile="ISL_logo.png";
+		  img=loadImage(logoFile);
+		  image(img,31, 7, 886, 482);
 		}
 	
 	private void createSignAlphabetGUI(){
-		  char currentLetter= alphabetArray[currentLetterPosition];
-		  String imageName= SignClassifier.language +  "/" + hand.toString() +"/" + alphabet + "/" + currentLetter + imageType;	
-		  imgButton = new GImageButton(this, 104, 57, 300, 200, new String[] { imageName, imageName, imageName } );
-		  textfield = new GTextField(this, 176, 280, 160, 30, G4P.SCROLLBARS_NONE);
-		  textfield.setText("Sign the letter: " + Character.toUpperCase(currentLetter) +" " + currentLetter);
-		  textfield.setOpaque(true);
+		char currentLetter=alphabetArray[currentLetterPosition];
+		String imageName= SignClassifier.language +  "/" + hand.toString() +"/" + alphabet + "/" + currentLetter + imageType;	
+		if(instruction==null){
+			startGUITimerAndInitInstruction();
+		}
+		  updateSignCharactersGUI(currentLetter, imageName);
+	}
+	
+	private void startGUITimerAndInitInstruction(){
+		  instruction = new GTextField(this, 217, 513, 492, 81, G4P.SCROLLBARS_NONE);
+		  instruction.setOpaque(false);
+		  instruction.setFont(new Font("Dialog", Font.PLAIN, 58));
+		  instruction.setVisible(true);
+		  instruction.setTextEditEnabled(false);
+		  score = new GLabel(this, 259, 28, 331, 20);
+		  score.setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
+		  score.setText("Score:                       Time left:");
+		  score.setOpaque(false);
+		  score.setFont(new Font("Dialog", Font.PLAIN, 16));
+		  scoreTimer = new GTimer(this, this, "timeUp", 1000);
+		  scoreTimer.start();
+	}
+	
+	private void updateSignCharactersGUI(char currentLetter, String imageName){
+		img=loadImage(imageName);
+		image(img,136, 65, 657, 408);
+		instruction.setText("Sign the letter: " + Character.toUpperCase(currentLetter) +" " + currentLetter);
 	}
 	
 	private void createSignNumberGUI(){
-		  int currentNumber= numbersArray[currentLetterPosition];
-		  String imageName= SignClassifier.language +  "/" + hand.toString() +"/" + numbers + "/" + currentNumber + imageType;	
-		  imgButton = new GImageButton(this, 104, 57, 300, 200, new String[] { imageName, imageName, imageName } );
-		  textfield = new GTextField(this, 176, 280, 160, 30, G4P.SCROLLBARS_NONE);
-		  textfield.setText("Sign the number: ");
-		  textfield.setOpaque(true);
+		  char currentNumber= numbersArray[currentLetterPosition];
+		  String imageName= SignClassifier.language +  "/" + hand.toString() +"/" + numbers + "/" + currentNumber + imageType;
+			if(instruction==null){
+				startGUITimerAndInitInstruction();
+			}
+			  updateSignCharactersGUI(currentNumber, imageName);
 	}
 
-	public void handleButtonEvents(GButton button, GEvent event) { 
-		 welcomeLabel=null;
-		 signInstructions=null;
-			stateOfProgram=stateMainMenu;
-	}
-	
-	public void handleButtonEvents(GImageButton button, GEvent event) { /* Not called*/ 
-		if(this.currentLetterPosition==26)
-			this.currentLetterPosition=0;
-		this.currentLetterPosition++;
-	}
-
-	public void handleTextEvents(GEditableTextControl textcontrol, GEvent event) { /* Not called */ }	
-	public void textarea1_change1(GTextArea textarea, GEvent event) { /* Not called */ }
+	public void handleTextEvents(GEditableTextControl textcontrol, GEvent event) { /* Not called */ }
+	public void timeUp(GTimer timer) { println("Time's up"); }
 }

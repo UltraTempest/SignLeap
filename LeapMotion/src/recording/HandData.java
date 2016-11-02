@@ -29,7 +29,6 @@ public class HandData {
 	{
 	    Frame frame = controller.frame();
 	    while (frame.fingers().isEmpty())
-	        //frame = controller.frame();
 	    	return null;
 
 	    FingerList fingers = controller.frame().fingers();

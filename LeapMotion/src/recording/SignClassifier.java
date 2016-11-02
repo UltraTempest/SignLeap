@@ -29,8 +29,13 @@ public class SignClassifier {
 	private Instances trainingSet;
 	
 	@SuppressWarnings({ "unchecked" })
-		public SignClassifier(String hand){
-		SimpleEntry<List<ArrayList<Double>>, List<Character>> entry=new SignedDB().getAllData(language, hand);
+		public SignClassifier(String hand,String type){
+		SimpleEntry<List<ArrayList<Double>>, List<Character>> entry=null;
+		if(type.equals("num"))
+			entry=new SignedDB().getNumberData(language, hand);
+		else
+			entry=new SignedDB().getAlphabetData(language, hand);
+		
 		List<ArrayList<Double>> data= entry.getKey();
 		List<Character> target=entry.getValue();
 		
@@ -80,7 +85,7 @@ public class SignClassifier {
 			cls=new IBk();
 			//cls=new NaiveBayes();
 			//cls=new J48();
-			//cls=new LibSVM();
+			//cls= new SMO();
 			cls.buildClassifier(trainingSet);
 			// serialize model
 			 weka.core.SerializationHelper.write(filename, cls);

@@ -43,8 +43,18 @@ public class SignedDB
 	    }
 	  }
 	
+	public SimpleEntry<List<ArrayList<Double>>, List<Character>> getAlphabetData(String langauge, String hand){
+	  final String query="SELECT * FROM alpha_data";
+	  return getData(langauge, hand, query);
+	}
+	
+	public SimpleEntry<List<ArrayList<Double>>, List<Character>> getNumberData(String langauge, String hand){
+		  final String query="SELECT * FROM num_data";
+		  return getData(langauge, hand, query);
+		}
+	
 	@SuppressWarnings("unchecked")
-	public SimpleEntry<List<ArrayList<Double>>, List<Character>> getAllData(String langauge, String hand){
+	private SimpleEntry<List<ArrayList<Double>>, List<Character>> getData(String langauge, String hand, String query){
 		  Connection conn = null;
 		    Statement stmt = null;
 		    try {
@@ -59,7 +69,7 @@ public class SignedDB
 		      List<ArrayList<Double>> data=new ArrayList<ArrayList<Double>>();
 		      List<Character> target=new ArrayList<Character>();
 		      
-		      ResultSet rs = stmt.executeQuery( "SELECT * FROM alpha_data" );
+		      ResultSet rs = stmt.executeQuery( query );
 		      
 		      ArrayList<Double> list=new ArrayList<Double>(60);
 		      while(rs.next()){
