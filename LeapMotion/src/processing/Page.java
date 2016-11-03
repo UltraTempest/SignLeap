@@ -1,51 +1,42 @@
 package processing;
-import java.awt.Font;
 import java.util.Map;
 
 import com.leapmotion.leap.Controller;
 import com.leapmotion.leap.Frame;
 
-import g4p_controls.G4P;
-import g4p_controls.GAlign;
-import g4p_controls.GCScheme;
-import g4p_controls.GEditableTextControl;
-import g4p_controls.GEvent;
-import g4p_controls.GLabel;
-import g4p_controls.GTextField;
-import g4p_controls.GTimer;
+import leaderboard.HighScoreManager;
+import processing.GUI.GUI;
 import processing.core.PApplet;
-import processing.core.PImage;
 import recording.HandData;
 import recording.HandData.Handedness;
 import recording.SignClassifier;
 
 public class Page extends PApplet{
 	
-	private final int stateWelcomeScreenDisplay=0;
-	final private int stateMainMenu= 1;
-	private final int stateSignAlphabet=2;
-	private final int stateSignNumbers=3;
+	public static final int stateWelcomeScreenDisplay=0;
+	final public static int stateMainMenu= 1;
+	public static final int stateSignAlphabet=2;
+	public static final int stateSignNumbers=3;
+	public static final int userSubmissionScreen=4;
+	public static final int leaderboardScreen=5;
 	private int stateOfProgram = stateWelcomeScreenDisplay;
 	
 	private final Controller controller = new Controller();
-	
 	private Handedness hand;
+	
 	private SignClassifier signClass;
 	private SignClassifier leftSignClass=new SignClassifier(Handedness.LEFT.toString(), "alpha");
 	private SignClassifier rightSignClass=new SignClassifier(Handedness.RIGHT.toString(), "alpha");
 	
-	private final String alphabet="Alphabet";
-	private final String numbers="Numbers";
-	private final String imageType=".jpg";
+	
 	private final char[] alphabetArray = "abcdefghijklmnopqrstuvwxyz".toCharArray();
 	private final char[] numbersArray = {0,1,2,3,4,5,6,7,8,9,10};
 	private int currentLetterPosition=0;
 	
-	private PImage img;
-	private GTextField instruction;
-	private GLabel score;
-	private GTimer scoreTimer; 
-	private GLabel PreferredHandText; 
+	private final GUIHandler guiHandle= new GUIHandler(this);
+	private GUI currentGUIDisplayed;
+	
+	private int userScore=0;
 	
 	 public static void main(String[] args) {
 	        PApplet.main("processing.Page");
@@ -57,7 +48,8 @@ public class Page extends PApplet{
 	    
 	    public void setup(){    
 	    	background(230);
-	    	createWelcomeGUI();
+	    	currentGUIDisplayed=guiHandle.getWelcomeGUI();
+	    	currentGUIDisplayed.render();
 	    }
 
 	public void draw(){
@@ -68,30 +60,45 @@ public class Page extends PApplet{
 	case stateMainMenu:
 	  // displayLeapInfo();
 		signAlphabet();
+		checkIfTimerExpired();
 	   break;
 	case stateSignAlphabet:
 		signAlphabet();
+		checkIfTimerExpired();
 		   break;
-	  case stateSignNumbers:
+	case stateSignNumbers:
 		  signNumbers();
+		  checkIfTimerExpired();
 		  break;
+	case userSubmissionScreen:
+		currentGUIDisplayed.render();
+	case leaderboardScreen:
+		break;
 	  }
+	}
+	
+	public void stateSwitch(int state, GUI gui){
+		currentGUIDisplayed.dispose();
+		this.currentGUIDisplayed=gui;
+		this.stateOfProgram=state;
 	}
 	 
 	private void signAlphabet(){	
-		createSignAlphabetGUI();
+		//createSignAlphabetGUI();
+		currentGUIDisplayed.render();
 		  Frame frame = controller.frame();
 		  char currentLetter=alphabetArray[currentLetterPosition];
 		  if(frame.hands().count()>0){
 		  Map<String, Float> data=new HandData().getHandPosition(controller);
 		  if(data!=null){
-			  double score = signClass.score(data,currentLetter);
-			  if(score>0.9)
+			  double classProbValue = signClass.score(data,currentLetter);
+			  if(classProbValue>0.000000001)
 				  text("Close!",50,50);
 			  else
 				  text("",50,50);
-			  println(score);
-			  if(score>0.7){
+			  println(classProbValue);
+			  if(classProbValue>0.7){
+				  userScore++;
 				  this.currentLetterPosition++;
 				  if(this.currentLetterPosition==26)
 					  this.currentLetterPosition=0;	  
@@ -101,7 +108,8 @@ public class Page extends PApplet{
 	}
 	
 	private void signNumbers(){	
-		createSignNumberGUI();
+		//createSignNumberGUI();
+		currentGUIDisplayed.render();
 		  Frame frame = controller.frame();
 		  if(frame.hands().count()>0){
 		  Map<String, Float> data=new HandData().getHandPosition(controller);
@@ -141,66 +149,22 @@ public class Page extends PApplet{
 			  signClass=rightSignClass;
 			  else
 				  signClass=leftSignClass;
-		  
-		  background(230);
-		  PreferredHandText.setVisible(false);
-		  PreferredHandText.dispose();
-		  stateOfProgram=stateMainMenu;
+		  stateSwitch(stateMainMenu, guiHandle.getMainMenuGUI(hand.toString()));
 	  }
 	}
 	
-	private void createWelcomeGUI(){
-		  G4P.setGlobalColorScheme(GCScheme.BLUE_SCHEME);
-		  surface.setTitle("Sketch Window");  
-		  PreferredHandText = new GLabel(this, 3, 497, 950, 139);
-		  PreferredHandText.setTextAlign(GAlign.CENTER, GAlign.BOTTOM);
-		  PreferredHandText.setText("Place your preferred hand over the Leap Motion to begin!");
-		  PreferredHandText.setFont(new Font("Dialog", Font.PLAIN, 58));
-		  PreferredHandText.setOpaque(false);
-		  String logoFile="ISL_logo.png";
-		  img=loadImage(logoFile);
-		  image(img,31, 7, 886, 482);
-		}
-	
-	private void createSignAlphabetGUI(){
-		char currentLetter=alphabetArray[currentLetterPosition];
-		String imageName= SignClassifier.language +  "/" + hand.toString() +"/" + alphabet + "/" + currentLetter + imageType;	
-		if(instruction==null){
-			startGUITimerAndInitInstruction();
-		}
-		  updateSignCharactersGUI(currentLetter, imageName);
-	}
-	
-	private void startGUITimerAndInitInstruction(){
-		  instruction = new GTextField(this, 217, 513, 492, 81, G4P.SCROLLBARS_NONE);
-		  instruction.setOpaque(false);
-		  instruction.setFont(new Font("Dialog", Font.PLAIN, 58));
-		  instruction.setVisible(true);
-		  instruction.setTextEditEnabled(false);
-		  score = new GLabel(this, 259, 28, 331, 20);
-		  score.setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
-		  score.setText("Score:                       Time left:");
-		  score.setOpaque(false);
-		  score.setFont(new Font("Dialog", Font.PLAIN, 16));
-		  scoreTimer = new GTimer(this, this, "timeUp", 1000);
-		  scoreTimer.start();
-	}
-	
-	private void updateSignCharactersGUI(char currentLetter, String imageName){
-		img=loadImage(imageName);
-		image(img,136, 65, 657, 408);
-		instruction.setText("Sign the letter: " + Character.toUpperCase(currentLetter) +" " + currentLetter);
-	}
-	
-	private void createSignNumberGUI(){
-		  char currentNumber= numbersArray[currentLetterPosition];
-		  String imageName= SignClassifier.language +  "/" + hand.toString() +"/" + numbers + "/" + currentNumber + imageType;
-			if(instruction==null){
-				startGUITimerAndInitInstruction();
-			}
-			  updateSignCharactersGUI(currentNumber, imageName);
-	}
+	public int time(){
+		  int c;
+		  int climit = 60; //defined for a 60 second countdown
 
-	public void handleTextEvents(GEditableTextControl textcontrol, GEvent event) { /* Not called */ }
-	public void timeUp(GTimer timer) { println("Time's up"); }
+		  c = climit*1000 - millis();
+		 return (c/(1000));
+	}
+	
+	private void checkIfTimerExpired(){
+		if(time()!=0)
+			return;
+		new HighScoreManager().addScore("TestUser", userScore);
+		stateSwitch(userSubmissionScreen, guiHandle.getGameOverGUI());
+	}
 }
