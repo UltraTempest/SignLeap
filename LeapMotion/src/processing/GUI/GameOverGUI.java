@@ -8,12 +8,17 @@ import g4p_controls.GEvent;
 import g4p_controls.GLabel;
 import g4p_controls.GPanel;
 import g4p_controls.GTextField;
+import leaderboard.HighScoreManager;
+import processing.GUIFactory;
 import processing.core.PApplet;
 
-public class GameOverGUI extends AbstractGUI{
+public class GameOverGUI extends AbstractGeneralGUI{
 	
-	public GameOverGUI(PApplet page) {
+	private int score=0;
+	
+	public GameOverGUI(PApplet page, int score) {
 		super(page);
+		this.score=score;
 	}
 
 	private GPanel gameOverPanel; 
@@ -24,9 +29,10 @@ public class GameOverGUI extends AbstractGUI{
 	private GLabel label3; 
 
 
-	public void button1_click1(GButton source, GEvent event) { //_CODE_:button1:825371:
-	  PApplet.println("button1 - GButton >> GEvent." + event + " @ " + getPage().millis());
-	} //_CODE_:button1:825371:
+	public void submitButtonClicked(GButton source, GEvent event) {
+		new HighScoreManager().addScore(userInputName.getText(), score);
+		getPage().stateSwitch(new GUIFactory(getPage()).createLeaderboardGUI());
+	} 
 
 
 	// Create all the GUI controls. 
@@ -43,10 +49,10 @@ public class GameOverGUI extends AbstractGUI{
 	  submitButton = new GButton(getPage(), 294, 148, 63, 23);
 	  submitButton.setText("Submit");
 	  submitButton.setLocalColorScheme(GCScheme.GREEN_SCHEME);
-	  submitButton.addEventHandler(this, "button1_click1");
+	  submitButton.addEventHandler(this, "submitButtonClicked");
 	  label1 = new GLabel(getPage(), 87, 61, 233, 23);
 	  label1.setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
-	  label1.setText("You scored 1200 points!");
+	  label1.setText("You scored " + score +  " points!");
 	  label1.setOpaque(false);
 	  label2 = new GLabel(getPage(), 87, 88, 235, 20);
 	  label2.setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
@@ -67,7 +73,6 @@ public class GameOverGUI extends AbstractGUI{
 	@Override
 	public void dispose() {
 		super.dispose();
-		gameOverPanel.dispose();
-		gameOverPanel=null;
+		objectDisposal(gameOverPanel);
 	}
 }

@@ -1,14 +1,14 @@
 package processing.GUI;
 
+import java.awt.Font;
+
 import g4p_controls.GButton;
 import g4p_controls.GCScheme;
 import g4p_controls.GEvent;
 import processing.GUIFactory;
-import processing.Page;
-import processing.StateProperties;
 import processing.core.PApplet;
 
-public class MainMenuGUI extends AbstractGUI{
+public class MainMenuGUI extends AbstractGeneralGUI{
 	private GButton AlphabetButton; 
 	private GButton NumbersButton;
 	
@@ -17,21 +17,23 @@ public class MainMenuGUI extends AbstractGUI{
 	} 
 
 	public void alphabetButtonPressed(GButton source, GEvent event) { 
-		((Page) getPage()).stateSwitch(StateProperties.stateSignAlphabet, new GUIFactory(getPage()).createSignAlphabetGUI());
+		getPage().stateSwitch(new GUIFactory(getPage()).createSignAlphabetGUI());
 	} 
 
 	public void numbersButtonPressed(GButton source, GEvent event) {
-		((Page) getPage()).stateSwitch(StateProperties.stateSignNumbers, new GUIFactory(getPage()).createSignNumbersGUI());
+		getPage().stateSwitch(new GUIFactory(getPage()).createSignNumbersGUI());
 	} 
 	
 	  @Override
 	  protected void createGUI(){
-	  AlphabetButton = new GButton(getPage(), 228, 111, 449, 142);
+	  AlphabetButton = new GButton(getPage(), 245, 111, 449, 142);
 	  AlphabetButton.setText("Alphabet");
-	  AlphabetButton.setLocalColorScheme(GCScheme.CYAN_SCHEME);
+	  AlphabetButton.setFont(new Font("Dialog", Font.PLAIN, 30));
+	  AlphabetButton.setLocalColorScheme(GCScheme.CYAN_SCHEME); 
 	  AlphabetButton.addEventHandler(this, "alphabetButtonPressed");
 	  NumbersButton = new GButton(getPage(), 245, 371, 449, 142);
 	  NumbersButton.setText("Numbers");
+	  NumbersButton.setFont(new Font("Dialog", Font.PLAIN, 30));
 	  NumbersButton.setLocalColorScheme(GCScheme.CYAN_SCHEME);
 	  NumbersButton.addEventHandler(this, "numbersButtonPressed");
 	}
@@ -39,11 +41,7 @@ public class MainMenuGUI extends AbstractGUI{
 	@Override
 	public void dispose() {
 		super.dispose();
-		AlphabetButton.setVisible(false);
-		NumbersButton.setVisible(false);
-		AlphabetButton.dispose();
-		NumbersButton.dispose();
-		AlphabetButton=null;
-		NumbersButton=null;
+        objectDisposal(AlphabetButton);
+        objectDisposal(NumbersButton);
 	}
 }

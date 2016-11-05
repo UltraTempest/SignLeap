@@ -9,12 +9,11 @@ import g4p_controls.GAlign;
 import g4p_controls.GCScheme;
 import g4p_controls.GLabel;
 import processing.GUIFactory;
-import processing.StateProperties;
 import processing.core.PApplet;
 import processing.core.PImage;
 import recording.HandData;
 
-public class WelcomeGUI extends AbstractGUI{
+public class WelcomeGUI extends AbstractGeneralGUI{
 
 	public WelcomeGUI(PApplet page) {
 		super(page);
@@ -27,7 +26,7 @@ public class WelcomeGUI extends AbstractGUI{
 		  Frame frame = getPage().getLeap().frame();
 		  if(frame.hands().count()>0){
 			  getPage().setHand(new HandData().GetHandedness(frame.hands().frontmost()));
-			  getPage().stateSwitch(StateProperties.stateMainMenu, new GUIFactory(getPage()).createMainMenuGUI());
+			  getPage().stateSwitch(new GUIFactory(getPage()).createMainMenuGUI());
 		  }
 	}
 	
@@ -54,8 +53,6 @@ public class WelcomeGUI extends AbstractGUI{
 	@Override
 	public void dispose() {
 		super.dispose();
-		PreferredHandText.setVisible(false);
-		PreferredHandText.dispose();
+		objectDisposal(PreferredHandText);
 	}
-	
 }

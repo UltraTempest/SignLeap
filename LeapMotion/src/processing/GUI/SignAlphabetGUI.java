@@ -21,7 +21,7 @@ public class SignAlphabetGUI extends AbstractSignCharacterGUI{
 		  Frame frame = getPage().getLeap().frame();
 		  char currentLetter=alphabetArray[currentLetterPosition];
 		  if(frame.hands().count()>0){
-		  Map<String, Float> data=new HandData().getHandPosition(getPage().getLeap());
+		  Map<String, Float> data=new HandData().getOneHandPosition(getPage().getLeap());
 		  if(data!=null){
 			  double classProbValue = getPage().getClassifier().score(data,currentLetter);
 			  if(classProbValue>0.000000001)
@@ -30,13 +30,14 @@ public class SignAlphabetGUI extends AbstractSignCharacterGUI{
 				  getPage().text("",50,50);
 			  PApplet.println(classProbValue);
 			  if(classProbValue>0.7){
-				  getPage().incrementUserScore();
+				  incrementUserScore();;
 				  this.currentLetterPosition++;
 				  if(this.currentLetterPosition==26)
 					  this.currentLetterPosition=0;	  
 			  }
 		  	}
 		  }
+		  checkIfTimerExpired();
 	}
 
 	@Override

@@ -1,6 +1,7 @@
 package processing;
 
 import processing.GUI.IGUI;
+import processing.GUI.LeaderboardGUI;
 import processing.GUI.GameOverGUI;
 import processing.GUI.MainMenuGUI;
 import processing.GUI.SignAlphabetGUI;
@@ -15,8 +16,8 @@ private static PApplet page;
 	  GUIFactory.page=page;
   }
   
-  public IGUI createGameOverGUI(){
-	  return new GameOverGUI(page);
+  public IGUI createGameOverGUI(int score){
+	  return new GameOverGUI(page, score);
   }
   
   public IGUI createWelcomeGUI(){
@@ -33,5 +34,9 @@ private static PApplet page;
   
   public IGUI createMainMenuGUI(){
 	  return new MainMenuGUI(page);
+  }
+  
+  public IGUI createLeaderboardGUI(){
+	  return new LeaderboardGUI(page);
   }
 }

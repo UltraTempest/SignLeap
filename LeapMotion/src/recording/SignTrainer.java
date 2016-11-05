@@ -56,10 +56,10 @@ class Trainer{
 		   table="alpha_data";
 	   for(int i=0; i< NUM_SAMPLES;i++){
 	        Thread.sleep(SAMPLE_DELAY);
-	        Map<String, Float> sample = handData.getHandPosition(controller);
+	        Map<String, Float> sample = handData.getOneHandPosition(controller);
 	        while(sample==null || sample.size()!=NUM_FEATURES){
 	           System.out.println("Please place only " + hand + " hand in view");
-	            sample = handData.getHandPosition(controller);
+	            sample = handData.getOneHandPosition(controller);
 	        }
 	        System.out.println("Inserted " + training_char +" no." + i + ": " + sample);
 	        new SignedDB().insertSignValues("isl_" + hand + "_data.db", training_char, sample, table);

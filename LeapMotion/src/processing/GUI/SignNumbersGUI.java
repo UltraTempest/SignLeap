@@ -20,22 +20,23 @@ public class SignNumbersGUI extends AbstractSignCharacterGUI{
 	private void signNumbers(){	
 		  Frame frame = getPage().getLeap().frame();
 		  if(frame.hands().count()>0){
-		  Map<String, Float> data=new HandData().getHandPosition(getPage().getLeap());
+		  Map<String, Float> data=new HandData().getOneHandPosition(getPage().getLeap());
 		  if(data!=null){
 			  double score = getPage().getClassifier().score(data,numbersArray[currentLetterPosition]);
 			  if(score>0.9)
 				  getPage().text("Close!",50,50);
 			  else
 				  getPage().text("",50,50);
-			  getPage();
 			PApplet.println(score);
 			  if(score>0.7){
+				  incrementUserScore();
 				  this.currentLetterPosition++;
 				  if(this.currentLetterPosition==10)
 					  this.currentLetterPosition=0;	  
 			  }
 		  	}
 		  }
+		  checkIfTimerExpired();
 		}
 	
 	@Override

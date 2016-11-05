@@ -21,12 +21,8 @@ public class HighScoreManager {
     
     public ArrayList<Score> getScores() {
         loadScoreFile();
-        sort();
-        return scores;
-    }
-    
-    private void sort() {
         Collections.sort(scores);
+        return scores;
     }
     
     public void addScore(String name, int score) {
@@ -38,8 +34,11 @@ public class HighScoreManager {
     @SuppressWarnings("unchecked")
 	public void loadScoreFile() {
         try {
-        	FileInputStream file=new FileInputStream(HIGHSCORE_FILE);
-        	if(file.toString().equals("")){
+        	File f = new File(HIGHSCORE_FILE);
+        	FileInputStream file;
+        	if(f.exists() && !f.isDirectory())  
+        	    file=new FileInputStream(HIGHSCORE_FILE);
+        	else{	
         		PrintWriter writer = new PrintWriter(HIGHSCORE_FILE, "UTF-8");
         		writer.close();
         		file=new FileInputStream(HIGHSCORE_FILE);

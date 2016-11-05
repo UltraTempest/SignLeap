@@ -1,11 +1,11 @@
 package processing.GUI;
 
+import g4p_controls.GAbstractControl;
 import processing.Page;
 import processing.core.PApplet;
 
 public abstract class AbstractGUI implements IGUI{
   private static PApplet page;
-  protected boolean rendered=false;
   public AbstractGUI(PApplet page){
 	  AbstractGUI.page=page;
   }
@@ -14,15 +14,9 @@ public abstract class AbstractGUI implements IGUI{
 	  return (Page) AbstractGUI.page;
   }
   
-  protected void createGUI(){
-	//To be implemented by subclass
-  }
-  
-  @Override
-  public void render(){
-	  if(rendered==false)
-		createGUI();
-	  rendered=true;
+  protected void objectDisposal(GAbstractControl object){
+	  object.setVisible(false);
+	  object.dispose();
   }
   
   @Override

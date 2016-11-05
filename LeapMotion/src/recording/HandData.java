@@ -25,44 +25,87 @@ public class HandData {
 	 * @param Leap motion Controller
 	 * @return Map<String, Float>
 	**/
-	public Map<String, Float> getHandPosition(Controller controller)
+	public Map<String, Float> getOneHandPosition(Controller controller)
+	{
+	    Frame frame = controller.frame();
+	    while (frame.fingers().isEmpty())
+	    	return null;
+	    
+	    List<Vector> fingerBones=getFingerList(controller);
+	    
+	    // possible issue when more than one hand
+	    HandList hands = controller.frame().hands();
+	    Vector handCentre = null;
+	    for (Hand hand : hands){
+	        handCentre = hand.palmPosition();
+	    }
+	    
+	    if(handCentre==null)
+	    	return null;
+
+	    Map<String,Float> calibratedFingerBones = new LinkedHashMap<String,Float>();
+	    	for(int i=0; i< fingerBones.size();i++){
+	        Vector normalizedJoint = fingerBones.get(i).minus(handCentre);
+	        for(int j=0; j<3;j++)
+	        	if(j==0)
+	            calibratedFingerBones.put("feat" + Integer.toString(i*3+j),normalizedJoint.getX());
+	            else if(j==1)
+	            	calibratedFingerBones.put("feat" + Integer.toString(i*3+j),normalizedJoint.getY());
+	            else
+	            	calibratedFingerBones.put("feat" + Integer.toString(i*3+j),normalizedJoint.getZ());
+	    	}
+	            		
+	    return calibratedFingerBones;
+	}
+	
+	public Map<String, Float> getTwoHandsPosition(Controller controller)
 	{
 	    Frame frame = controller.frame();
 	    while (frame.fingers().isEmpty())
 	    	return null;
 
-	    FingerList fingers = controller.frame().fingers();
-	    List<Vector>finger_bones = new ArrayList<Vector>();
-		for (Finger finger:fingers){
-	        finger_bones.add(finger.bone(Bone.Type.TYPE_METACARPAL).nextJoint());
-	        finger_bones.add(finger.bone(Bone.Type.TYPE_PROXIMAL).nextJoint());
-	        finger_bones.add(finger.bone(Bone.Type.TYPE_INTERMEDIATE).nextJoint());
-	        finger_bones.add(finger.bone(Bone.Type.TYPE_DISTAL).nextJoint());
-		}
+	    List<Vector> fingerBones=getFingerList(controller);
 
 	    // possible issue when more than one hand
 	    HandList hands = controller.frame().hands();
-	    Vector hand_center = null;
+	    Vector[] handCentres = new Vector[2];
+	    int x=0;
 	    for (Hand hand : hands){
-	        hand_center = hand.palmPosition();
+	        handCentres[x] = hand.palmPosition();
+	        x++;
 	    }
 	    
-	    if(hand_center==null)
+	    if(handCentres[1]==null)
 	    	return null;
 
-	    Map<String,Float> calibrated_finger_bones = new LinkedHashMap<String,Float>();
-	    	for(int i=0; i< finger_bones.size();i++){
-	        Vector normalized_joint = (finger_bones.get(i).minus(hand_center));
+	    Map<String,Float> calibratedFingerBones = new LinkedHashMap<String,Float>();
+	    Vector handCentre=handCentres[0];
+	    	for(int i=0; i< fingerBones.size();i++){
+	    		if(i>=20)
+	    			handCentre=handCentres[1];
+	        Vector normalizedJoint = fingerBones.get(i).minus(handCentre);
 	        for(int j=0; j<3;j++)
 	        	if(j==0)
-	            calibrated_finger_bones.put("feat" + Integer.toString(i*3+j),normalized_joint.getX());
+	            calibratedFingerBones.put("feat" + Integer.toString(i*3+j),normalizedJoint.getX());
 	            else if(j==1)
-	            	calibrated_finger_bones.put("feat" + Integer.toString(i*3+j),normalized_joint.getY());
+	            	calibratedFingerBones.put("feat" + Integer.toString(i*3+j),normalizedJoint.getY());
 	            else
-	            	calibrated_finger_bones.put("feat" + Integer.toString(i*3+j),normalized_joint.getZ());
+	            	calibratedFingerBones.put("feat" + Integer.toString(i*3+j),normalizedJoint.getZ());
 	    	}
 	            		
-	    return calibrated_finger_bones;
+	    return calibratedFingerBones;
+	}
+	
+	private List<Vector> getFingerList(Controller controller){
+		  FingerList fingers = controller.frame().fingers();
+		    List<Vector>fingerBones = new ArrayList<Vector>();
+			for (Finger finger:fingers){
+		        fingerBones.add(finger.bone(Bone.Type.TYPE_METACARPAL).nextJoint());
+		        fingerBones.add(finger.bone(Bone.Type.TYPE_PROXIMAL).nextJoint());
+		        fingerBones.add(finger.bone(Bone.Type.TYPE_INTERMEDIATE).nextJoint());
+		        fingerBones.add(finger.bone(Bone.Type.TYPE_DISTAL).nextJoint());
+			}
+			return fingerBones;
 	}
 	
 	public enum Handedness {
