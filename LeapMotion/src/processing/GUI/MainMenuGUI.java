@@ -3,26 +3,25 @@ package processing.GUI;
 import g4p_controls.GButton;
 import g4p_controls.GCScheme;
 import g4p_controls.GEvent;
-import processing.GUIHandler;
+import processing.GUIFactory;
 import processing.Page;
+import processing.StateProperties;
 import processing.core.PApplet;
 
 public class MainMenuGUI extends AbstractGUI{
 	private GButton AlphabetButton; 
 	private GButton NumbersButton;
-	private String hand;
 	
-	public MainMenuGUI(PApplet page, String hand) {
+	public MainMenuGUI(PApplet page) {
 		super(page);
-		this.hand=hand;
 	} 
 
 	public void alphabetButtonPressed(GButton source, GEvent event) { 
-		((Page) getPage()).stateSwitch(Page.stateSignAlphabet, new GUIHandler(getPage()).getSignAlphabetGUI(hand));
+		((Page) getPage()).stateSwitch(StateProperties.stateSignAlphabet, new GUIFactory(getPage()).createSignAlphabetGUI());
 	} 
 
 	public void numbersButtonPressed(GButton source, GEvent event) {
-		((Page) getPage()).stateSwitch(Page.stateSignNumbers, new GUIHandler(getPage()).getSignNumbersGUI(hand));
+		((Page) getPage()).stateSwitch(StateProperties.stateSignNumbers, new GUIFactory(getPage()).createSignNumbersGUI());
 	} 
 	
 	  @Override

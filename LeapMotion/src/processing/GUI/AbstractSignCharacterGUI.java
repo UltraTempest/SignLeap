@@ -8,21 +8,23 @@ import processing.Page;
 import processing.core.PApplet;
 import processing.core.PImage;
 
-public abstract class AbstractSignCharacterGUI extends AbstractGUI{
+public abstract class AbstractSignCharacterGUI implements IGUI{
 	
 	protected final String imageType=".jpg";
 	protected int currentLetterPosition=0;
 	private PImage img;
 	protected GTextField signInstruction;
 	private GTextField scoreTimerText;
-	protected final String hand;
+	private static Page page;
 	
-	public AbstractSignCharacterGUI(PApplet page, String hand) {
-		super(page);
-		this.hand=hand;
+	public AbstractSignCharacterGUI(PApplet page) {
+		AbstractSignCharacterGUI.page=(Page) page;
 	}
 	
-	@Override
+	protected Page getPage(){
+		return AbstractSignCharacterGUI.page;
+	}
+	
 	protected void createGUI(){
 		  signInstruction = new GTextField(getPage(), 217, 513, 492, 81, G4P.SCROLLBARS_NONE);
 		  signInstruction.setOpaque(false);
@@ -38,12 +40,12 @@ public abstract class AbstractSignCharacterGUI extends AbstractGUI{
 		img=getPage().loadImage(imageName);
 		getPage().image(img,136, 65, 657, 408);
 		signInstruction.setText("Sign the letter: " + Character.toUpperCase(currentLetter) +" " + currentLetter);
-		scoreTimerText.setText("Score:                       Time left:" + ((Page) getPage()).time());
+		scoreTimerText.setText("Score:        " + getPage().getCurrentUserScore() + "               Time left:" + ((Page) getPage()).time());
 	}
 	
 	@Override
 	public void dispose(){
-		super.dispose();
+		getPage().background(230);
 		signInstruction.setVisible(false);
 		scoreTimerText.setVisible(false);
 		signInstruction.dispose();

@@ -1,6 +1,6 @@
 package processing.GUI;
 
-public interface GUI {
+public interface IGUI {
 	public void render();
 	public void dispose();
 }

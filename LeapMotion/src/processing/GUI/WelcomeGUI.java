@@ -2,12 +2,17 @@ package processing.GUI;
 
 import java.awt.Font;
 
+import com.leapmotion.leap.Frame;
+
 import g4p_controls.G4P;
 import g4p_controls.GAlign;
 import g4p_controls.GCScheme;
 import g4p_controls.GLabel;
+import processing.GUIFactory;
+import processing.StateProperties;
 import processing.core.PApplet;
 import processing.core.PImage;
+import recording.HandData;
 
 public class WelcomeGUI extends AbstractGUI{
 
@@ -17,6 +22,14 @@ public class WelcomeGUI extends AbstractGUI{
 
 	private GLabel PreferredHandText; 
 	private PImage img;
+	
+	private void checkIfHandPlacedOverLeap(){
+		  Frame frame = getPage().getLeap().frame();
+		  if(frame.hands().count()>0){
+			  getPage().setHand(new HandData().GetHandedness(frame.hands().frontmost()));
+			  getPage().stateSwitch(StateProperties.stateMainMenu, new GUIFactory(getPage()).createMainMenuGUI());
+		  }
+	}
 	
 	@Override
 	protected void createGUI(){
@@ -34,9 +47,8 @@ public class WelcomeGUI extends AbstractGUI{
 
 	@Override
 	public void render() {
-		if(PreferredHandText==null){
-			createGUI();
-		}
+		super.render();
+		checkIfHandPlacedOverLeap();
 	}
 
 	@Override
