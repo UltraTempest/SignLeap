@@ -35,15 +35,11 @@ public class HighScoreManager {
 	public void loadScoreFile() {
         try {
         	File f = new File(HIGHSCORE_FILE);
-        	FileInputStream file;
-        	if(f.exists() && !f.isDirectory())  
-        	    file=new FileInputStream(HIGHSCORE_FILE);
-        	else{	
+        	if(!f.exists() || !f.isDirectory()){
         		PrintWriter writer = new PrintWriter(HIGHSCORE_FILE, "UTF-8");
         		writer.close();
-        		file=new FileInputStream(HIGHSCORE_FILE);
         	}
-            inputStream = new ObjectInputStream(file);
+            inputStream = new ObjectInputStream(new FileInputStream(HIGHSCORE_FILE));
             scores = (ArrayList<Score>) inputStream.readObject();
         } catch (FileNotFoundException e) {
             System.out.println("[Laad] FNF Error: " + e.getMessage());

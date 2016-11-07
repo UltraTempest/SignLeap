@@ -1,6 +1,8 @@
 package processing.GUI;
 
 import java.awt.Font;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import g4p_controls.G4P;
 import g4p_controls.GAbstractControl;
@@ -21,6 +23,8 @@ public abstract class AbstractSignCharacterGUI extends AbstractGUI{
 	protected GTextField signInstruction;
 	private GTextField scoreTimerText;
 	private int userScore=0;
+	private final Timer timer = new Timer();
+	private int currentTime=0;
 	
 	protected void createGUI(){
 		  signInstruction = new GTextField(getPage(), 217, 513, 492, 81, G4P.SCROLLBARS_NONE);
@@ -31,6 +35,7 @@ public abstract class AbstractSignCharacterGUI extends AbstractGUI{
 		  scoreTimerText.setText("Score:                       Time left:");
 		  scoreTimerText.setOpaque(false);
 		  scoreTimerText.setFont(new Font("Dialog", Font.PLAIN, 16));
+		  time();
 	}
 	
 	 protected void objectDisposal(GAbstractControl object){
@@ -38,16 +43,20 @@ public abstract class AbstractSignCharacterGUI extends AbstractGUI{
 		  object.dispose();
 	  }
 	
-	protected int time(){
-		  int c;
-		  int climit = 20; //defined for a 60 second countdown
-
-		  c = climit*1000 - getPage().millis();
-		 return (c/(1000));
+	protected void time(){
+		timer.scheduleAtFixedRate(new TimerTask() {
+            int i = 60;//defined for a 60 second countdown
+            public void run() {
+                System.out.println(i--);
+                currentTime=i;
+                if (i< 0)
+                    timer.cancel();
+            }
+        }, 0, 1000);
 	}
 	
 	protected void checkIfTimerExpired(){
-		if(time()!=0)
+		if(currentTime!=0)
 			return;
 		getPage().stateSwitch(new GUIFactory(getPage()).createGameOverGUI(userScore));
 	}
@@ -64,7 +73,7 @@ public abstract class AbstractSignCharacterGUI extends AbstractGUI{
 		img=getPage().loadImage(imageName);
 		getPage().image(img,136, 65, 657, 408);
 		signInstruction.setText("Sign the letter: " + Character.toUpperCase(currentLetter) +" " + currentLetter);
-		scoreTimerText.setText("Score:        " + userScore + "               Time left:" + time());
+		scoreTimerText.setText("Score:        " + userScore + "               Time left:" + currentTime);
 	}
 	
 	@Override
