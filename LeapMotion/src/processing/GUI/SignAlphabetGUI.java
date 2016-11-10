@@ -6,7 +6,7 @@ import com.leapmotion.leap.Frame;
 
 import processing.core.PApplet;
 import recording.HandData;
-import recording.SignClassifier;
+import recording.OneHandSignClassifier;
 
 public class SignAlphabetGUI extends AbstractSignCharacterGUI{
 	
@@ -43,7 +43,7 @@ public class SignAlphabetGUI extends AbstractSignCharacterGUI{
 	@Override
 	public void render() {
 		char currentLetter=alphabetArray[currentLetterPosition];
-		String imageName= SignClassifier.language +  "/" + getPage().getHand() +"/" + alphabet + "/" + currentLetter + imageType;	
+		String imageName= OneHandSignClassifier.language +  "/" + getPage().getHand() +"/" + alphabet + "/" + currentLetter + imageType;	
 		if(signInstruction==null){
 			createGUI();
 		}

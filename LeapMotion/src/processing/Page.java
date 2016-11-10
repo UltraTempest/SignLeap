@@ -10,18 +10,22 @@ import g4p_controls.GEvent;
 import g4p_controls.GPanel;
 import processing.GUI.IGUI;
 import processing.core.PApplet;
+import recording.AbstractSignClassifier;
 import recording.HandData;
 import recording.HandData.Handedness;
-import recording.SignClassifier;
+import recording.OneHandSignClassifier;
+import recording.TwoHandSignClassifier;
 
 public class Page extends PApplet{
 	
 	private final Controller controller = new Controller();
 	private Handedness hand;
 	
-	private SignClassifier signClass;
-	private SignClassifier leftSignClass=new SignClassifier(Handedness.LEFT.toString(), "alpha");
-	private SignClassifier rightSignClass=new SignClassifier(Handedness.RIGHT.toString(), "alpha");
+	private OneHandSignClassifier oneSignClass;
+	private TwoHandSignClassifier twoSignClass;
+	//private TwoHandSignClassifier twoSignClass= new TwoHandSignClassifier(Handedness.RIGHT.toString());
+	private OneHandSignClassifier leftSignClass=new OneHandSignClassifier(Handedness.LEFT.toString(), "alpha");
+	private OneHandSignClassifier rightSignClass=new OneHandSignClassifier(Handedness.RIGHT.toString(), "num");
 	
 	private final GUIFactory guiFactory= new GUIFactory(this);
 	private IGUI currentGUIDisplayed;
@@ -55,18 +59,22 @@ public class Page extends PApplet{
 	 public void setHand(Handedness hand){
 		this.hand=hand;
 		if(this.hand.equals(Handedness.RIGHT))
-			  signClass=rightSignClass;
+			  oneSignClass=rightSignClass;
 			  else
-				  signClass=leftSignClass;
+				  oneSignClass=leftSignClass;
 	}
 	
 	 public String getHand(){
 		return this.hand.toString();
 	}
 	
-	 public SignClassifier getClassifier(){
-		return this.signClass;
+	 public AbstractSignClassifier getClassifier(){
+		return this.oneSignClass;
 	}
+	 
+	 public AbstractSignClassifier getTwoHandClassifier(){
+			return this.twoSignClass;
+		}
 	 
 	 public void handleButtonEvents(GButton button, GEvent event) { /* Not called */ }
 	 
@@ -82,7 +90,7 @@ public class Page extends PApplet{
 	  text( frame.fingers().count() + " Fingers", 50, 100 );
 	  if(frame.hands().count()>0){
 		  Map<String, Float> data=new HandData().getOneHandPosition(controller);
-		  text( "Letter:" + signClass.classify(data), 50, 150);
+		  text( "Letter:" + oneSignClass.classify(data), 50, 150);
 	  }
 	}
 }

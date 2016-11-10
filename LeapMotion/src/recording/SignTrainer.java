@@ -11,15 +11,16 @@ import recording.HandData.Handedness;
 public class SignTrainer {
 	
 	public static void main(String args[]){
-		new Trainer().train();
+		new OneHandTrainer().train();
+		//new TwoHandTrainer().train();
 	}
 }	
 
-class Trainer{
+class OneHandTrainer{
 	
-	private final int NUM_SAMPLES = 250;
-	private final long SAMPLE_DELAY = (long) 0.1;
-	public static final int NUM_FEATURES = 60;
+	protected final int NUM_SAMPLES = 1010;
+	protected final long SAMPLE_DELAY = (long) 0.1;
+	public static final int ONE_HAND_NUM_FEATURES = 60;
 	
 	public void train(){
 		Scanner scan = new Scanner(System.in);
@@ -32,21 +33,20 @@ class Trainer{
 			}
 	}
 
-	private char getCharToTrain(Scanner scan){
+	protected char getCharToTrain(Scanner scan){
 		System.out.println("Enter char to train: ");
 		char training_char = scan.nextLine().charAt(0);
 	    return Character.toLowerCase(training_char);
 	}
 	
-	private Handedness getHandUsed(Scanner scan){
+	protected Handedness getHandUsed(Scanner scan){
 		System.out.println("Hand to be used? r/l?");
 		char handChar = scan.nextLine().charAt(0);
 		scan.close();
 	    return handChar=='r'? Handedness.RIGHT : Handedness.LEFT;
 	}
 
-
-	private void trainChar(char training_char, Handedness hand) throws InterruptedException{
+	protected void trainChar(char training_char, Handedness hand) throws InterruptedException{
 	   Controller controller = new Controller();
 	   HandData handData=new HandData();
 	   String table;
@@ -57,7 +57,7 @@ class Trainer{
 	   for(int i=0; i< NUM_SAMPLES;i++){
 	        Thread.sleep(SAMPLE_DELAY);
 	        Map<String, Float> sample = handData.getOneHandPosition(controller);
-	        while(sample==null || sample.size()!=NUM_FEATURES){
+	        while(sample==null || sample.size()!=ONE_HAND_NUM_FEATURES){
 	           System.out.println("Please place only " + hand + " hand in view");
 	            sample = handData.getOneHandPosition(controller);
 	        }
@@ -66,4 +66,36 @@ class Trainer{
 	   }
 	   System.out.println("Done training");
 	}
+}
+
+class TwoHandTrainer extends OneHandTrainer{
+	public static final int TW0_HAND_NUM_FEATURES = 120;
+	private final int prepDelay=20;
+	
+	@Override
+	protected void trainChar(char training_char, Handedness hand) throws InterruptedException{
+		   Controller controller = new Controller();
+		   HandData handData=new HandData();
+		   SignedDB db= new SignedDB();
+		   String table;
+		   if(hand.equals(Handedness.RIGHT))
+			   table="right_data";
+		   else
+			   table="left_data";
+		   for(int i=0; i< NUM_SAMPLES+prepDelay;i++){
+		        Thread.sleep(SAMPLE_DELAY);
+		        Map<String, Float> sample = handData.getTwoHandsPosition(controller);
+		        while(sample==null || sample.size()!=TW0_HAND_NUM_FEATURES){
+		           System.out.println("Please place 2 hands in view");
+		            sample = handData.getTwoHandsPosition(controller);
+		        }
+		        if(i<prepDelay)
+		        	System.out.println("Preparing:" + (prepDelay-i));
+		        else{
+		        	db.insertSignValues("isl_two_hand_data.db", training_char, sample, table);
+		        	System.out.println("Inserted " + training_char +" no." + (i-prepDelay) + ": " + sample);
+		        }
+		   }
+		   System.out.println("Done training");
+		}
 }

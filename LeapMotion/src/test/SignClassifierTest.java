@@ -4,26 +4,37 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
+import recording.AbstractSignClassifier;
 import recording.HandData.Handedness;
-import recording.SignClassifier;
+import recording.OneHandSignClassifier;
+import recording.TwoHandSignClassifier;
 import weka.core.Instance;
 
 public class SignClassifierTest{
 	
 	@Test
+	public void twoHandClassificationTest(){
+		classicationTest(new TwoHandSignClassifier(Handedness.RIGHT.toString()));
+		classicationTest(new TwoHandSignClassifier(Handedness.LEFT.toString()));
+	}
+	
+	@Test
 	public void rightClassificationTest(){
-		classificationTest(Handedness.RIGHT, "num");
-		classificationTest(Handedness.RIGHT, "alpha");
+		oneHandClassificationTest(Handedness.RIGHT, "num");
+		oneHandClassificationTest(Handedness.RIGHT, "alpha");
 	}
 	
 	@Test
 	public void leftClassificationTest(){
-		classificationTest(Handedness.LEFT, "num");
-		classificationTest(Handedness.LEFT, "alpha");
+		oneHandClassificationTest(Handedness.LEFT, "num");
+		oneHandClassificationTest(Handedness.LEFT, "alpha");
 	}
 	
-	public void classificationTest(Handedness hand, String type){
-		 SignClassifier signCls=new SignClassifier(hand.toString(), type);
+	public void oneHandClassificationTest(Handedness hand, String type){
+		 classicationTest(new OneHandSignClassifier(hand.toString(), type));
+	}
+	
+	private void classicationTest(AbstractSignClassifier signCls){
 		 /* Counters for correct and wrong predictions. */
 		 int correct = 0, wrong = 0;
 		 /* Classify all instances and check with the correct class values */

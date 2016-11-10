@@ -6,12 +6,12 @@ import com.leapmotion.leap.Frame;
 
 import processing.core.PApplet;
 import recording.HandData;
-import recording.SignClassifier;
+import recording.OneHandSignClassifier;
 
 public class SignNumbersGUI extends AbstractSignCharacterGUI{
 	
 	private final String numbers="Numbers";
-	private final char[] numbersArray = {0,1,2,3,4,5,6,7,8,9,10};
+	private final char[] numbersArray = {'1','2','3','4','5','6','7','8','9'};
 	
 	public SignNumbersGUI(PApplet page) {
 		super(page);
@@ -20,9 +20,17 @@ public class SignNumbersGUI extends AbstractSignCharacterGUI{
 	private void signNumbers(){	
 		  Frame frame = getPage().getLeap().frame();
 		  if(frame.hands().count()>0){
-		  Map<String, Float> data=new HandData().getOneHandPosition(getPage().getLeap());
+			  Map<String, Float> data;
+			  if(currentLetterPosition<=5)
+		       data=new HandData().getOneHandPosition(getPage().getLeap());
+			  else
+				  data=new HandData().getTwoHandsPosition(getPage().getLeap());
 		  if(data!=null){
-			  double score = getPage().getClassifier().score(data,numbersArray[currentLetterPosition]);
+			  double score;
+			  if(currentLetterPosition<=5)
+			  score = getPage().getClassifier().score(data,numbersArray[currentLetterPosition]);
+			  else
+				  score = getPage().getTwoHandClassifier().score(data,numbersArray[currentLetterPosition]);
 			  if(score>0.9)
 				  getPage().text("Close!",50,50);
 			  else
@@ -40,9 +48,15 @@ public class SignNumbersGUI extends AbstractSignCharacterGUI{
 		}
 	
 	@Override
+	protected void updateSignCharactersGUI(char currentLetter, String imageName){
+        super.updateSignCharactersGUI(currentLetter, imageName);
+		signInstruction.setText("Sign the number: " + Character.toUpperCase(currentLetter));
+	}
+	
+	@Override
 	public void render() {
 		char currentNumber= numbersArray[currentLetterPosition];
-		  String imageName= SignClassifier.language +  "/" + getPage().getHand() +"/" + numbers + "/" + currentNumber + imageType;
+		  String imageName= OneHandSignClassifier.language +  "/" + getPage().getHand() +"/" + numbers + "/" + currentNumber + imageType;
 			if(signInstruction==null){
 				createGUI();
 			}
