@@ -26,7 +26,8 @@ public abstract class AbstractSignCharacterGUI extends AbstractGUI{
 	private final Timer timer = new Timer();
 	private int currentTime=0;
 	
-	protected void createGUI(){
+	protected void createGUI(String classifierToSet){
+		  getPage().setClassifier(classifierToSet);
 		  signInstruction = new GTextField(getPage(), 217, 513, 492, 81, G4P.SCROLLBARS_NONE);
 		  signInstruction.setOpaque(false);
 		  signInstruction.setFont(new Font("Dialog", Font.PLAIN, 58));
@@ -45,7 +46,7 @@ public abstract class AbstractSignCharacterGUI extends AbstractGUI{
 	
 	protected void time(){
 		timer.scheduleAtFixedRate(new TimerTask() {
-            int i = 60;//defined for a 60 second countdown
+            int i = 62;//defined for a 60 second countdown
             public void run() {
             	i--;
                 currentTime=i;

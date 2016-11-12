@@ -18,13 +18,14 @@ import weka.core.DenseInstance;
 import weka.core.FastVector;
 import weka.core.Instance;
 import weka.core.Instances;
+import weka.core.WekaPackageManager;
 
 @SuppressWarnings("deprecation")
 public abstract class AbstractSignClassifier {
 		
 		public static final String language= "ISL";
 		protected FastVector<Attribute> fvWekaAttributes;
-		protected Classifier cls;
+		protected Classifier classifier;
 		protected Instances trainingSet;
 		
 protected void setupClassifier(SimpleEntry<List<ArrayList<Double>>, List<Character>> entry, final int features, final String filename){
@@ -67,21 +68,26 @@ protected void setupClassifier(SimpleEntry<List<ArrayList<Double>>, List<Charact
 		  }
 			 
 			 try {
-				 
+				 WekaPackageManager.loadPackages( false, true, false );
 				 File f = new File(filename);
 				 if(f.exists() && !f.isDirectory()) { 
 					// deserialize model
-					 cls= (Classifier) weka.core.SerializationHelper.read(filename);
+					 classifier= (Classifier) weka.core.SerializationHelper.read(filename);
 				 }
 				 else{
-					// train classifier
-				cls=new IBk();
-				//cls=new NaiveBayes();
-				//cls=new J48();
-				//cls= new SMO();
-				cls.buildClassifier(trainingSet);
+				// train classifier
+//				classifier=(Classifier) Class.forName(
+//			             "weka.classifiers.functions.LibSVM" ).newInstance();
+//				String options = ( "-S 0 -K 0 -D 3 -G 0.0001 -R 0.0 -N 0.5 -M 40.0 -C 50 -E 0.001 -P 0.1" );
+//				String[] optionsArray = options.split( " " );
+//				    ((AbstractClassifier) classifier).setOptions( optionsArray );
+					 classifier=new IBk();
+				//classifier=new NaiveBayes();
+				//classifier=new J48();
+				//classifier= new SMO();
+				classifier.buildClassifier(trainingSet);
 				// serialize model
-				 weka.core.SerializationHelper.write(filename, cls);
+				 weka.core.SerializationHelper.write(filename, classifier);
 				 }
 			} catch (Exception e) {
 				System.err.println("Error during classifier building:"+ e);
@@ -93,20 +99,20 @@ protected void setupClassifier(SimpleEntry<List<ArrayList<Double>>, List<Charact
 	        String[] algorithms = {"nb","smo","knn","j48"};
 	        for(int w=0; w<algorithms.length;w++){
 	            if(algorithms[w].equals("nb"))
-	            cls = new NaiveBayes();
+	            classifier = new NaiveBayes();
 	            if(algorithms[w].equals("smo"))
-	            cls = new SMO();
+	            classifier = new SMO();
 	            if(algorithms[w].equals("knn"))
-	            cls = new IBk();
+	            classifier = new IBk();
 	            if(algorithms[w].equals("j48"))
-	            cls = new J48();
+	            classifier = new J48();
 
 	        System.out.println("==========================================================================");
 	        System.out.println("training using " + algorithms[w] + " classifier");
 
 	        Evaluation eval = new Evaluation(trainingSet);
 	        //perform 10 fold cross validation
-	        eval.crossValidateModel(cls, trainingSet, 10, new Random(1));
+	        eval.crossValidateModel(classifier, trainingSet, 10, new Random(1));
 	        String output = eval.toSummaryString();
 	        System.out.println(output);
 
@@ -118,7 +124,7 @@ protected void setupClassifier(SimpleEntry<List<ArrayList<Double>>, List<Charact
 		
 		public double classifyInstance(Instance data){
 				try {
-					return cls.classifyInstance(data);
+					return classifier.classifyInstance(data);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -127,7 +133,7 @@ protected void setupClassifier(SimpleEntry<List<ArrayList<Double>>, List<Charact
 		
 		public String classify(Map<String, Float> data){
 			try {
-				return trainingSet.classAttribute().value((int)  cls.classifyInstance(createInstanceFromData(data)));
+				return trainingSet.classAttribute().value((int)  classifier.classifyInstance(createInstanceFromData(data)));
 			} catch (Exception e) {
 				System.err.println("Error during classifier building:" + e);
 			}
@@ -145,7 +151,7 @@ protected void setupClassifier(SimpleEntry<List<ArrayList<Double>>, List<Charact
 		
 		private double getProbabilityForChar(Instance sampleInstance, char c) throws Exception{
 				int position=trainingSet.classAttribute().indexOfValue(Character.toString(c));
-				double[] fDistribution = cls.distributionForInstance(sampleInstance);	
+				double[] fDistribution = classifier.distributionForInstance(sampleInstance);	
 				return fDistribution[position];
 		}
 		

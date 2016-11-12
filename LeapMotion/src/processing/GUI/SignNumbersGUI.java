@@ -12,6 +12,7 @@ public class SignNumbersGUI extends AbstractSignCharacterGUI{
 	
 	private final String numbers="Numbers";
 	private final char[] numbersArray = {'1','2','3','4','5','6','7','8','9'};
+	private char previousChar;
 	
 	public SignNumbersGUI(PApplet page) {
 		super(page);
@@ -27,10 +28,7 @@ public class SignNumbersGUI extends AbstractSignCharacterGUI{
 				  data=new HandData().getTwoHandsPosition(getPage().getLeap());
 		  if(data!=null){
 			  double score;
-			  if(currentLetterPosition<=5)
-			  score = getPage().getClassifier().score(data,numbersArray[currentLetterPosition]);
-			  else
-				  score = getPage().getTwoHandClassifier().score(data,numbersArray[currentLetterPosition]);
+			  score = getPage().getClassifier().score(data,previousChar);
 			  if(score>0.9)
 				  getPage().text("Close!",50,50);
 			  else
@@ -56,16 +54,19 @@ public class SignNumbersGUI extends AbstractSignCharacterGUI{
 	@Override
 	public void render() {
 		char currentNumber= numbersArray[currentLetterPosition];
-		  String imageName= OneHandSignClassifier.language +  "/" + getPage().getHand() +"/" + numbers + "/" + currentNumber + imageType;
+		String imageName= OneHandSignClassifier.language +  "/" + getPage().getHand() +"/" + numbers + "/" + currentNumber + imageType;
 			if(signInstruction==null){
-				createGUI();
+				createGUI(getPage().getHand()+"num");
 			}
 			  updateSignCharactersGUI(currentNumber, imageName);
+			  if(currentNumber!=previousChar){
+				  previousChar=currentNumber;
+				  try {
+						Thread.sleep(500);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+			  }
 			  signNumbers();
-	}
-
-	@Override
-	public void dispose() {
-		super.dispose();
 	}
 }

@@ -1,13 +1,14 @@
 package processing.GUI;
 
 import java.awt.Font;
+import java.io.File;
 
-import com.leapmotion.leap.Frame;
-
+import com.leapmotion.leap.Controller;
 import g4p_controls.G4P;
 import g4p_controls.GAlign;
 import g4p_controls.GCScheme;
 import g4p_controls.GLabel;
+import leaderboard.HighScoreManager;
 import processing.GUIFactory;
 import processing.core.PApplet;
 import processing.core.PImage;
@@ -22,12 +23,20 @@ public class WelcomeGUI extends AbstractGeneralGUI{
 	private GLabel PreferredHandText; 
 	private PImage img;
 	
-	private void checkIfHandPlacedOverLeap(){
-		  Frame frame = getPage().getLeap().frame();
-		  if(frame.hands().count()>0){
-			  getPage().setHand(new HandData().GetHandedness(frame.hands().frontmost()));
-			  getPage().stateSwitch(new GUIFactory(getPage()).createMainMenuGUI());
+	private void changeStateIfRequired(){
+		  HandData handInfo = new HandData();
+		  Controller leap = getPage().getLeap();
+		  if(handInfo.checkIfHandPlacedOverLeap(getPage().getLeap())){
+			  getPage().setHand(handInfo.GetHandedness(leap.frame().hands().frontmost()));
+			  if(!checkLeaderBoardFileExistence())
+			  getPage().stateSwitch(new GUIFactory(getPage()).createIntroductionGUI());
+			  else
+				  getPage().stateSwitch(new GUIFactory(getPage()).createMainMenuGUI());
 		  }
+	}
+	
+	private boolean checkLeaderBoardFileExistence(){
+		return new File(HighScoreManager.HIGHSCORE_FILE).exists();
 	}
 	
 	@Override
@@ -47,7 +56,7 @@ public class WelcomeGUI extends AbstractGeneralGUI{
 	@Override
 	public void render() {
 		super.render();
-		checkIfHandPlacedOverLeap();
+		changeStateIfRequired();
 	}
 
 	@Override

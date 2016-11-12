@@ -8,7 +8,7 @@ public class HighScoreManager {
     private ArrayList<Score> scores;
 
     // The name of the file where the highscores will be saved
-    private static final String HIGHSCORE_FILE = "leaderboard.dat";
+    public static final String HIGHSCORE_FILE = "leaderboard.dat";
 
     //Initialising an in and outputStream for working with the file
     ObjectOutputStream outputStream = null;
@@ -34,10 +34,11 @@ public class HighScoreManager {
     @SuppressWarnings("unchecked")
 	public void loadScoreFile() {
         try {
-        	File f = new File(HIGHSCORE_FILE);
-        	if(!f.exists() || !f.isDirectory()){
+        	File file = new File(HIGHSCORE_FILE);
+        	if(!file.exists() || file.toString().equals("")){
         		PrintWriter writer = new PrintWriter(HIGHSCORE_FILE, "UTF-8");
         		writer.close();
+        		return;
         	}
             inputStream = new ObjectInputStream(new FileInputStream(HIGHSCORE_FILE));
             scores = (ArrayList<Score>) inputStream.readObject();

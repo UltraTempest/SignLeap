@@ -14,7 +14,7 @@ public class OneHandSignClassifier extends AbstractSignClassifier{
 	
 		public OneHandSignClassifier(String hand,String type){
 			
-		final String filename=language +"_" +  hand +  ".model";
+		final String filename=language +"_" +  hand + "_" + type + ".model";
 		SimpleEntry<List<ArrayList<Double>>, List<Character>> entry=null;
 		if(type.equals("num"))
 			entry=new SignedDB().getOneHandNumberData(language, hand,OneHandTrainer.ONE_HAND_NUM_FEATURES);

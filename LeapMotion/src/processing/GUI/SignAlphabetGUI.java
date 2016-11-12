@@ -12,6 +12,7 @@ public class SignAlphabetGUI extends AbstractSignCharacterGUI{
 	
 	private final String alphabet="Alphabet";
 	private final char[] alphabetArray = "abcdefghijklmnopqrstuvwxyz".toCharArray();
+	private char previousChar;
 	
 	public SignAlphabetGUI(PApplet page) {
 		super(page);
@@ -19,11 +20,10 @@ public class SignAlphabetGUI extends AbstractSignCharacterGUI{
 	
 	private void signAlphabet(){
 		  Frame frame = getPage().getLeap().frame();
-		  char currentLetter=alphabetArray[currentLetterPosition];
 		  if(frame.hands().count()>0){
 		  Map<String, Float> data=new HandData().getOneHandPosition(getPage().getLeap());
 		  if(data!=null){
-			  double classProbValue = getPage().getClassifier().score(data,currentLetter);
+			  double classProbValue = getPage().getClassifier().score(data,previousChar);
 			  if(classProbValue>0.000000001)
 				  getPage().text("Close!",50,50);
 			  else
@@ -45,14 +45,17 @@ public class SignAlphabetGUI extends AbstractSignCharacterGUI{
 		char currentLetter=alphabetArray[currentLetterPosition];
 		String imageName= OneHandSignClassifier.language +  "/" + getPage().getHand() +"/" + alphabet + "/" + currentLetter + imageType;	
 		if(signInstruction==null){
-			createGUI();
+			createGUI(getPage().getHand()+"alpha");
 		}
 		  updateSignCharactersGUI(currentLetter, imageName);
+		  if(currentLetter!=previousChar){
+			  previousChar=currentLetter;
+			  try {
+				Thread.sleep(500);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		  }
 		  signAlphabet();
-	}
-
-	@Override
-	public void dispose() {
-		super.dispose();
 	}
 }

@@ -1,6 +1,7 @@
 package processing;
 
 import processing.GUI.IGUI;
+import processing.GUI.IntroductionGUI;
 import processing.GUI.LeaderboardGUI;
 import processing.GUI.GameOverGUI;
 import processing.GUI.MainMenuGUI;
@@ -22,6 +23,10 @@ private static PApplet page;
   
   public IGUI createWelcomeGUI(){
 	  return new WelcomeGUI(page);
+  }
+  
+  public IGUI createIntroductionGUI(){
+	  return new IntroductionGUI(page);
   }
   
   public IGUI createSignAlphabetGUI(){

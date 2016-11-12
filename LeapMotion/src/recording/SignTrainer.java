@@ -18,7 +18,7 @@ public class SignTrainer {
 
 class OneHandTrainer{
 	
-	protected final int NUM_SAMPLES = 1010;
+	private final int NUM_SAMPLES = 750;
 	protected final long SAMPLE_DELAY = (long) 0.1;
 	public static final int ONE_HAND_NUM_FEATURES = 60;
 	
@@ -69,6 +69,7 @@ class OneHandTrainer{
 }
 
 class TwoHandTrainer extends OneHandTrainer{
+	private final int NUM_SAMPLES = 1010;
 	public static final int TW0_HAND_NUM_FEATURES = 120;
 	private final int prepDelay=20;
 	
