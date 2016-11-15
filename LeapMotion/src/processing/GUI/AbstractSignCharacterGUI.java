@@ -7,7 +7,6 @@ import java.util.TimerTask;
 import g4p_controls.G4P;
 import g4p_controls.GAbstractControl;
 import g4p_controls.GTextField;
-import processing.GUIFactory;
 import processing.core.PApplet;
 import processing.core.PImage;
 
@@ -59,7 +58,7 @@ public abstract class AbstractSignCharacterGUI extends AbstractGUI{
 	protected void checkIfTimerExpired(){
 		if(currentTime!=0)
 			return;
-		getPage().stateSwitch(new GUIFactory(getPage()).createGameOverGUI(userScore));
+		getPage().switchToGameOverGUI(userScore);
 	}
 	
 	protected void incrementUserScore(){

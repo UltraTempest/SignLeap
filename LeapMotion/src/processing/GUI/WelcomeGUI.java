@@ -9,7 +9,6 @@ import g4p_controls.GAlign;
 import g4p_controls.GCScheme;
 import g4p_controls.GLabel;
 import leaderboard.HighScoreManager;
-import processing.GUIFactory;
 import processing.core.PApplet;
 import processing.core.PImage;
 import recording.HandData;
@@ -29,9 +28,9 @@ public class WelcomeGUI extends AbstractGeneralGUI{
 		  if(handInfo.checkIfHandPlacedOverLeap(getPage().getLeap())){
 			  getPage().setHand(handInfo.GetHandedness(leap.frame().hands().frontmost()));
 			  if(!checkLeaderBoardFileExistence())
-			  getPage().stateSwitch(new GUIFactory(getPage()).createIntroductionGUI());
+			  getPage().switchToIntroductionGUI();
 			  else
-				  getPage().stateSwitch(new GUIFactory(getPage()).createMainMenuGUI());
+				  getPage().switchToMainMenuGUI();
 		  }
 	}
 	

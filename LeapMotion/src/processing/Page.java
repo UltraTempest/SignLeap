@@ -47,7 +47,7 @@ public class Page extends PApplet{
 		currentGUIDisplayed.render();
 	}
 	
-	 public void stateSwitch(IGUI gui){
+	 private void stateSwitch(IGUI gui){
 		currentGUIDisplayed.dispose();
 		this.currentGUIDisplayed=gui;
 	} 
@@ -70,6 +70,30 @@ public class Page extends PApplet{
 	 
 	 public void setClassifier(String classifierToSet){
 		 currentClassifier=classifierMap.get(classifierToSet);
+	 }
+	 
+	 public void switchToIntroductionGUI(){
+		 stateSwitch(guiFactory.createIntroductionGUI());
+	 }
+	 
+	 public void switchToMainMenuGUI(){
+		 stateSwitch(guiFactory.createMainMenuGUI());
+	 }
+	 
+	 public void switchToSignNumbersGUI(){
+		 stateSwitch(guiFactory.createSignNumbersGUI());
+	 }
+	 
+	 public void switchToSignAlphabetGUI(){
+		 stateSwitch(guiFactory.createSignAlphabetGUI());
+	 }
+	 
+	 public void switchToLeaderboardGUI(){
+		 stateSwitch(guiFactory.createLeaderboardGUI());
+	 }
+	 
+	 public void switchToGameOverGUI(int userScore){
+		 stateSwitch(guiFactory.createGameOverGUI(userScore));
 	 }
 	 
 	 public void handleButtonEvents(GButton button, GEvent event) { /* Not called */ }

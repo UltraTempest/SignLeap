@@ -4,7 +4,6 @@ import java.awt.Font;
 
 import g4p_controls.G4P;
 import g4p_controls.GTextField;
-import processing.GUIFactory;
 import processing.core.PApplet;
 import recording.HandData;
 
@@ -34,7 +33,7 @@ public class IntroductionGUI extends AbstractGeneralGUI{
 			 postionOfStringDisplayed++;
 		 
 		 if(postionOfStringDisplayed==introTextArray.length){
-			 getPage().stateSwitch(new GUIFactory(getPage()).createMainMenuGUI());
+			 getPage().switchToMainMenuGUI();
 		     return;
 		 }
 		 if(!introText.getText().equals(introTextArray[postionOfStringDisplayed])){

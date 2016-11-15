@@ -7,7 +7,6 @@ import g4p_controls.GCScheme;
 import g4p_controls.GEvent;
 import leaderboard.HighScoreManager;
 import leaderboard.Score;
-import processing.GUIFactory;
 import processing.core.PApplet;
 
 public class LeaderboardGUI extends AbstractGeneralGUI{
@@ -19,7 +18,7 @@ public class LeaderboardGUI extends AbstractGeneralGUI{
 	}
 	
 	public void homeButtonClicked(GButton button, GEvent event){
-		getPage().stateSwitch(new GUIFactory(getPage()).createMainMenuGUI());
+		getPage().switchToMainMenuGUI();
 	}
 	
 	@Override

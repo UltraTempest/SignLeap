@@ -5,7 +5,6 @@ import java.awt.Font;
 import g4p_controls.GButton;
 import g4p_controls.GCScheme;
 import g4p_controls.GEvent;
-import processing.GUIFactory;
 import processing.core.PApplet;
 
 public class MainMenuGUI extends AbstractGeneralGUI{
@@ -17,11 +16,11 @@ public class MainMenuGUI extends AbstractGeneralGUI{
 	} 
 
 	public void alphabetButtonPressed(GButton source, GEvent event) { 
-		getPage().stateSwitch(new GUIFactory(getPage()).createSignAlphabetGUI());
+		getPage().switchToSignAlphabetGUI();
 	} 
 
 	public void numbersButtonPressed(GButton source, GEvent event) {
-		getPage().stateSwitch(new GUIFactory(getPage()).createSignNumbersGUI());
+		getPage().switchToSignNumbersGUI();
 	} 
 	
 	  @Override

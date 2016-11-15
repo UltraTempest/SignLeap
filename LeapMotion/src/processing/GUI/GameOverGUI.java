@@ -9,7 +9,6 @@ import g4p_controls.GLabel;
 import g4p_controls.GPanel;
 import g4p_controls.GTextField;
 import leaderboard.HighScoreManager;
-import processing.GUIFactory;
 import processing.core.PApplet;
 
 public class GameOverGUI extends AbstractGeneralGUI{
@@ -31,7 +30,7 @@ public class GameOverGUI extends AbstractGeneralGUI{
 
 	public void submitButtonClicked(GButton source, GEvent event) {
 		new HighScoreManager().addScore(userInputName.getText(), score);
-		getPage().stateSwitch(new GUIFactory(getPage()).createLeaderboardGUI());
+		getPage().switchToLeaderboardGUI();
 	} 
 
 
