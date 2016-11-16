@@ -14,9 +14,9 @@ public abstract class AbstractGeneralGUI extends AbstractGUI{
 	 
 	  @Override
 	  public void render(){
-		  if(rendered==false)
-			createGUI();
-		  rendered=true;
-	  }
-	
+		  if(rendered==false){
+				createGUI();
+			    rendered=true;
+			  }
+	  }	
 }

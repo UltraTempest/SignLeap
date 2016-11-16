@@ -5,6 +5,7 @@ import com.leapmotion.leap.Finger;
 import com.leapmotion.leap.FingerList;
 import com.leapmotion.leap.Frame;
 import com.leapmotion.leap.Gesture;
+import com.leapmotion.leap.GestureList;
 import com.leapmotion.leap.Hand;
 import com.leapmotion.leap.HandList;
 import com.leapmotion.leap.Vector;
@@ -97,13 +98,12 @@ public class HandData {
 	    return calibratedFingerBones;
 	}
 	
-	   public boolean isSwiped(Controller controller){
-		   Frame frame=controller.frame();
-		    for (int i = 0; i < frame.gestures().count(); i++) {
-		        Gesture gesture = frame.gestures().get(i);
-		        if (gesture.type().equals(Gesture.Type.TYPE_SWIPE))
-		            return true;
-		    }
+	   public boolean isTapped(Controller controller){
+		   GestureList gestures=controller.frame().gestures();
+		   for(Gesture gesture: gestures){
+		        if(gesture.type().equals(Gesture.Type.TYPE_KEY_TAP) || gesture.type().equals(Gesture.Type.TYPE_CIRCLE))
+		        return true;
+		   }
 		    return false;
 	   }
 	   

@@ -51,6 +51,11 @@ public class WelcomeGUI extends AbstractGeneralGUI{
 		  img=getPage().loadImage(logoFile);
 		  getPage().image(img,31, 7, 886, 482);
 		}
+	
+	@Override
+	public boolean isWarningRequired(){
+		return false;
+	}
 
 	@Override
 	public void render() {

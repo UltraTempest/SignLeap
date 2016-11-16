@@ -6,6 +6,7 @@ import processing.core.PApplet;
 
 public abstract class AbstractGUI implements IGUI{
   private static PApplet page;
+ 
   public AbstractGUI(PApplet page){
 	  AbstractGUI.page=page;
   }
@@ -22,5 +23,12 @@ public abstract class AbstractGUI implements IGUI{
   @Override
   public void dispose(){
 	  getPage().background(230);
+	//To be implemented by subclass
   }
+  
+  @Override
+  public boolean isWarningRequired(){
+	 return true;
+  }
+
 }

@@ -22,6 +22,11 @@ public class LeaderboardGUI extends AbstractGeneralGUI{
 	}
 	
 	@Override
+	public boolean isWarningRequired(){
+		return false;
+	}
+	
+	@Override
 	protected void createGUI(){
 		  getPage().background(230);
 		  homeButton = new GButton(getPage(), 736, 38, 131, 53);

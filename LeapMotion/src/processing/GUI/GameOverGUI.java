@@ -32,7 +32,11 @@ public class GameOverGUI extends AbstractGeneralGUI{
 		new HighScoreManager().addScore(userInputName.getText(), score);
 		getPage().switchToLeaderboardGUI();
 	} 
-
+    
+	public void userInputFieldEventHandle(GTextField source, GEvent event) { 
+        if(event.toString().equals("ENTERED"))
+		submitButtonClicked(null, null);
+		}
 
 	// Create all the GUI controls. 
 	@Override
@@ -46,6 +50,7 @@ public class GameOverGUI extends AbstractGeneralGUI{
 	  gameOverPanel.setOpaque(true);
 	  userInputName = new GTextField(getPage(), 71, 148, 192, 21, G4P.SCROLLBARS_NONE);
 	  userInputName.setOpaque(true);
+	  userInputName.addEventHandler(this, "userInputFieldEventHandle");
 	  submitButton = new GButton(getPage(), 294, 148, 63, 23);
 	  submitButton.setText("Submit");
 	  submitButton.setLocalColorScheme(GCScheme.GREEN_SCHEME);
@@ -69,10 +74,20 @@ public class GameOverGUI extends AbstractGeneralGUI{
 	  gameOverPanel.addControl(label2);
 	  gameOverPanel.addControl(label3);
 	}
+	
+	@Override
+	public boolean isWarningRequired(){
+		return false;
+	}
 
 	@Override
 	public void dispose() {
 		super.dispose();
 		objectDisposal(gameOverPanel);
+	}
+	
+	@Override
+	public void render(){
+		super.render();
 	}
 }

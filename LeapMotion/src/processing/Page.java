@@ -12,6 +12,7 @@ import g4p_controls.GPanel;
 import processing.GUI.IGUI;
 import processing.core.PApplet;
 import recording.AbstractSignClassifier;
+import recording.HandData;
 import recording.HandData.Handedness;
 import recording.OneHandSignClassifier;
 
@@ -19,6 +20,7 @@ public class Page extends PApplet{
 	
 	private final Controller controller = new Controller();
 	private Handedness hand;
+	private HandData handInfo= new HandData();
 	
 	private AbstractSignClassifier currentClassifier;
 	
@@ -38,12 +40,14 @@ public class Page extends PApplet{
 	    
 	 public void setup(){ 
 		 initializeClassifiers();
+	     controller.enableGesture(Gesture.Type.TYPE_KEY_TAP);
+	     controller.enableGesture(Gesture.Type.TYPE_CIRCLE);
 	     background(230);
 	     currentGUIDisplayed=guiFactory.createWelcomeGUI();
-	     controller.enableGesture(Gesture.Type.TYPE_SWIPE);
 	}
 
 	 public void draw(){
+		renderLeapWarning();
 		currentGUIDisplayed.render();
 	}
 	
@@ -95,6 +99,18 @@ public class Page extends PApplet{
 	 public void switchToGameOverGUI(int userScore){
 		 stateSwitch(guiFactory.createGameOverGUI(userScore));
 	 }
+	 
+	  private void renderLeapWarning(){
+		  if(currentGUIDisplayed.isWarningRequired()){
+		  if(!handInfo.checkIfHandPlacedOverLeap(getLeap())){
+		   final String leapWarning="Warning! Please keep your " + hand + " hand placed over the Leap Motion";
+		   fill(205, 48, 48);
+		   text(leapWarning,250, 50);
+		  }
+		  else
+			  background(230);
+		  }
+	  }
 	 
 	 public void handleButtonEvents(GButton button, GEvent event) { /* Not called */ }
 	 

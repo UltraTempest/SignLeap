@@ -35,6 +35,7 @@ public abstract class AbstractSignCharacterGUI extends AbstractGUI{
 		  scoreTimerText.setText("Score:                       Time left:");
 		  scoreTimerText.setOpaque(false);
 		  scoreTimerText.setFont(new Font("Dialog", Font.PLAIN, 16));
+		  scoreTimerText.setTextEditEnabled(false);
 		  time();
 	}
 	
@@ -82,5 +83,4 @@ public abstract class AbstractSignCharacterGUI extends AbstractGUI{
 		objectDisposal(signInstruction);
 		objectDisposal(scoreTimerText);
 	}
-
 }
