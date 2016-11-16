@@ -38,6 +38,7 @@ public class GameOverGUI extends AbstractGeneralGUI{
 	@Override
 	protected void createGUI(){
 	  gameOverPanel = new GPanel(getPage(), 245, 182, 442, 232, "                                                             Game Over!");
+	  gameOverPanel.setDraggable(false);
 	  gameOverPanel.setCollapsible(false);
 	  gameOverPanel.setText("                                                             Game Over!");
 	  gameOverPanel.setTextBold();
