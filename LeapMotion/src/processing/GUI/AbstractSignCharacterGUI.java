@@ -46,7 +46,7 @@ public abstract class AbstractSignCharacterGUI extends AbstractGUI{
 	
 	protected void time(){
 		timer.scheduleAtFixedRate(new TimerTask() {
-            int i = 62;//defined for a 60 second countdown
+            int i = 22;//defined for a 20 second countdown
             public void run() {
             	i--;
                 currentTime=i;
