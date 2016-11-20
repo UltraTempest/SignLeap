@@ -15,6 +15,7 @@ import recording.AbstractSignClassifier;
 import recording.HandData;
 import recording.HandData.Handedness;
 import recording.OneHandSignClassifier;
+import recording.SVMClassifier;
 
 public class Page extends PApplet{
 	
@@ -24,6 +25,7 @@ public class Page extends PApplet{
 	
 	private AbstractSignClassifier currentClassifier;
 	
+	private final SVMClassifier model = new SVMClassifier();
 	private final Map<String,AbstractSignClassifier> classifierMap= new HashMap<String, AbstractSignClassifier>();
 	//private TwoHandSignClassifier twoSignClass= new TwoHandSignClassifier(Handedness.RIGHT.toString());
 	
@@ -67,6 +69,10 @@ public class Page extends PApplet{
 	 public String getHand(){
 		return this.hand.toString();
 	}
+	 
+	 public SVMClassifier getSVM(){
+			return this.model;
+		}
 	
 	 public AbstractSignClassifier getClassifier(){
 		return this.currentClassifier;
