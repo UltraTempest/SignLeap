@@ -28,8 +28,8 @@ public class SignNumbersGUI extends AbstractSignCharacterGUI{
 				  data=new HandData().getTwoHandsPosition(getPage().getLeap());
 		  if(data!=null){
 			  double score;
-			  //score = getPage().getClassifier().score(data,previousChar);
-			  score = getPage().getSVM().getProbabilityForInstance(data, previousChar);
+			  score = getPage().getClassifier().score(data,previousChar);
+			  //score = getPage().getSVM().getProbabilityForInstance(data, previousChar);
 			  if(score>0.9)
 				  getPage().text("Close!",50,50);
 			  else

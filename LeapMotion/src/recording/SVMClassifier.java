@@ -19,6 +19,11 @@ public class SVMClassifier{
 	svm_model model;
 	double[][] train;
 	
+	public static void main(String args[]){
+		SVMClassifier classifier = new SVMClassifier();
+		classifier.evaluateLoop();
+	}
+	
 	public SVMClassifier(){
 		
 		final String filename=language + "svm.model";
