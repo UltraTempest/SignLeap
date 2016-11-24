@@ -18,7 +18,6 @@ import weka.core.DenseInstance;
 import weka.core.FastVector;
 import weka.core.Instance;
 import weka.core.Instances;
-import weka.core.WekaPackageManager;
 
 @SuppressWarnings("deprecation")
 public abstract class AbstractSignClassifier {
@@ -68,7 +67,6 @@ protected void setupClassifier(SimpleEntry<List<ArrayList<Double>>, List<Charact
 		  }
 			 
 			 try {
-				 WekaPackageManager.loadPackages( false, true, false );
 				 File f = new File(filename);
 				 if(f.exists() && !f.isDirectory()) { 
 					// deserialize model
@@ -76,8 +74,6 @@ protected void setupClassifier(SimpleEntry<List<ArrayList<Double>>, List<Charact
 				 }
 				 else{
 				// train classifier
-//				classifier=(Classifier) Class.forName(
-//			             "weka.classifiers.functions.LibSVM" ).newInstance();
 //				String options = ( "-S 0 -K 0 -D 3 -G 0.0001 -R 0.0 -N 0.5 -M 40.0 -C 50 -E 0.001 -P 0.1" );
 //				String[] optionsArray = options.split( " " );
 //				    ((AbstractClassifier) classifier).setOptions( optionsArray );

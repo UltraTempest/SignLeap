@@ -2,191 +2,165 @@ package recording;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
+import java.util.TreeMap;
 import java.util.AbstractMap.SimpleEntry;
 
 import database.SignedDB;
-import weka.classifiers.AbstractClassifier;
-import weka.classifiers.Classifier;
-import weka.classifiers.Evaluation;
-import weka.classifiers.bayes.NaiveBayes;
-import weka.classifiers.functions.SMO;
-import weka.classifiers.lazy.IBk;
-import weka.classifiers.trees.J48;
+import weka.classifiers.functions.LibSVM;
 import weka.core.Attribute;
 import weka.core.DenseInstance;
 import weka.core.FastVector;
 import weka.core.Instance;
 import weka.core.Instances;
-import weka.core.WekaPackageManager;
 
 @SuppressWarnings("deprecation")
 public class LibSVMClassifier {
 		
 		public static final String language= "ISL";
-		protected FastVector<Attribute> fvWekaAttributes;
-		protected Classifier classifier;
-		protected Instances trainingSet;
+		private final TreeMap<String, FastVector<Attribute>> fvWekaAttributesMap = new TreeMap<String,  FastVector<Attribute>>(); 
+		private final Map<String, LibSVM> classifierMap= new HashMap<String, LibSVM>();
+		private final Map<String, Instances> trainingSetMap= new HashMap<String, Instances>();
+		private int numberOfFeatures;
 		
 		public static void main(String args[]){
-				new LibSVMClassifier();
+				new LibSVMClassifier("right", "num", 60);
 		}
 		
 		
-		public LibSVMClassifier(){
-			String hand="right";
-			String type = "num";
-			final String filename=language +"_" +  hand + "_" + type + ".model";
+		public LibSVMClassifier(String hand, String type, int numberOfFeatures){
+			final String filename=language +"_" +  hand + "_" + type;
 			SimpleEntry<List<ArrayList<Double>>, List<Character>> entry=null;
-				entry=new SignedDB().getOneHandNumberData(language, hand,OneHandTrainer.ONE_HAND_NUM_FEATURES);
-				//entry=new SignedDB().getOneHandAlphabetData(language, hand, OneHandTrainer.ONE_HAND_NUM_FEATURES);
-			  
-			setupClassifier(entry, OneHandTrainer.ONE_HAND_NUM_FEATURES, filename);
+			   if(type.equals("num"))
+				entry=new SignedDB().getOneHandNumberData(language, hand,numberOfFeatures);
+			   else
+				entry=new SignedDB().getOneHandAlphabetData(language, hand, numberOfFeatures);
+			   this.numberOfFeatures=numberOfFeatures;
+			   setupClassifier(entry,filename);
 			}
 			
-			protected Instance createInstanceFromData(Map<String, Float> data){
-				 Instance sampleInstance = new DenseInstance(OneHandTrainer.ONE_HAND_NUM_FEATURES+1);
-				 	for(int i=0; i<OneHandTrainer.ONE_HAND_NUM_FEATURES;i++){
+			private Instance createInstanceFromData(Map<String, Float> data, char c){
+				 Instance sampleInstance = new DenseInstance(numberOfFeatures+1);
+				 FastVector<Attribute> fvWekaAttributes=fvWekaAttributesMap.get(c);
+				 	for(int i=0; i<numberOfFeatures;i++){
 				 		sampleInstance.setValue((Attribute)fvWekaAttributes.elementAt(i), data.get("feat"+i));
 				 	}
-				 	sampleInstance.setDataset(trainingSet);
+				 	sampleInstance.setDataset(trainingSetMap.get(c));
 				 	sampleInstance.setClassMissing();
 				 	return sampleInstance;
 			}
 		
-protected void setupClassifier(SimpleEntry<List<ArrayList<Double>>, List<Character>> entry, final int features, final String filename){
+			private void setupClassifier(SimpleEntry<List<ArrayList<Double>>, List<Character>> entry, String filename){
 			
+			final String originalFilename=filename;
 			List<ArrayList<Double>> data= entry.getKey();
 			List<Character> target=entry.getValue();
 			
-			// Declare the feature vector
-			 fvWekaAttributes = new FastVector<Attribute>(features+1);
-			 for(int i=0;i<features;i++){
-				fvWekaAttributes.addElement(new Attribute("feat"+i));
-			 }
-			 
+		
+			FastVector<Attribute> fvWekaAttributes = null; 
+			final List<String> classValueList = new ArrayList<String>();
+			
 			 // Declare the class attribute along with its values
 			 FastVector<String> fvClassVal = new FastVector<String>();
-//			 for(Character i: target){
-//				 String character=String.valueOf(i);
-//				 if(!fvClassVal.contains(character))
-//				 fvClassVal.addElement(character);
-//			 }
-			 fvClassVal.add("1");
-			 fvClassVal.add("-1");
+			 for(Character i: target){
+				 String character=String.valueOf(i);
+				 if(!classValueList.contains(character)){
+				 fvWekaAttributes=declareFeatureVector();
+				 fvClassVal.addElement("-" + character);
+				 fvClassVal.addElement(character);
+				 Attribute ClassAttribute = new Attribute("theClass", fvClassVal);
+				 fvWekaAttributes.addElement(ClassAttribute);
+				 fvWekaAttributesMap.put(character, fvWekaAttributes);
+				 fvClassVal = new FastVector<String>();
+				 classValueList.add(character);
+				 classValueList.add("-" + character);
+				 }
+			 }
+//			 fvClassVal.add("1");
+//			 fvClassVal.add("-1");
 			 
-			 Attribute ClassAttribute = new Attribute("theClass", fvClassVal);
-			 fvWekaAttributes.addElement(ClassAttribute);
+			 Instances trainingSet=createTrainingset(fvWekaAttributesMap.firstEntry().getValue());
 			 
-			 // Create an empty training set
-			 this.trainingSet = new Instances("Rel", fvWekaAttributes, 10);
-			 // Set class index
-			 trainingSet.setClassIndex(features);
+			 int evenOddCheck=-1;
 			 
+			 for(String classVal: classValueList){
+				 fvWekaAttributes=fvWekaAttributesMap.get(classVal);
 			 for(int i=0; i<data.size();i++){
 				// Create the instance
-				 Instance trainingInstance = new DenseInstance(features+1);
-				 for(int j=0; j<features;j++){
+				 Instance trainingInstance = new DenseInstance(numberOfFeatures+1);
+				 for(int j=0; j<numberOfFeatures;j++){
 				 trainingInstance.setValue((Attribute)fvWekaAttributes.elementAt(j), data.get(i).get(j));
 				 }
-				 double num=Character.getNumericValue(target.get(i));
-				if(num==1.0)
-					trainingInstance.setValue((Attribute)fvWekaAttributes.elementAt(features),"1");
+				 String currentClassVal=String.valueOf(target.get(i));
+				// double num=Character.getNumericValue(target.get(i));
+				//if(num==1.0)
+				 if(currentClassVal.equals(classVal))
+					trainingInstance.setValue((Attribute)fvWekaAttributes.elementAt(numberOfFeatures),classVal);
 				else
-					trainingInstance.setValue((Attribute)fvWekaAttributes.elementAt(features),"-1");
-				 //trainingInstance.setValue((Attribute)fvWekaAttributes.elementAt(features),String.valueOf(target.get(i)));
+					trainingInstance.setValue((Attribute)fvWekaAttributes.elementAt(numberOfFeatures),"-" + classVal);
 				 
 				 // add the instance
 				 trainingSet.add(trainingInstance);
 		  }
-			 
+			    evenOddCheck++;
+			    if(evenOddCheck%2==1){
 			 try {
-				 WekaPackageManager.loadPackages( false, true, false );
+				 filename=originalFilename + classVal + ".model";
 				 File f = new File(filename);
 				 if(f.exists() && !f.isDirectory()) { 
 					// deserialize model
-					 classifier= (Classifier) weka.core.SerializationHelper.read(filename);
+					 classifierMap.put(classVal, (LibSVM) weka.core.SerializationHelper.read(filename));
 				 }
 				 else{
 				// train classifier
-				classifier=(Classifier) Class.forName(
-			             "weka.classifiers.functions.LibSVM" ).newInstance();
-				String options = ( "-S 0 -K 0 -D 3 -G 0.0001 -R 0.0 -N 0.5 -M 40.0 -C 50 -E 0.001 -P 0.1 -B -V" );
-				String[] optionsArray = options.split( " " );
-				    ((AbstractClassifier) classifier).setOptions( optionsArray );
+				LibSVM classifier=new LibSVM();
+				classifier.setWeights("1 4");
+				String[] options = {"-S", "0", "-K", "2", "-D", "3", "-G", "0.0001", "-C", "50", "-B", "-V", "-W", "1 4"}; 
+				classifier.setOptions( options );
 				classifier.buildClassifier(trainingSet);
+				classifierMap.put(classVal, classifier);
+				
 				// serialize model
 				 weka.core.SerializationHelper.write(filename, classifier);
 				 }
+				 trainingSetMap.put(classVal, trainingSet);
+				 trainingSet=createTrainingset(fvWekaAttributes);
 			} catch (Exception e) {
 				System.err.println("Error during classifier building:"+ e);
 			}
-		}
-		
-		public void evaluate() throws Exception{	
-			// training using a collection of classifiers (NaiveBayes, SMO (AKA SVM), KNN and Decision trees.)
-	        String[] algorithms = {"nb","smo","knn","j48"};
-	        for(int w=0; w<algorithms.length;w++){
-	            if(algorithms[w].equals("nb"))
-	            classifier = new NaiveBayes();
-	            if(algorithms[w].equals("smo"))
-	            classifier = new SMO();
-	            if(algorithms[w].equals("knn"))
-	            classifier = new IBk();
-	            if(algorithms[w].equals("j48"))
-	            classifier = new J48();
-
-	        System.out.println("==========================================================================");
-	        System.out.println("training using " + algorithms[w] + " classifier");
-
-	        Evaluation eval = new Evaluation(trainingSet);
-	        //perform 10 fold cross validation
-	        eval.crossValidateModel(classifier, trainingSet, 10, new Random(1));
-	        String output = eval.toSummaryString();
-	        System.out.println(output);
-
-	        String classDetails = eval.toClassDetailsString();
-	        System.out.println(classDetails);
-
-	        }
-		}
-		
-		public double classifyInstance(Instance data){
-				try {
-					return classifier.classifyInstance(data);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-				return 0.0;
-		}
-		
-		public String classify(Map<String, Float> data){
-			try {
-				return trainingSet.classAttribute().value((int)  classifier.classifyInstance(createInstanceFromData(data)));
-			} catch (Exception e) {
-				System.err.println("Error during classifier building:" + e);
-			}
-			return null;
+		 }
+			 }
 		}
 		
 		public double score(Map<String, Float> data, char c){
+			Instance sampleInstance=createInstanceFromData(data, c);
+			//int position=trainingSetMap.get(c).classAttribute().indexOfValue(Character.toString(c));
+			int position=0;
 			try {
-				return getProbabilityForChar(createInstanceFromData(data), c);
-			} catch (Exception e) {
-				System.err.println("Error during classifier building:" + e);
-			}
-			return 0.0;
-		}
-		
-		private double getProbabilityForChar(Instance sampleInstance, char c) throws Exception{
-				int position=trainingSet.classAttribute().indexOfValue(Character.toString(c));
-				double[] fDistribution = classifier.distributionForInstance(sampleInstance);	
+				double[] fDistribution = classifierMap.get(c).distributionForInstance(sampleInstance);
 				return fDistribution[position];
+			} catch (Exception e) {
+				e.printStackTrace();
+			}	
+			return 0.0;
+		}	
+		
+		private Instances createTrainingset(FastVector<Attribute> fvWekaAttributes){
+			 // Create an empty training set
+			 Instances trainingSet = new Instances("Rel", fvWekaAttributes, 10);
+			 // Set class index
+			 trainingSet.setClassIndex(numberOfFeatures);
+			 return trainingSet;
 		}
 		
-		public Instances getTrainingSet(){
-			return trainingSet;
+		private FastVector<Attribute> declareFeatureVector(){
+			// Declare the feature vector
+			 FastVector<Attribute> fvWekaAttributes = new FastVector<Attribute>(numberOfFeatures+1);
+			 for(int i=0;i<numberOfFeatures;i++){
+				fvWekaAttributes.addElement(new Attribute("feat"+i));
+			 }
+			 return fvWekaAttributes;
 		}
 }

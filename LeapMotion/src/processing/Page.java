@@ -29,7 +29,7 @@ public class Page extends PApplet{
 	
 	//private final SVMClassifier model = new SVMClassifier();
 	private final SVMClassifier model = null;
-	private final LibSVMClassifier classif= new LibSVMClassifier();
+	private final LibSVMClassifier classif= new LibSVMClassifier("right", "num", 60);
 	private final Map<String,AbstractSignClassifier> classifierMap= new HashMap<String, AbstractSignClassifier>();
 	//private TwoHandSignClassifier twoSignClass= new TwoHandSignClassifier(Handedness.RIGHT.toString());
 	
