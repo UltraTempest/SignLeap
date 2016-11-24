@@ -135,16 +135,4 @@ public class Page extends PApplet{
 			 classifierMap.put(Handedness.RIGHT.toString()+"num", new OneHandSignClassifier(Handedness.RIGHT.toString(), "num"));
 			 classifierMap.put(Handedness.RIGHT.toString()+"alpha", new OneHandSignClassifier(Handedness.RIGHT.toString(), "alpha"));
 	 }
-
-//	 @SuppressWarnings("unused")
-//	 private void displayLeapInfo(){
-//	  background(0);
-//	  Frame frame = controller.frame();
-//	  text( frame.hands().count() + " Hands", 50, 50 );
-//	  text( frame.fingers().count() + " Fingers", 50, 100 );
-//	  if(frame.hands().count()>0){
-//		  Map<String, Float> data=new HandData().getOneHandPosition(controller);
-//		  text( "Letter:" + currentClassifier.classify(data), 50, 150);
-//	  }
-//	}
 }

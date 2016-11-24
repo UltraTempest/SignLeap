@@ -75,7 +75,6 @@ public class LibSVMClassifier {
 				 fvWekaAttributesMap.put(character, fvWekaAttributes);
 				 fvClassVal = new FastVector<String>();
 				 classValueList.add(character);
-				 classValueList.add("-" + character);
 				 }
 			 }
 //			 fvClassVal.add("1");
@@ -83,10 +82,11 @@ public class LibSVMClassifier {
 			 
 			 Instances trainingSet=createTrainingset(fvWekaAttributesMap.firstEntry().getValue());
 			 
-			 int evenOddCheck=-1;
-			 
-			 for(String classVal: classValueList){
-				 fvWekaAttributes=fvWekaAttributesMap.get(classVal);
+			 for(String modelVal: classValueList){
+				 if(fvWekaAttributesMap.containsKey(modelVal))
+				 fvWekaAttributes=fvWekaAttributesMap.get(modelVal);
+				 else
+					 continue;
 			 for(int i=0; i<data.size();i++){
 				// Create the instance
 				 Instance trainingInstance = new DenseInstance(numberOfFeatures+1);
@@ -94,24 +94,20 @@ public class LibSVMClassifier {
 				 trainingInstance.setValue((Attribute)fvWekaAttributes.elementAt(j), data.get(i).get(j));
 				 }
 				 String currentClassVal=String.valueOf(target.get(i));
-				// double num=Character.getNumericValue(target.get(i));
-				//if(num==1.0)
-				 if(currentClassVal.equals(classVal))
-					trainingInstance.setValue((Attribute)fvWekaAttributes.elementAt(numberOfFeatures),classVal);
+				 if(currentClassVal.equals(modelVal))
+					trainingInstance.setValue((Attribute)fvWekaAttributes.elementAt(numberOfFeatures),modelVal);
 				else
-					trainingInstance.setValue((Attribute)fvWekaAttributes.elementAt(numberOfFeatures),"-" + classVal);
+					trainingInstance.setValue((Attribute)fvWekaAttributes.elementAt(numberOfFeatures),"-" + modelVal);
 				 
 				 // add the instance
 				 trainingSet.add(trainingInstance);
 		  }
-			    evenOddCheck++;
-			    if(evenOddCheck%2==1){
 			 try {
-				 filename=originalFilename + classVal + ".model";
+				 filename=originalFilename + modelVal + ".model";
 				 File f = new File(filename);
 				 if(f.exists() && !f.isDirectory()) { 
 					// deserialize model
-					 classifierMap.put(classVal, (LibSVM) weka.core.SerializationHelper.read(filename));
+					 classifierMap.put(modelVal, (LibSVM) weka.core.SerializationHelper.read(filename));
 				 }
 				 else{
 				// train classifier
@@ -120,18 +116,18 @@ public class LibSVMClassifier {
 				String[] options = {"-S", "0", "-K", "2", "-D", "3", "-G", "0.0001", "-C", "50", "-B", "-V", "-W", "1 4"}; 
 				classifier.setOptions( options );
 				classifier.buildClassifier(trainingSet);
-				classifierMap.put(classVal, classifier);
+				classifierMap.put(modelVal, classifier);
 				
 				// serialize model
 				 weka.core.SerializationHelper.write(filename, classifier);
 				 }
-				 trainingSetMap.put(classVal, trainingSet);
-				 trainingSet=createTrainingset(fvWekaAttributes);
+				 trainingSetMap.put(modelVal, trainingSet);
+				 if(fvWekaAttributesMap.higherEntry(modelVal)!=null)
+				 trainingSet=createTrainingset(fvWekaAttributesMap.higherEntry(modelVal).getValue());
 			} catch (Exception e) {
 				System.err.println("Error during classifier building:"+ e);
 			}
 		 }
-			 }
 		}
 		
 		public double score(Map<String, Float> data, char c){
