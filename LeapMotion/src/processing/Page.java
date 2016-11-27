@@ -9,12 +9,15 @@ import g4p_controls.GButton;
 import g4p_controls.GEditableTextControl;
 import g4p_controls.GEvent;
 import g4p_controls.GPanel;
+import g4p_controls.GValueControl;
 import processing.GUI.IGUI;
 import processing.core.PApplet;
 import recording.AbstractSignClassifier;
 import recording.HandData;
 import recording.HandData.Handedness;
 import recording.LibSVMClassifier;
+import recording.NeuralClassifier;
+import recording.OneClassifier;
 import recording.OneHandSignClassifier;
 import recording.SVMClassifier;
 
@@ -23,13 +26,18 @@ public class Page extends PApplet{
 	private final Controller controller = new Controller();
 	private Handedness hand;
 	private HandData handInfo= new HandData();
+	private final String leapWarning="Warning! Please keep your %s hand placed over the Leap Motion";
 	
 	@SuppressWarnings("unused")
 	private AbstractSignClassifier currentClassifier;
 	
+	private final NeuralClassifier neuro = new NeuralClassifier("right", "num", 60);
 	//private final SVMClassifier model = new SVMClassifier();
 	private final SVMClassifier model = null;
+	//private final LibSVMClassifier classif=null;
 	private final LibSVMClassifier classif= new LibSVMClassifier("right", "num", 60);
+	//private final OneClassifier oneClassif= new OneClassifier("right", "num", 60);
+	private final OneClassifier oneClassif=null;
 	private final Map<String,AbstractSignClassifier> classifierMap= new HashMap<String, AbstractSignClassifier>();
 	//private TwoHandSignClassifier twoSignClass= new TwoHandSignClassifier(Handedness.RIGHT.toString());
 	
@@ -83,6 +91,14 @@ public class Page extends PApplet{
 		 return this.classif;
 	}
 	 
+	 public NeuralClassifier getNeuroClassifier(){
+		 return this.neuro;
+	 }
+	 
+	 public OneClassifier getOneClassifier(){
+		 return this.oneClassif;
+	 }
+	 
 	 public void setClassifier(String classifierToSet){
 		 currentClassifier=classifierMap.get(classifierToSet);
 	 }
@@ -113,10 +129,9 @@ public class Page extends PApplet{
 	 
 	  private void renderLeapWarning(){
 		  if(currentGUIDisplayed.isWarningRequired()){
-		  if(!handInfo.checkIfHandPlacedOverLeap(getLeap())){
-		   final String leapWarning="Warning! Please keep your " + hand + " hand placed over the Leap Motion";
+		  if(!handInfo.checkIfCorrectHandPlacedOverLeap(controller, hand)){
 		   fill(205, 48, 48);
-		   text(leapWarning,250, 50);
+		   text(String.format(leapWarning,hand),250, 50);
 		  }
 		  else
 			  background(230);
@@ -128,6 +143,8 @@ public class Page extends PApplet{
 	 public void handleTextEvents(GEditableTextControl textcontrol, GEvent event) { /* Not called */ }
 	 
 	 public void handlePanelEvents(GPanel panel, GEvent event) { /* Not called */ }
+	 
+	 public void handleSliderEvents(GValueControl slider, GEvent event) { /* Not called */ }
 	 
 	 private void initializeClassifiers(){
 		// classifierMap.put(Handedness.LEFT.toString()+"alpha", new OneHandSignClassifier(Handedness.LEFT.toString(), "alpha"));

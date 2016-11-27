@@ -110,6 +110,11 @@ public class HandData {
 	   public boolean checkIfHandPlacedOverLeap(Controller controller){
 			  return controller.frame().hands().count()>0 ? true : false;
 	   }
+	   
+	   public boolean checkIfCorrectHandPlacedOverLeap(Controller controller, Handedness hand){
+		   Handedness current = GetHandedness(controller.frame().hands().frontmost());
+		   return hand.equals(current);	
+	   }
 	
 	private List<Vector> getFingerList(Controller controller){
 		  FingerList fingers = controller.frame().fingers();
@@ -124,8 +129,8 @@ public class HandData {
 	}
 	
 	public enum Handedness {
-	    LEFT ("left"),
-	    RIGHT ("right");
+	    LEFT ("LEFT"),
+	    RIGHT ("RIGHT");
 
 	    private final String name;       
 
@@ -139,6 +144,9 @@ public class HandData {
 	}
 
 	public Handedness GetHandedness(Hand hand) {
+		if(hand.isValid())
 		return hand.isLeft() ? Handedness.LEFT : Handedness.RIGHT;	
+		else
+			return null;
 	}
 }

@@ -25,7 +25,7 @@ public class WelcomeGUI extends AbstractGeneralGUI{
 	private void changeStateIfRequired(){
 		  HandData handInfo = new HandData();
 		  Controller leap = getPage().getLeap();
-		  if(handInfo.checkIfHandPlacedOverLeap(getPage().getLeap())){
+		  if(handInfo.checkIfHandPlacedOverLeap(leap)){
 			  getPage().setHand(handInfo.GetHandedness(leap.frame().hands().frontmost()));
 			  if(!checkLeaderBoardFileExistence())
 			  getPage().switchToIntroductionGUI();

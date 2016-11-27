@@ -13,23 +13,25 @@ public class SignAlphabetGUI extends AbstractSignCharacterGUI{
 	private final String alphabet="Alphabet";
 	private final char[] alphabetArray = "abcdefghijklmnopqrstuvwxyz".toCharArray();
 	private char previousChar;
+	private String imageName;
 	
 	public SignAlphabetGUI(PApplet page) {
 		super(page);
+		imageName=OneHandSignClassifier.language +  "/" + getPage().getHand() +"/" + alphabet + "/";
 	}
 	
 	private void signAlphabet(){
-		  Frame frame = getPage().getLeap().frame();
+		  Frame frame = leap.frame();
 		  if(frame.hands().count()>0){
 		  Map<String, Float> data=new HandData().getOneHandPosition(getPage().getLeap());
 		  if(data!=null){
 			  double classProbValue = getPage().getClassifier().score(data,previousChar);
-			  if(classProbValue>0.000000001)
+			  if(classProbValue>0.4)
 				  getPage().text("Close!",50,50);
 			  else
 				  getPage().text("",50,50);
 			  PApplet.println(classProbValue);
-			  if(classProbValue>0.7){
+			  if(classProbValue>0.9){
 				  incrementUserScore();;
 				  this.currentLetterPosition++;
 				  if(this.currentLetterPosition==26)
@@ -43,11 +45,11 @@ public class SignAlphabetGUI extends AbstractSignCharacterGUI{
 	@Override
 	public void render() {
 		char currentLetter=alphabetArray[currentLetterPosition];
-		String imageName= OneHandSignClassifier.language +  "/" + getPage().getHand() +"/" + alphabet + "/" + currentLetter + imageType;	
+		String image=imageName+currentLetter + imageType;	
 		if(signInstruction==null){
 			createGUI(getPage().getHand()+"alpha");
 		}
-		  updateSignCharactersGUI(currentLetter, imageName);
+		  updateSignCharactersGUI(currentLetter, image);
 		  if(currentLetter!=previousChar){
 			  previousChar=currentLetter;
 			  try {

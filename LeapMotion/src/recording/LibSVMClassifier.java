@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 import java.util.AbstractMap.SimpleEntry;
 
 import database.SignedDB;
@@ -20,13 +19,14 @@ import weka.core.Instances;
 public class LibSVMClassifier {
 		
 		public static final String language= "ISL";
-		private final TreeMap<String, FastVector<Attribute>> fvWekaAttributesMap = new TreeMap<String,  FastVector<Attribute>>(); 
+		private FastVector<Attribute> fvWekaAttributes;
 		private final Map<String, LibSVM> classifierMap= new HashMap<String, LibSVM>();
 		private final Map<String, Instances> trainingSetMap= new HashMap<String, Instances>();
 		private int numberOfFeatures;
 		
 		public static void main(String args[]){
 				new LibSVMClassifier("right", "num", 60);
+				new LibSVMClassifier("right", "alpha", 60);
 		}
 		
 		
@@ -41,14 +41,12 @@ public class LibSVMClassifier {
 			   setupClassifier(entry,filename);
 			}
 			
-			private Instance createInstanceFromData(Map<String, Float> data, char c){
-				 Instance sampleInstance = new DenseInstance(numberOfFeatures+1);
-				 FastVector<Attribute> fvWekaAttributes=fvWekaAttributesMap.get(c);
+			private Instance createInstanceFromData(Map<String, Float> data, String c){
+				Instance sampleInstance = new DenseInstance(numberOfFeatures+1);
 				 	for(int i=0; i<numberOfFeatures;i++){
-				 		sampleInstance.setValue((Attribute)fvWekaAttributes.elementAt(i), data.get("feat"+i));
+				 		sampleInstance.setValue(fvWekaAttributes.elementAt(i), data.get("feat"+i));
 				 	}
 				 	sampleInstance.setDataset(trainingSetMap.get(c));
-				 	sampleInstance.setClassMissing();
 				 	return sampleInstance;
 			}
 		
@@ -57,47 +55,38 @@ public class LibSVMClassifier {
 			final String originalFilename=filename;
 			List<ArrayList<Double>> data= entry.getKey();
 			List<Character> target=entry.getValue();
-			
 		
-			FastVector<Attribute> fvWekaAttributes = null; 
+			declareFeatureVector(); 
 			final List<String> classValueList = new ArrayList<String>();
 			
 			 // Declare the class attribute along with its values
 			 FastVector<String> fvClassVal = new FastVector<String>();
+			 fvClassVal.addElement("target");
+			 fvClassVal.addElement("outlier");
+			 Attribute ClassAttribute = new Attribute("theClass", fvClassVal);
+			 fvWekaAttributes.addElement(ClassAttribute);
+			
 			 for(Character i: target){
 				 String character=String.valueOf(i);
 				 if(!classValueList.contains(character)){
-				 fvWekaAttributes=declareFeatureVector();
-				 fvClassVal.addElement("-" + character);
-				 fvClassVal.addElement(character);
-				 Attribute ClassAttribute = new Attribute("theClass", fvClassVal);
-				 fvWekaAttributes.addElement(ClassAttribute);
-				 fvWekaAttributesMap.put(character, fvWekaAttributes);
-				 fvClassVal = new FastVector<String>();
 				 classValueList.add(character);
 				 }
 			 }
-//			 fvClassVal.add("1");
-//			 fvClassVal.add("-1");
 			 
-			 Instances trainingSet=createTrainingset(fvWekaAttributesMap.firstEntry().getValue());
+			 Instances trainingSet=createTrainingset();
 			 
 			 for(String modelVal: classValueList){
-				 if(fvWekaAttributesMap.containsKey(modelVal))
-				 fvWekaAttributes=fvWekaAttributesMap.get(modelVal);
-				 else
-					 continue;
 			 for(int i=0; i<data.size();i++){
 				// Create the instance
 				 Instance trainingInstance = new DenseInstance(numberOfFeatures+1);
 				 for(int j=0; j<numberOfFeatures;j++){
-				 trainingInstance.setValue((Attribute)fvWekaAttributes.elementAt(j), data.get(i).get(j));
+				 trainingInstance.setValue(fvWekaAttributes.elementAt(j), data.get(i).get(j));
 				 }
 				 String currentClassVal=String.valueOf(target.get(i));
 				 if(currentClassVal.equals(modelVal))
-					trainingInstance.setValue((Attribute)fvWekaAttributes.elementAt(numberOfFeatures),modelVal);
+					trainingInstance.setValue(fvWekaAttributes.elementAt(numberOfFeatures),"target");
 				else
-					trainingInstance.setValue((Attribute)fvWekaAttributes.elementAt(numberOfFeatures),"-" + modelVal);
+					trainingInstance.setValue(fvWekaAttributes.elementAt(numberOfFeatures),"outlier");
 				 
 				 // add the instance
 				 trainingSet.add(trainingInstance);
@@ -122,8 +111,6 @@ public class LibSVMClassifier {
 				 weka.core.SerializationHelper.write(filename, classifier);
 				 }
 				 trainingSetMap.put(modelVal, trainingSet);
-				 if(fvWekaAttributesMap.higherEntry(modelVal)!=null)
-				 trainingSet=createTrainingset(fvWekaAttributesMap.higherEntry(modelVal).getValue());
 			} catch (Exception e) {
 				System.err.println("Error during classifier building:"+ e);
 			}
@@ -131,11 +118,14 @@ public class LibSVMClassifier {
 		}
 		
 		public double score(Map<String, Float> data, char c){
-			Instance sampleInstance=createInstanceFromData(data, c);
-			//int position=trainingSetMap.get(c).classAttribute().indexOfValue(Character.toString(c));
+			String charToFind=String.valueOf(c);
+			Instance sampleInstance=createInstanceFromData(data, charToFind);
+			//int position=trainingSetMap.get(charToFind).classAttribute().indexOfValue("target");
 			int position=0;
 			try {
-				double[] fDistribution = classifierMap.get(c).distributionForInstance(sampleInstance);
+				double[] fDistribution = classifierMap.get(charToFind).distributionForInstance(sampleInstance);
+				double i=classifierMap.get(charToFind).classifyInstance(sampleInstance);
+				sampleInstance.setClassValue(i);
 				return fDistribution[position];
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -143,7 +133,7 @@ public class LibSVMClassifier {
 			return 0.0;
 		}	
 		
-		private Instances createTrainingset(FastVector<Attribute> fvWekaAttributes){
+		private Instances createTrainingset(){
 			 // Create an empty training set
 			 Instances trainingSet = new Instances("Rel", fvWekaAttributes, 10);
 			 // Set class index
@@ -151,12 +141,11 @@ public class LibSVMClassifier {
 			 return trainingSet;
 		}
 		
-		private FastVector<Attribute> declareFeatureVector(){
+		private void declareFeatureVector(){
 			// Declare the feature vector
-			 FastVector<Attribute> fvWekaAttributes = new FastVector<Attribute>(numberOfFeatures+1);
+			 fvWekaAttributes = new FastVector<Attribute>(numberOfFeatures+1);
 			 for(int i=0;i<numberOfFeatures;i++){
 				fvWekaAttributes.addElement(new Attribute("feat"+i));
 			 }
-			 return fvWekaAttributes;
 		}
 }

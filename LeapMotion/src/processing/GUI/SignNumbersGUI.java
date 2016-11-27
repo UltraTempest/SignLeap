@@ -13,13 +13,15 @@ public class SignNumbersGUI extends AbstractSignCharacterGUI{
 	private final String numbers="Numbers";
 	private final char[] numbersArray = {'1','2','3','4','5','6','7','8','9'};
 	private char previousChar;
+	private String imageName;
 	
 	public SignNumbersGUI(PApplet page) {
 		super(page);
+		imageName=OneHandSignClassifier.language +  "/" + getPage().getHand() +"/" + numbers + "/";
 	}
 	
 	private void signNumbers(){	
-		  Frame frame = getPage().getLeap().frame();
+		  Frame frame = leap.frame();
 		  if(frame.hands().count()>0){
 			  Map<String, Float> data;
 			  if(currentLetterPosition<=5)
@@ -27,15 +29,12 @@ public class SignNumbersGUI extends AbstractSignCharacterGUI{
 			  else
 				  data=new HandData().getTwoHandsPosition(getPage().getLeap());
 		  if(data!=null){
-			  double score;
-			  score = getPage().getClassifier().score(data,previousChar);
+			  //double score = getPage().getNeuroClassifier().score(data,previousChar);
+			  double score = getPage().getClassifier().score(data,previousChar);
 			  //score = getPage().getSVM().getProbabilityForInstance(data, previousChar);
-			  if(score>0.9)
-				  getPage().text("Close!",50,50);
-			  else
-				  getPage().text("",50,50);
+			  setProgressBarValue((float) (score*100));
 			PApplet.println(score);
-			  if(score>0.7){
+			  if(score>0.95){
 				  incrementUserScore();
 				  this.currentLetterPosition++;
 				  if(this.currentLetterPosition==10)
@@ -55,11 +54,11 @@ public class SignNumbersGUI extends AbstractSignCharacterGUI{
 	@Override
 	public void render() {
 		char currentNumber= numbersArray[currentLetterPosition];
-		String imageName= OneHandSignClassifier.language +  "/" + getPage().getHand() +"/" + numbers + "/" + currentNumber + imageType;
+		String image=imageName+currentNumber+imageType;
 			if(signInstruction==null){
 				createGUI(getPage().getHand()+"num");
 			}
-			  updateSignCharactersGUI(currentNumber, imageName);
+			  updateSignCharactersGUI(currentNumber, image);
 			  if(currentNumber!=previousChar){
 				  previousChar=currentNumber;
 				  try {
