@@ -5,6 +5,13 @@ import java.util.Map;
 import com.leapmotion.leap.Controller;
 import com.leapmotion.leap.Gesture;
 
+import classifier.AbstractSignClassifier;
+import classifier.LibSVMClassifier;
+import classifier.NeuralClassifier;
+import classifier.OneClassifier;
+import classifier.OneHandSignClassifier;
+import classifier.SVMClassifier;
+import controller.LeapMouseListener;
 import g4p_controls.GButton;
 import g4p_controls.GEditableTextControl;
 import g4p_controls.GEvent;
@@ -12,14 +19,8 @@ import g4p_controls.GPanel;
 import g4p_controls.GValueControl;
 import processing.GUI.IGUI;
 import processing.core.PApplet;
-import recording.AbstractSignClassifier;
 import recording.HandData;
 import recording.HandData.Handedness;
-import recording.LibSVMClassifier;
-import recording.NeuralClassifier;
-import recording.OneClassifier;
-import recording.OneHandSignClassifier;
-import recording.SVMClassifier;
 
 public class Page extends PApplet{
 	
@@ -28,10 +29,13 @@ public class Page extends PApplet{
 	private HandData handInfo= new HandData();
 	private final String leapWarning="Warning! Please keep your %s hand placed over the Leap Motion";
 	
+	private final LeapMouseListener leapListen= new LeapMouseListener();
+	
 	@SuppressWarnings("unused")
 	private AbstractSignClassifier currentClassifier;
 	
-	private final NeuralClassifier neuro = new NeuralClassifier("right", "num", 60);
+	private NeuralClassifier neuro=null;
+	//private final NeuralClassifier neuro = new NeuralClassifier("right", "num", 60);
 	//private final SVMClassifier model = new SVMClassifier();
 	private final SVMClassifier model = null;
 	//private final LibSVMClassifier classif=null;
@@ -137,6 +141,14 @@ public class Page extends PApplet{
 			  background(230);
 		  }
 	  }
+	  
+	 public void turnOnLeapMouseControl(){
+		 controller.addListener(leapListen);
+	 }
+	 
+	 public void turnOffLeapMouseControl(){
+		 controller.removeListener(leapListen);
+	 }
 	 
 	 public void handleButtonEvents(GButton button, GEvent event) { /* Not called */ }
 	 

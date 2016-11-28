@@ -1,4 +1,4 @@
-package recording;
+package classifier;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -9,6 +9,7 @@ import java.util.TreeMap;
 import java.util.AbstractMap.SimpleEntry;
 
 import database.SignedDB;
+import weka.classifiers.functions.MultilayerPerceptron;
 import weka.classifiers.meta.OneClassClassifier;
 import weka.core.Attribute;
 import weka.core.DenseInstance;
@@ -17,22 +18,22 @@ import weka.core.Instance;
 import weka.core.Instances;
 
 @SuppressWarnings("deprecation")
-public class OneClassifier {
+public class NeuralClassifier {
 		
 		public static final String language= "ISL";
 		private final TreeMap<String, FastVector<Attribute>> fvWekaAttributesMap = new TreeMap<String,  FastVector<Attribute>>(); 
-		private final Map<String, OneClassClassifier> classifierMap= new HashMap<String, OneClassClassifier>();
+		private final Map<String, MultilayerPerceptron> classifierMap= new HashMap<String, MultilayerPerceptron>();
 		private final Map<String, Instances> trainingSetMap= new HashMap<String, Instances>();
 		private int numberOfFeatures;
 		
 		public static void main(String args[]){
-				new OneClassifier("right", "num", 60);
-				new OneClassifier("right", "alpha", 60);
+				new NeuralClassifier("right", "num", 60);
+				new NeuralClassifier("right", "alpha", 60);
 		}
 		
 		
-		public OneClassifier(String hand, String type, int numberOfFeatures){
-			final String filename="OneClass" + language +"_" +  hand + "_" + type;
+		public NeuralClassifier(String hand, String type, int numberOfFeatures){
+			final String filename="Neural" + language +"_" +  hand + "_" + type;
 			SimpleEntry<List<ArrayList<Double>>, List<Character>> entry=null;
 			   if(type.equals("num"))
 				entry=new SignedDB().getOneHandNumberData(language, hand,numberOfFeatures);
@@ -104,13 +105,17 @@ public class OneClassifier {
 				 File f = new File(filename);
 				 if(f.exists() && !f.isDirectory()) { 
 					// deserialize model
-					 classifierMap.put(modelVal, (OneClassClassifier) weka.core.SerializationHelper.read(filename));
+					 classifierMap.put(modelVal, (MultilayerPerceptron) weka.core.SerializationHelper.read(filename));
 				 }
 				 else{
 				// train classifier
-				String[] options = new String[]{"-E"};
-				OneClassClassifier classifier=new OneClassClassifier();
-				classifier.setOptions(options);
+				//Instance of NN
+				MultilayerPerceptron classifier = new MultilayerPerceptron();
+				//Setting Parameters
+				classifier.setLearningRate(0.1);
+				classifier.setMomentum(0.2);
+				classifier.setTrainingTime(2000);
+				classifier.setHiddenLayers("3");
 				classifier.buildClassifier(trainingSet);
 				classifierMap.put(modelVal, classifier);
 				
@@ -129,7 +134,7 @@ public class OneClassifier {
 		public double score(Map<String, Float> data, char c){
 			String charToFind=String.valueOf(c);
 			Instance sampleInstance=createInstanceFromData(data, charToFind);
-			int position=trainingSetMap.get(charToFind).classAttribute().indexOfValue(OneClassClassifier.OUTLIER_LABEL);
+			int position=trainingSetMap.get(charToFind).classAttribute().indexOfValue("target");
 			try {
 				double[] fDistribution = classifierMap.get(charToFind).distributionForInstance(sampleInstance);
 				double i=classifierMap.get(charToFind).classifyInstance(sampleInstance);

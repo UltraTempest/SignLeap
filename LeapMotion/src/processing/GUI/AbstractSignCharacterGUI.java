@@ -47,6 +47,7 @@ public abstract class AbstractSignCharacterGUI extends AbstractGUI{
 		  slider.setNumberFormat(G4P.DECIMAL, 2);
 		  slider.setOpaque(false);
 		  slider.setShowValue(true);
+		  getPage().turnOffLeapMouseControl();
 		  time();
 	}
 	

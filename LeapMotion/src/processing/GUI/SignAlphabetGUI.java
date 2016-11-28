@@ -4,9 +4,9 @@ import java.util.Map;
 
 import com.leapmotion.leap.Frame;
 
+import classifier.OneHandSignClassifier;
 import processing.core.PApplet;
 import recording.HandData;
-import recording.OneHandSignClassifier;
 
 public class SignAlphabetGUI extends AbstractSignCharacterGUI{
 	

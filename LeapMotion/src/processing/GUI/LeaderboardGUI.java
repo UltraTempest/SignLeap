@@ -33,6 +33,7 @@ public class LeaderboardGUI extends AbstractGeneralGUI{
 		  homeButton.setText("Home");
 		  homeButton.setTextBold();
 		  homeButton.setLocalColorScheme(GCScheme.CYAN_SCHEME);
+		  homeButton.setEnabled(true);
 		  homeButton.addEventHandler(this, "homeButtonClicked");
 		  getPage().textSize(50);
 		  getPage().text("Leaderboard", 50, 60);
@@ -50,6 +51,7 @@ public class LeaderboardGUI extends AbstractGeneralGUI{
 			  getPage().text(score.getScore(), 500, 240+60*i);
 			  getPage().line(0, position+10, 575, position+10);
 		  }
+		  getPage().turnOnLeapMouseControl();
 	}
 	
 	@Override

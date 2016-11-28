@@ -35,6 +35,7 @@ public class MainMenuGUI extends AbstractGeneralGUI{
 	  NumbersButton.setFont(new Font("Dialog", Font.PLAIN, 30));
 	  NumbersButton.setLocalColorScheme(GCScheme.CYAN_SCHEME);
 	  NumbersButton.addEventHandler(this, "numbersButtonPressed");
+	  getPage().turnOnLeapMouseControl();
 	}
 
 	@Override

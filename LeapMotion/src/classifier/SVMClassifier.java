@@ -1,4 +1,4 @@
-package recording;
+package classifier;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -12,6 +12,7 @@ import libsvm.svm_model;
 import libsvm.svm_node;
 import libsvm.svm_parameter;
 import libsvm.svm_problem;
+import recording.SignTrainer;
 
 public class SVMClassifier{
 	private static final String language= "ISL";
@@ -28,9 +29,9 @@ public class SVMClassifier{
 		
 		final String filename=language + "svm.model";
 		SimpleEntry<List<ArrayList<Double>>, List<Character>> entry=null;
-		//entry=new SignedDB().getOneHandAlphabetData(language, "right", OneHandTrainer.ONE_HAND_NUM_FEATURES);
-		entry=new SignedDB().getOneHandNumberData(language, "right", OneHandTrainer.ONE_HAND_NUM_FEATURES);
-		setupClassifier(entry, OneHandTrainer.ONE_HAND_NUM_FEATURES, filename);
+		//entry=new SignedDB().getOneHandAlphabetData(language, "right", SignTrainer.ONE_HAND_NUM_FEATURES);
+		entry=new SignedDB().getOneHandNumberData(language, "right", SignTrainer.ONE_HAND_NUM_FEATURES);
+		setupClassifier(entry, SignTrainer.ONE_HAND_NUM_FEATURES, filename);
 	}
 	
 	public void evaluateLoop(){
@@ -179,7 +180,7 @@ public class SVMClassifier{
 		}
 		
 		private double[] createFeatureArrayFromData(Map<String, Float> data, char symbol){
-			int arraySize=OneHandTrainer.ONE_HAND_NUM_FEATURES+1;
+			int arraySize=SignTrainer.ONE_HAND_NUM_FEATURES+1;
 			 double[] features = new double[arraySize];
 			 features[0]=getCharForNumber(symbol);
 			 	for(int i=1; i<arraySize;i++){

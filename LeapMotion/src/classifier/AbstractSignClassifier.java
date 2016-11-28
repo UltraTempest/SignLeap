@@ -1,4 +1,4 @@
-package recording;
+package classifier;
 
 import java.io.File;
 import java.util.ArrayList;

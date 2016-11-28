@@ -10,6 +10,9 @@ import recording.HandData.Handedness;
 
 public class SignTrainer {
 	
+	public static final int ONE_HAND_NUM_FEATURES = 60;
+	public static final int TW0_HAND_NUM_FEATURES = 120;
+	
 	public static void main(String args[]){
 		new OneHandTrainer().train();
 		//new TwoHandTrainer().train();
@@ -20,7 +23,6 @@ class OneHandTrainer{
 	
 	private final int NUM_SAMPLES = 1000;
 	protected final long SAMPLE_DELAY = (long) 0.1;
-	public static final int ONE_HAND_NUM_FEATURES = 60;
 	
 	public void train(){
 		Scanner scan = new Scanner(System.in);
@@ -57,7 +59,7 @@ class OneHandTrainer{
 	   for(int i=0; i< NUM_SAMPLES;i++){
 	        Thread.sleep(SAMPLE_DELAY);
 	        Map<String, Float> sample = handData.getOneHandPosition(controller);
-	        while(sample==null || sample.size()!=ONE_HAND_NUM_FEATURES){
+	        while(sample==null || sample.size()!=SignTrainer.ONE_HAND_NUM_FEATURES){
 	           System.out.println("Please place only " + hand + " hand in view");
 	            sample = handData.getOneHandPosition(controller);
 	        }
@@ -70,7 +72,6 @@ class OneHandTrainer{
 
 class TwoHandTrainer extends OneHandTrainer{
 	private final int NUM_SAMPLES = 1010;
-	public static final int TW0_HAND_NUM_FEATURES = 120;
 	private final int prepDelay=20;
 	
 	@Override
@@ -86,7 +87,7 @@ class TwoHandTrainer extends OneHandTrainer{
 		   for(int i=0; i< NUM_SAMPLES+prepDelay;i++){
 		        Thread.sleep(SAMPLE_DELAY);
 		        Map<String, Float> sample = handData.getTwoHandsPosition(controller);
-		        while(sample==null || sample.size()!=TW0_HAND_NUM_FEATURES){
+		        while(sample==null || sample.size()!=SignTrainer.TW0_HAND_NUM_FEATURES){
 		           System.out.println("Please place 2 hands in view");
 		            sample = handData.getTwoHandsPosition(controller);
 		        }

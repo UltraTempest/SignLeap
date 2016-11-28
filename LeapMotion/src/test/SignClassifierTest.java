@@ -4,10 +4,10 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import recording.AbstractSignClassifier;
+import classifier.AbstractSignClassifier;
+import classifier.OneHandSignClassifier;
+import classifier.TwoHandSignClassifier;
 import recording.HandData.Handedness;
-import recording.OneHandSignClassifier;
-import recording.TwoHandSignClassifier;
 import weka.core.Instance;
 
 public class SignClassifierTest{
