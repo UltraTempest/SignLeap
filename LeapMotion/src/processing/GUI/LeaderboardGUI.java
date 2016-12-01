@@ -19,7 +19,7 @@ public class LeaderboardGUI extends AbstractGeneralGUI{
 	
 	public void homeButtonClicked(GButton button, GEvent event){
 		getPage().switchToMainMenuGUI();
-	}
+		}
 	
 	@Override
 	public boolean isWarningRequired(){
@@ -33,8 +33,7 @@ public class LeaderboardGUI extends AbstractGeneralGUI{
 		  homeButton.setText("Home");
 		  homeButton.setTextBold();
 		  homeButton.setLocalColorScheme(GCScheme.CYAN_SCHEME);
-		  homeButton.setEnabled(true);
-		  homeButton.addEventHandler(this, "homeButtonClicked");
+		  homeButton.addEventHandler(getPage(), "homeButtonClicked");
 		  getPage().textSize(50);
 		  getPage().text("Leaderboard", 50, 60);
 		  getPage().textSize(40);

@@ -29,8 +29,10 @@ public class SignNumbersGUI extends AbstractSignCharacterGUI{
 			  else
 				  data=new HandData().getTwoHandsPosition(getPage().getLeap());
 		  if(data!=null){
+			  double score = getPage().getBinaryClassifier().score(data,previousChar);
+			  //double score = getPage().getMultiClassClassifier().score(data,previousChar);
 			  //double score = getPage().getNeuroClassifier().score(data,previousChar);
-			  double score = getPage().getClassifier().score(data,previousChar);
+			  // double score = getPage().getClassifier().score(data,previousChar);
 			  //score = getPage().getSVM().getProbabilityForInstance(data, previousChar);
 			  setProgressBarValue((float) (score*100));
 			PApplet.println(score);

@@ -6,6 +6,7 @@ import com.leapmotion.leap.Controller;
 import com.leapmotion.leap.Gesture;
 
 import classifier.AbstractSignClassifier;
+import classifier.BinaryLibSVMClassifier;
 import classifier.LibSVMClassifier;
 import classifier.NeuralClassifier;
 import classifier.OneClassifier;
@@ -18,6 +19,7 @@ import g4p_controls.GEvent;
 import g4p_controls.GPanel;
 import g4p_controls.GValueControl;
 import processing.GUI.IGUI;
+import processing.GUI.LeaderboardGUI;
 import processing.core.PApplet;
 import recording.HandData;
 import recording.HandData.Handedness;
@@ -31,15 +33,16 @@ public class Page extends PApplet{
 	
 	private final LeapMouseListener leapListen= new LeapMouseListener();
 	
-	@SuppressWarnings("unused")
 	private AbstractSignClassifier currentClassifier;
 	
+	private final LibSVMClassifier multiclassLib=null;
+	//private final LibSVMClassifier multiclassLib = new LibSVMClassifier("right", "num", 60);
 	private NeuralClassifier neuro=null;
 	//private final NeuralClassifier neuro = new NeuralClassifier("right", "num", 60);
 	//private final SVMClassifier model = new SVMClassifier();
 	private final SVMClassifier model = null;
-	//private final LibSVMClassifier classif=null;
-	private final LibSVMClassifier classif= new LibSVMClassifier("right", "num", 60);
+	//private final BinaryLibSVMClassifier classif=null;
+	private final BinaryLibSVMClassifier classif= new BinaryLibSVMClassifier("right", "num", 60);
 	//private final OneClassifier oneClassif= new OneClassifier("right", "num", 60);
 	private final OneClassifier oneClassif=null;
 	private final Map<String,AbstractSignClassifier> classifierMap= new HashMap<String, AbstractSignClassifier>();
@@ -89,11 +92,18 @@ public class Page extends PApplet{
 	 public SVMClassifier getSVM(){
 			return this.model;
 		}
+	 
+	 public LibSVMClassifier getMultiClassClassifier(){
+		 return this.multiclassLib;
+	 }
 	
-	 public LibSVMClassifier getClassifier(){
-		//return this.currentClassifier;
+	 public BinaryLibSVMClassifier getBinaryClassifier(){
 		 return this.classif;
 	}
+	 
+	 public AbstractSignClassifier getClassifier(){
+		 return this.currentClassifier;
+	 }
 	 
 	 public NeuralClassifier getNeuroClassifier(){
 		 return this.neuro;
@@ -149,6 +159,10 @@ public class Page extends PApplet{
 	 public void turnOffLeapMouseControl(){
 		 controller.removeListener(leapListen);
 	 }
+	 
+	 public void homeButtonClicked(GButton button, GEvent event){
+		 ((LeaderboardGUI) currentGUIDisplayed).homeButtonClicked(button, event);
+		}
 	 
 	 public void handleButtonEvents(GButton button, GEvent event) { /* Not called */ }
 	 

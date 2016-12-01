@@ -22,7 +22,7 @@ public class SignTrainer {
 class OneHandTrainer{
 	
 	private final int NUM_SAMPLES = 1000;
-	protected final long SAMPLE_DELAY = (long) 0.1;
+	protected final long SAMPLE_DELAY = (long) 0.0;
 	
 	public void train(){
 		Scanner scan = new Scanner(System.in);

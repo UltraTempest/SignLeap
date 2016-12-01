@@ -112,6 +112,7 @@ public class NeuralClassifier {
 				//Instance of NN
 				MultilayerPerceptron classifier = new MultilayerPerceptron();
 				//Setting Parameters
+				classifier.setGUI(true);
 				classifier.setLearningRate(0.1);
 				classifier.setMomentum(0.2);
 				classifier.setTrainingTime(2000);
