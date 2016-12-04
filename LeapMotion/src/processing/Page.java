@@ -3,7 +3,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.leapmotion.leap.Controller;
-import com.leapmotion.leap.Gesture;
+import com.leapmotion.leap.Frame;
+import com.leapmotion.leap.Image;
+import com.leapmotion.leap.ImageList;
 
 import classifier.AbstractSignClassifier;
 import classifier.BinaryLibSVMClassifier;
@@ -18,9 +20,11 @@ import g4p_controls.GEditableTextControl;
 import g4p_controls.GEvent;
 import g4p_controls.GPanel;
 import g4p_controls.GValueControl;
+import processing.GUI.GUIFactory;
 import processing.GUI.IGUI;
 import processing.GUI.LeaderboardGUI;
 import processing.core.PApplet;
+import processing.core.PImage;
 import recording.HandData;
 import recording.HandData.Handedness;
 
@@ -61,13 +65,13 @@ public class Page extends PApplet{
 	    
 	 public void setup(){ 
 		 initializeClassifiers();
-	     controller.enableGesture(Gesture.Type.TYPE_KEY_TAP);
-	     controller.enableGesture(Gesture.Type.TYPE_CIRCLE);
+		 controller.setPolicy(Controller.PolicyFlag.POLICY_IMAGES);
 	     background(230);
 	     currentGUIDisplayed=guiFactory.createWelcomeGUI();
 	}
 
 	 public void draw(){
+		 displayLeapImages();
 		renderLeapWarning();
 		currentGUIDisplayed.render();
 	}
@@ -177,5 +181,35 @@ public class Page extends PApplet{
 			// classifierMap.put(Handedness.LEFT.toString()+"num", new OneHandSignClassifier(Handedness.LEFT.toString(), "num"));
 			 classifierMap.put(Handedness.RIGHT.toString()+"num", new OneHandSignClassifier(Handedness.RIGHT.toString(), "num"));
 			 classifierMap.put(Handedness.RIGHT.toString()+"alpha", new OneHandSignClassifier(Handedness.RIGHT.toString(), "alpha"));
+	 }
+	 
+	 private void displayLeapImages(){
+		 Frame frame = controller.frame();
+		 if(frame.isValid()){
+		   ImageList images = frame.images();
+		   for(Image image : images)
+		   {
+			   PImage[] cameras = new PImage[2];
+		     //Processing PImage class
+		     PImage camera = cameras[image.id()];
+		     camera = createImage(image.width(), image.height(), RGB);
+		     camera.loadPixels();
+		     
+		     //Get byte array containing the image data from Image object
+		     byte[] imageData = image.data();
+
+		     //Copy image data into display object, in this case PImage defined in Processing
+		     for(int i = 0; i < image.width() * image.height(); i++){
+		       int r = (imageData[i] & 0xFF) << 16; //convert to unsigned and shift into place
+		       int g = (imageData[i] & 0xFF) << 8;
+		       int b = imageData[i] & 0xFF;
+		       camera.pixels[i] =  r | g | b; 
+		     }
+		     
+		     //Show the image
+		     camera.updatePixels();
+		     image(camera, 640 * image.id(), 0);  
+		   }
+		}
 	 }
 }

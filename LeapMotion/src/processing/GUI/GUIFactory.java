@@ -1,13 +1,5 @@
-package processing;
+package processing.GUI;
 
-import processing.GUI.IGUI;
-import processing.GUI.IntroductionGUI;
-import processing.GUI.LeaderboardGUI;
-import processing.GUI.GameOverGUI;
-import processing.GUI.MainMenuGUI;
-import processing.GUI.SignAlphabetGUI;
-import processing.GUI.SignNumbersGUI;
-import processing.GUI.WelcomeGUI;
 import processing.core.PApplet;
 
 public class GUIFactory {

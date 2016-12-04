@@ -12,7 +12,7 @@ import libsvm.svm_model;
 import libsvm.svm_node;
 import libsvm.svm_parameter;
 import libsvm.svm_problem;
-import recording.SignTrainer;
+import processing.SignTrainer;
 
 public class SVMClassifier{
 	private static final String language= "ISL";

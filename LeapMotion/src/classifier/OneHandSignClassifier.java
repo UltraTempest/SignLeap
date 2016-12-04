@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import database.SignedDB;
-import recording.SignTrainer;
+import processing.SignTrainer;
 import weka.core.Attribute;
 import weka.core.DenseInstance;
 import weka.core.Instance;
