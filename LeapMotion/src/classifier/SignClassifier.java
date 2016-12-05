@@ -17,7 +17,7 @@ import weka.core.Instance;
 import weka.core.Instances;
 import weka.core.converters.ConverterUtils.DataSource;
 
-public class SignRandomForest {
+public class SignClassifier {
 		
 		public static final String language= "ISL";
 		private Classifier classifier;
@@ -26,21 +26,21 @@ public class SignRandomForest {
 		private Instances testingSet;
 		
 		public static void main(String args[]){
-				new SignRandomForest("right", "num").evaluate();
+				new SignClassifier("right", "num").evaluate();
 		}
 		
 		
-		public SignRandomForest(String hand, String type){
-			final String filename="Random" + language +"_" +  hand + "_" + type + ".model";
+		public SignClassifier(String hand, String type){
+			final String filename=language +"_" +  hand + "_" + type + ".model";
 			   setupClassifier(filename);
 			}
 			
-			private Instance createInstanceFromData(Map<String, Float> data, String c){
+			private Instance createInstanceFromData(Map<String, Float> data){
 				Instance sampleInstance = new DenseInstance(numberOfFeatures+1);
 				 	for(int i=0; i<numberOfFeatures;i++){
 				 		sampleInstance.setValue(i, data.get("feat"+i));
 				 	}
-				 	sampleInstance.setClassValue(numberOfFeatures-1);
+				 	sampleInstance.setDataset(testingSet);
 				 	return sampleInstance;
 			}
 		
@@ -50,9 +50,9 @@ public class SignRandomForest {
 				 trainingSet= source.getDataSet();
 				 source= new DataSource("SignData/TestingData/num.arff");
 				 testingSet= source.getDataSet();
-				 numberOfFeatures=trainingSet.numAttributes();
-				 trainingSet.setClassIndex(numberOfFeatures - 1);
-				 testingSet.setClassIndex(numberOfFeatures-1);
+				 numberOfFeatures=trainingSet.numAttributes()-1;
+				 trainingSet.setClassIndex(numberOfFeatures);
+				 testingSet.setClassIndex(numberOfFeatures);
 				 File f = new File(filename);
 				 if(f.exists() && !f.isDirectory())  
 					// deserialize model
@@ -71,11 +71,10 @@ public class SignRandomForest {
 		 }
 		
 		public double score(Map<String, Float> data, char c){
-			String charToFind=String.valueOf(c);
-			Instance sampleInstance=createInstanceFromData(data, charToFind);
-			int position=0;
+			Instance sampleInstance=createInstanceFromData(data);
 			try {
 				double[] fDistribution = classifier.distributionForInstance(sampleInstance);
+				int position=getLabelDistributionPosition(String.valueOf(c), fDistribution);
 				return fDistribution[position];
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -83,6 +82,13 @@ public class SignRandomForest {
 			return 0.0;
 		}	
 		
+		private int getLabelDistributionPosition(String charToFind, double[] fDistribution){
+			for(int i=0; i<fDistribution.length;i++){
+			if(charToFind.equals(testingSet.classAttribute().value(i)))
+				return i;
+			}
+			return -1;
+		}
 		
 		public void evaluate(){	
 			// training using a collection of classifiers (NaiveBayes, SMO (AKA SVM), KNN and Decision trees.)

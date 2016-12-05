@@ -4,7 +4,8 @@ import java.util.Map;
 
 import com.leapmotion.leap.Frame;
 
-import classifier.OneHandSignClassifier;
+import classifier.SignClassifier;
+import processing.Page;
 import processing.core.PApplet;
 import recording.HandData;
 
@@ -17,19 +18,20 @@ public class SignAlphabetGUI extends AbstractSignCharacterGUI{
 	
 	public SignAlphabetGUI(PApplet page) {
 		super(page);
-		imageName=OneHandSignClassifier.language +  "/" + getPage().getHand() +"/" + alphabet + "/";
+		imageName=SignClassifier.language +  "/" + getPage().getHand() +"/" + alphabet + "/";
 	}
 	
 	private void signAlphabet(){
 		  Frame frame = leap.frame();
+		  Page page=getPage();
 		  if(frame.hands().count()>0){
-		  Map<String, Float> data=new HandData().getOneHandPosition(getPage().getLeap());
+		  Map<String, Float> data=new HandData().getOneHandPosition(page.getLeap());
 		  if(data!=null){
-			  double classProbValue = getPage().getClassifier().score(data,previousChar);
+			  double classProbValue = page.getClassifier().score(data,previousChar);
 			  if(classProbValue>0.4)
-				  getPage().text("Close!",50,50);
+				  page.text("Close!",50,50);
 			  else
-				  getPage().text("",50,50);
+				  page.text("",50,50);
 			  PApplet.println(classProbValue);
 			  if(classProbValue>0.9){
 				  incrementUserScore();;

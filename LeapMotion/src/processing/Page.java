@@ -1,19 +1,10 @@
 package processing;
-import java.util.HashMap;
-import java.util.Map;
-
 import com.leapmotion.leap.Controller;
 import com.leapmotion.leap.Frame;
 import com.leapmotion.leap.Image;
 import com.leapmotion.leap.ImageList;
 
-import classifier.AbstractSignClassifier;
-import classifier.BinaryLibSVMClassifier;
-import classifier.LibSVMClassifier;
-import classifier.NeuralClassifier;
-import classifier.OneClassifier;
-import classifier.OneHandSignClassifier;
-import classifier.SVMClassifier;
+import classifier.SignClassifier;
 import controller.LeapMouseListener;
 import g4p_controls.GButton;
 import g4p_controls.GEditableTextControl;
@@ -37,20 +28,7 @@ public class Page extends PApplet{
 	
 	private final LeapMouseListener leapListen= new LeapMouseListener();
 	
-	private AbstractSignClassifier currentClassifier;
-	
-	private final LibSVMClassifier multiclassLib=null;
-	//private final LibSVMClassifier multiclassLib = new LibSVMClassifier("right", "num", 60);
-	private NeuralClassifier neuro=null;
-	//private final NeuralClassifier neuro = new NeuralClassifier("right", "num", 60);
-	//private final SVMClassifier model = new SVMClassifier();
-	private final SVMClassifier model = null;
-	//private final BinaryLibSVMClassifier classif=null;
-	private final BinaryLibSVMClassifier classif= new BinaryLibSVMClassifier("right", "num", 60);
-	//private final OneClassifier oneClassif= new OneClassifier("right", "num", 60);
-	private final OneClassifier oneClassif=null;
-	private final Map<String,AbstractSignClassifier> classifierMap= new HashMap<String, AbstractSignClassifier>();
-	//private TwoHandSignClassifier twoSignClass= new TwoHandSignClassifier(Handedness.RIGHT.toString());
+	private SignClassifier currentClassifier= new SignClassifier(Handedness.RIGHT.toString(), "num");
 	
 	private final GUIFactory guiFactory= new GUIFactory(this);
 	private IGUI currentGUIDisplayed;
@@ -64,14 +42,14 @@ public class Page extends PApplet{
 	}
 	    
 	 public void setup(){ 
-		 initializeClassifiers();
-		 controller.setPolicy(Controller.PolicyFlag.POLICY_IMAGES);
+		 //initializeClassifiers();
+		 //controller.setPolicy(Controller.PolicyFlag.POLICY_IMAGES);
 	     background(230);
 	     currentGUIDisplayed=guiFactory.createWelcomeGUI();
 	}
 
 	 public void draw(){
-		 displayLeapImages();
+		// displayLeapImages();
 		renderLeapWarning();
 		currentGUIDisplayed.render();
 	}
@@ -93,32 +71,12 @@ public class Page extends PApplet{
 		return this.hand.toString();
 	}
 	 
-	 public SVMClassifier getSVM(){
-			return this.model;
-		}
-	 
-	 public LibSVMClassifier getMultiClassClassifier(){
-		 return this.multiclassLib;
-	 }
-	
-	 public BinaryLibSVMClassifier getBinaryClassifier(){
-		 return this.classif;
-	}
-	 
-	 public AbstractSignClassifier getClassifier(){
-		 return this.currentClassifier;
-	 }
-	 
-	 public NeuralClassifier getNeuroClassifier(){
-		 return this.neuro;
-	 }
-	 
-	 public OneClassifier getOneClassifier(){
-		 return this.oneClassif;
-	 }
-	 
 	 public void setClassifier(String classifierToSet){
-		 currentClassifier=classifierMap.get(classifierToSet);
+		 //currentClassifier=classifierMap.get(classifierToSet);
+	 }
+	 
+	 public SignClassifier getClassifier(){
+		 return this.currentClassifier;
 	 }
 	 
 	 public void switchToIntroductionGUI(){
@@ -176,14 +134,15 @@ public class Page extends PApplet{
 	 
 	 public void handleSliderEvents(GValueControl slider, GEvent event) { /* Not called */ }
 	 
-	 private void initializeClassifiers(){
-		// classifierMap.put(Handedness.LEFT.toString()+"alpha", new OneHandSignClassifier(Handedness.LEFT.toString(), "alpha"));
-			// classifierMap.put(Handedness.LEFT.toString()+"num", new OneHandSignClassifier(Handedness.LEFT.toString(), "num"));
-			 classifierMap.put(Handedness.RIGHT.toString()+"num", new OneHandSignClassifier(Handedness.RIGHT.toString(), "num"));
-			 classifierMap.put(Handedness.RIGHT.toString()+"alpha", new OneHandSignClassifier(Handedness.RIGHT.toString(), "alpha"));
-	 }
+//	 private void initializeClassifiers(){
+//		// classifierMap.put(Handedness.LEFT.toString()+"alpha", new OneHandSignClassifier(Handedness.LEFT.toString(), "alpha"));
+//			// classifierMap.put(Handedness.LEFT.toString()+"num", new OneHandSignClassifier(Handedness.LEFT.toString(), "num"));
+//			 classifierMap.put(Handedness.RIGHT.toString()+"num", new OneHandSignClassifier(Handedness.RIGHT.toString(), "num"));
+//			 classifierMap.put(Handedness.RIGHT.toString()+"alpha", new OneHandSignClassifier(Handedness.RIGHT.toString(), "alpha"));
+//	 }
 	 
-	 private void displayLeapImages(){
+	 @SuppressWarnings("unused")
+	private void displayLeapImages(){
 		 Frame frame = controller.frame();
 		 if(frame.isValid()){
 		   ImageList images = frame.images();

@@ -9,6 +9,7 @@ import g4p_controls.GAlign;
 import g4p_controls.GCScheme;
 import g4p_controls.GLabel;
 import leaderboard.HighScoreManager;
+import processing.Page;
 import processing.core.PApplet;
 import processing.core.PImage;
 import recording.HandData;
@@ -21,16 +22,21 @@ public class WelcomeGUI extends AbstractGeneralGUI{
 
 	private GLabel PreferredHandText; 
 	private PImage img;
+	private int frameCount;
 	
 	private void changeStateIfRequired(){
 		  HandData handInfo = new HandData();
-		  Controller leap = getPage().getLeap();
+		  Page page= getPage();
+		  Controller leap = page.getLeap();
 		  if(handInfo.checkIfHandPlacedOverLeap(leap)){
-			  getPage().setHand(handInfo.GetHandedness(leap.frame().hands().frontmost()));
+			  frameCount++;
+			  if(frameCount<3)
+				  return;
+			  page.setHand(handInfo.GetHandedness(leap.frame().hands().frontmost()));
 			  if(!checkLeaderBoardFileExistence())
-			  getPage().switchToIntroductionGUI();
+				  page.switchToIntroductionGUI();
 			  else
-				  getPage().switchToMainMenuGUI();
+				  page.switchToMainMenuGUI();
 		  }
 	}
 	
