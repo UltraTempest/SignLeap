@@ -4,6 +4,7 @@ import com.leapmotion.leap.Frame;
 import com.leapmotion.leap.Image;
 import com.leapmotion.leap.ImageList;
 
+import Command.EButton;
 import classifier.SignClassifier;
 import controller.LeapMouseListener;
 import g4p_controls.GButton;
@@ -125,6 +126,10 @@ public class Page extends PApplet{
 	 public void homeButtonClicked(GButton button, GEvent event){
 		 ((LeaderboardGUI) currentGUIDisplayed).homeButtonClicked(button, event);
 		}
+	 
+	 public void handleButtonEvents(EButton button, GEvent event) { 
+	        button.getCommand().process();
+      }
 	 
 	 public void handleButtonEvents(GButton button, GEvent event) { /* Not called */ }
 	 
