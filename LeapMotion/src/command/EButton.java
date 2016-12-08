@@ -1,4 +1,4 @@
-package Command;
+package command;
 
 import g4p_controls.GButton;
 import processing.core.PApplet;

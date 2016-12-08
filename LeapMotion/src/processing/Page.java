@@ -4,8 +4,8 @@ import com.leapmotion.leap.Frame;
 import com.leapmotion.leap.Image;
 import com.leapmotion.leap.ImageList;
 
-import Command.EButton;
 import classifier.SignClassifier;
+import command.EButton;
 import controller.LeapMouseListener;
 import g4p_controls.GButton;
 import g4p_controls.GEditableTextControl;

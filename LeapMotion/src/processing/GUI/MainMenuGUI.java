@@ -4,10 +4,10 @@ import java.awt.Font;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import Command.AlphabetGUISwitchCommand;
-import Command.EButton;
-import Command.ICommand;
-import Command.NumberGUISwitchCommand;
+import command.AlphabetGUISwitchCommand;
+import command.EButton;
+import command.ICommand;
+import command.NumberGUISwitchCommand;
 import g4p_controls.GCScheme;
 import processing.Page;
 import processing.core.PApplet;

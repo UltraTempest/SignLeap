@@ -1,4 +1,4 @@
-package Command;
+package command;
 
 import processing.Page;
 import processing.core.PApplet;
