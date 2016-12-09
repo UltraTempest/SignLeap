@@ -4,6 +4,9 @@ import java.awt.Font;
 import java.io.File;
 
 import com.leapmotion.leap.Controller;
+
+import command.IntroductionCommand;
+import command.MainMenuCommand;
 import g4p_controls.G4P;
 import g4p_controls.GAlign;
 import g4p_controls.GCScheme;
@@ -34,9 +37,9 @@ public class WelcomeGUI extends AbstractGeneralGUI{
 				  return;
 			  page.setHand(handInfo.GetHandedness(leap.frame().hands().frontmost()));
 			  if(!checkLeaderBoardFileExistence())
-				  page.switchToIntroductionGUI();
+				  new IntroductionCommand(page).process();
 			  else
-				  page.switchToMainMenuGUI();
+				  new MainMenuCommand(page).process();
 		  }
 	}
 	

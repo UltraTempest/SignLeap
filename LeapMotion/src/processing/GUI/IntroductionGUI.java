@@ -2,8 +2,10 @@ package processing.GUI;
 
 import java.awt.Font;
 
+import command.MainMenuCommand;
 import g4p_controls.G4P;
 import g4p_controls.GTextField;
+import processing.Page;
 import processing.core.PApplet;
 import processing.core.PImage;
 import recording.HandData;
@@ -36,11 +38,12 @@ public class IntroductionGUI extends AbstractGeneralGUI{
 	}
 	
 	private void checkIfKeyTapped(){
-		 if(new HandData().isTapped(getPage().getLeap()))
+		 Page page=getPage();
+		 if(new HandData().isTapped(page.getLeap()))
 			 postionOfStringDisplayed++;
 		 
 		 if(postionOfStringDisplayed==introTextArray.length){
-			 getPage().switchToMainMenuGUI();
+			 new MainMenuCommand(page).process();
 		     return;
 		 }
 		 if(!introText.getText().equals(introTextArray[postionOfStringDisplayed])){

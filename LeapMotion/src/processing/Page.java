@@ -14,7 +14,6 @@ import g4p_controls.GPanel;
 import g4p_controls.GValueControl;
 import processing.GUI.GUIFactory;
 import processing.GUI.IGUI;
-import processing.GUI.LeaderboardGUI;
 import processing.core.PApplet;
 import processing.core.PImage;
 import recording.HandData;
@@ -34,6 +33,8 @@ public class Page extends PApplet{
 	private final GUIFactory guiFactory= new GUIFactory(this);
 	private IGUI currentGUIDisplayed;
 	
+	private float defaultTextSize;
+	
 	 public static void main(String[] args) {
 	        PApplet.main("processing.Page");
 	    }
@@ -46,6 +47,7 @@ public class Page extends PApplet{
 		 //initializeClassifiers();
 		 //controller.setPolicy(Controller.PolicyFlag.POLICY_IMAGES);
 	     background(230);
+	     defaultTextSize=g.textSize;
 	     currentGUIDisplayed=guiFactory.createWelcomeGUI();
 	}
 
@@ -55,7 +57,7 @@ public class Page extends PApplet{
 		currentGUIDisplayed.render();
 	}
 	
-	 private void stateSwitch(IGUI gui){
+	 public void stateSwitch(IGUI gui){
 		currentGUIDisplayed.dispose();
 		this.currentGUIDisplayed=gui;
 	} 
@@ -63,6 +65,10 @@ public class Page extends PApplet{
 	 public Controller getLeap(){
 		return this.controller;
 	}
+	 
+	 public float getDefaultTextSize(){
+		 return this.defaultTextSize;
+	 }
 	
 	 public void setHand(Handedness hand){
 		this.hand=hand;
@@ -78,26 +84,6 @@ public class Page extends PApplet{
 	 
 	 public SignClassifier getClassifier(){
 		 return this.currentClassifier;
-	 }
-	 
-	 public void switchToIntroductionGUI(){
-		 stateSwitch(guiFactory.createIntroductionGUI());
-	 }
-	 
-	 public void switchToMainMenuGUI(){
-		 stateSwitch(guiFactory.createMainMenuGUI());
-	 }
-	 
-	 public void switchToSignNumbersGUI(){
-		 stateSwitch(guiFactory.createSignNumbersGUI());
-	 }
-	 
-	 public void switchToSignAlphabetGUI(){
-		 stateSwitch(guiFactory.createSignAlphabetGUI());
-	 }
-	 
-	 public void switchToLeaderboardGUI(){
-		 stateSwitch(guiFactory.createLeaderboardGUI());
 	 }
 	 
 	 public void switchToGameOverGUI(int userScore){
@@ -122,10 +108,6 @@ public class Page extends PApplet{
 	 public void turnOffLeapMouseControl(){
 		 controller.removeListener(leapListen);
 	 }
-	 
-	 public void homeButtonClicked(GButton button, GEvent event){
-		 ((LeaderboardGUI) currentGUIDisplayed).homeButtonClicked(button, event);
-		}
 	 
 	 public void handleButtonEvents(EButton button, GEvent event) { 
 	        button.getCommand().process();

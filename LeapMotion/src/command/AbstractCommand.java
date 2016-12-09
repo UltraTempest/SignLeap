@@ -1,6 +1,7 @@
 package command;
 
 import processing.Page;
+import processing.GUI.IGUI;
 import processing.core.PApplet;
 
 public abstract class AbstractCommand implements ICommand{
@@ -12,5 +13,9 @@ public abstract class AbstractCommand implements ICommand{
 	
 	protected Page getPage(){
 		return (Page) AbstractCommand.page;
+	}
+	
+	protected void executeCommand(IGUI gui){
+		getPage().stateSwitch(gui);
 	}
 }

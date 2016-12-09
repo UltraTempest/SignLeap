@@ -1,5 +1,6 @@
 package processing.GUI;
 
+import command.LeaderboardCommand;
 import g4p_controls.G4P;
 import g4p_controls.GAlign;
 import g4p_controls.GButton;
@@ -9,6 +10,7 @@ import g4p_controls.GLabel;
 import g4p_controls.GPanel;
 import g4p_controls.GTextField;
 import leaderboard.HighScoreManager;
+import processing.Page;
 import processing.core.PApplet;
 
 public class GameOverGUI extends AbstractGeneralGUI{
@@ -30,32 +32,33 @@ public class GameOverGUI extends AbstractGeneralGUI{
 
 	public void submitButtonClicked(GButton source, GEvent event) {
 		new HighScoreManager().addScore(userInputName.getText(), score);
-		getPage().switchToLeaderboardGUI();
+		new LeaderboardCommand(getPage()).process();
 	} 
     
 	public void userInputFieldEventHandle(GTextField source, GEvent event) { 
         if(event.toString().equals("ENTERED"))
 		submitButtonClicked(null, null);
-		}
+	}
 
 	// Create all the GUI controls. 
 	@Override
 	protected void createGUI(){
-	  gameOverPanel = new GPanel(getPage(), 245, 182, 442, 232, "                                                             Game Over!");
+	  Page page=getPage();
+	  gameOverPanel = new GPanel(page, 245, 182, 442, 232, "                                                             Game Over!");
 	  gameOverPanel.setDraggable(false);
 	  gameOverPanel.setCollapsible(false);
 	  gameOverPanel.setText("                                                             Game Over!");
 	  gameOverPanel.setTextBold();
 	  gameOverPanel.setLocalColorScheme(GCScheme.CYAN_SCHEME);
 	  gameOverPanel.setOpaque(true);
-	  userInputName = new GTextField(getPage(), 71, 148, 192, 21, G4P.SCROLLBARS_NONE);
+	  userInputName = new GTextField(page, 71, 148, 192, 21, G4P.SCROLLBARS_NONE);
 	  userInputName.setOpaque(true);
 	  userInputName.addEventHandler(this, "userInputFieldEventHandle");
-	  submitButton = new GButton(getPage(), 294, 148, 63, 23);
+	  submitButton = new GButton(page, 294, 148, 63, 23);
 	  submitButton.setText("Submit");
 	  submitButton.setLocalColorScheme(GCScheme.GREEN_SCHEME);
 	  submitButton.addEventHandler(this, "submitButtonClicked");
-	  label1 = new GLabel(getPage(), 87, 61, 233, 23);
+	  label1 = new GLabel(page, 87, 61, 233, 23);
 	  label1.setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
 	  label1.setText("You scored " + score +  " points!");
 	  label1.setOpaque(false);

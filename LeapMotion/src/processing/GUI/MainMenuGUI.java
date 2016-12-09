@@ -4,10 +4,10 @@ import java.awt.Font;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import command.AlphabetGUISwitchCommand;
+import command.AlphabetGUICommand;
 import command.EButton;
 import command.ICommand;
-import command.NumberGUISwitchCommand;
+import command.NumberGUICommand;
 import g4p_controls.GCScheme;
 import processing.Page;
 import processing.core.PApplet;
@@ -25,12 +25,12 @@ public class MainMenuGUI extends AbstractGeneralGUI{
 	  @Override
 	  protected void createGUI(){
 	  Page page=getPage();
-	  AlphabetButton = new EButton(page, 245, 111, 449, 142, new AlphabetGUISwitchCommand(page));
+	  AlphabetButton = new EButton(page, 245, 111, 449, 142, new AlphabetGUICommand(page));
 	  AlphabetButton.setText("Alphabet");
 	  AlphabetButton.setFont(new Font("Dialog", Font.PLAIN, 30));
 	  AlphabetButton.setLocalColorScheme(GCScheme.CYAN_SCHEME); 
 	  AlphabetButton.addEventHandler(page, "handleButtonEvents");
-	  NumbersButton = new EButton(page, 245, 371, 449, 142, new NumberGUISwitchCommand(page));
+	  NumbersButton = new EButton(page, 245, 371, 449, 142, new NumberGUICommand(page));
 	  NumbersButton.setText("Numbers");
 	  NumbersButton.setFont(new Font("Dialog", Font.PLAIN, 30));
 	  NumbersButton.setLocalColorScheme(GCScheme.CYAN_SCHEME);
@@ -64,6 +64,7 @@ public class MainMenuGUI extends AbstractGeneralGUI{
 			  if(!timerRunning){
 			  startTimer(button.getCommand());
 			  }
+//				page.background(230);			  
 //			    page.fill(255);
 //			    page.textAlign(PConstants.LEFT);
 //			    page.text ("LOADING " + ((page.frameCount%301) / 3) + "%", 50, 130);
