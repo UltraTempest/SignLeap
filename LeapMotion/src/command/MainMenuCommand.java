@@ -13,6 +13,7 @@ public class MainMenuCommand extends AbstractCommand{
 	@Override
 	public void process() {
 		Page page=getPage();
+		page.background(230);
 		page.textSize(page.getDefaultTextSize());
 		executeCommand(new GUIFactory(page).createMainMenuGUI());
 	}

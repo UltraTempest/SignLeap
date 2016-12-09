@@ -16,7 +16,6 @@ public class MainMenuGUI extends AbstractGeneralGUI{
 	private EButton AlphabetButton; 
 	private EButton NumbersButton;
 	private Timer timer;
-	boolean timerRunning=false;
 	
 	public MainMenuGUI(PApplet page) {
 		super(page);
@@ -48,12 +47,12 @@ public class MainMenuGUI extends AbstractGeneralGUI{
 	@Override
 	public void render(){
 		super.render();
-        if(!checkIfMouseOverButton(AlphabetButton))
-        checkIfMouseOverButton(NumbersButton);
+		Page page=getPage();
+		checkIfMouseOverButton(AlphabetButton, page);
+        checkIfMouseOverButton(NumbersButton, page);
 	}
 	
-	private boolean checkIfMouseOverButton(EButton button){
-		Page page=getPage();
+	private void checkIfMouseOverButton(EButton button, Page page){
 		float x=button.getX();
 		float y=button.getY();
 		float height=button.getHeight();
@@ -61,9 +60,11 @@ public class MainMenuGUI extends AbstractGeneralGUI{
 		// Test if the cursor is over the box 
 		  if (page.mouseX > x-width && page.mouseX < x+width && 
 		      page.mouseY > y-height && page.mouseY < y+height) {
-			  if(!timerRunning){
+			  if(!button.isTimerRunning()){
 			  startTimer(button.getCommand());
+			  button.setTimerRunning(true);
 			  }
+			  return;
 //				page.background(230);			  
 //			    page.fill(255);
 //			    page.textAlign(PConstants.LEFT);
@@ -72,25 +73,22 @@ public class MainMenuGUI extends AbstractGeneralGUI{
 //			    page.fill(0);
 //			    int fillX = ((page.frameCount%301) / 3 * 2);
 //			    page.rect(250, 140, fillX-200, 20);
-			    return true;
 		  }
-		  else if(timerRunning){
+		 if(button.isTimerRunning()){
 			  timer.cancel();
-			  timerRunning=false;
-			 // page.background(230);
+			  button.setTimerRunning(false);
 		  }
-		  return false;
 	}
 	
 	protected void startTimer(ICommand command){
 		timer= new Timer();
-		timerRunning=true;
 		timer.scheduleAtFixedRate(new TimerTask() {
-            int i = 5;//defined for a 5 second countdown
+            int i = 3;//defined for a 3 second countdown
             public void run() {
             	i--;
                 if (i< 0){
-                    timer.cancel();
+                	this.cancel();
+                	timer.cancel();
                     command.process();
                 }
             }

@@ -18,7 +18,7 @@ public class SignNumbersGUI extends AbstractSignCharacterGUI{
 	
 	public SignNumbersGUI(PApplet page) {
 		super(page);
-		imageName=SignClassifier.language +  "/" + getPage().getHand() +"/" + numbers + "/";
+		imageName=SignClassifier.language +  "/" + ((Page) page).getHand() +"/" + numbers + "/";
 	}
 	
 	private void signNumbers(){	
@@ -42,7 +42,6 @@ public class SignNumbersGUI extends AbstractSignCharacterGUI{
 			  }
 		  	}
 		  }
-		  checkIfTimerExpired();
 		}
 	
 	@Override

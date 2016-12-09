@@ -50,15 +50,16 @@ public class WelcomeGUI extends AbstractGeneralGUI{
 	@Override
 	protected void createGUI(){
 		  G4P.setGlobalColorScheme(GCScheme.BLUE_SCHEME);
-		  getPage().getSurface().setTitle("Sketch Window");  
-		  PreferredHandText = new GLabel(getPage(), 3, 497, 950, 139);
+		  Page page = getPage();
+		  page.getSurface().setTitle("Sketch Window");  
+		  PreferredHandText = new GLabel(page, 3, 497, 950, 139);
 		  PreferredHandText.setTextAlign(GAlign.CENTER, GAlign.BOTTOM);
 		  PreferredHandText.setText("Place your preferred hand over the Leap Motion to begin!");
 		  PreferredHandText.setFont(new Font("Dialog", Font.PLAIN, 58));
 		  PreferredHandText.setOpaque(false);
 		  String logoFile="ISL_logo.png";
-		  img=getPage().loadImage(logoFile);
-		  getPage().image(img,31, 7, 886, 482);
+		  img=page.loadImage(logoFile);
+		  page.image(img,31, 7, 886, 482);
 		}
 	
 	@Override

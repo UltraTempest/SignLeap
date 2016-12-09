@@ -18,7 +18,7 @@ public class SignAlphabetGUI extends AbstractSignCharacterGUI{
 	
 	public SignAlphabetGUI(PApplet page) {
 		super(page);
-		imageName=SignClassifier.language +  "/" + getPage().getHand() +"/" + alphabet + "/";
+		imageName=SignClassifier.language +  "/" + ((Page) page).getHand() +"/" + alphabet + "/";
 	}
 	
 	private void signAlphabet(){
@@ -41,7 +41,6 @@ public class SignAlphabetGUI extends AbstractSignCharacterGUI{
 			  }
 		  	}
 		  }
-		  checkIfTimerExpired();
 	}
 
 	@Override

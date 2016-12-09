@@ -39,7 +39,7 @@ public class LeaderboardGUI extends AbstractGeneralGUI{
 		  page.text("Score", 500, 180);
 		  page.textSize(30);
 		  int position=240;
-		  getPage().line(0, position-45, 575, position-45);
+		  page.line(0, position-45, 575, position-45);
 		  ArrayList<Score> scores= new HighScoreManager().getScores();
 		  for(int i=0; i< scores.size();i++) {
 			  Score score=scores.get(i);

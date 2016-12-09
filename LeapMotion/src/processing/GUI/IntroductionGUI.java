@@ -26,15 +26,16 @@ public class IntroductionGUI extends AbstractGeneralGUI{
      
 	@Override
 	protected void createGUI(){
-		introText = new GTextField(getPage(),130, 212, 801, 89, G4P.SCROLLBARS_NONE);
+		Page page=getPage();
+		introText = new GTextField(page,130, 212, 801, 89, G4P.SCROLLBARS_NONE);
 		introText.setText(introTextArray[postionOfStringDisplayed]);
 		introText.setFont(new Font("Dialog", Font.PLAIN, 20));
 		introText.setOpaque(false);
 		introText.setTextEditEnabled(false);
-		img=getPage().loadImage("Leap_Gesture_Tap.png");
-		getPage().image(img,350, 380, 138, 109);
-		getPage().fill(0, 102, 153);
-	    getPage().text("Use the keytap gesture to continue!",300, 551);
+		img=page.loadImage("Leap_Gesture_Tap.png");
+		page.image(img,350, 380, 138, 109);
+		page.fill(0, 102, 153);
+		page.text("Use the keytap gesture to continue!",300, 551);
 	}
 	
 	private void checkIfKeyTapped(){

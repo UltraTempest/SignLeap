@@ -62,11 +62,11 @@ public class GameOverGUI extends AbstractGeneralGUI{
 	  label1.setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
 	  label1.setText("You scored " + score +  " points!");
 	  label1.setOpaque(false);
-	  label2 = new GLabel(getPage(), 87, 88, 235, 20);
+	  label2 = new GLabel(page, 87, 88, 235, 20);
 	  label2.setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
 	  label2.setText("What is your name?");
 	  label2.setOpaque(false);
-	  label3 = new GLabel(getPage(), 65, 126, 52, 23);
+	  label3 = new GLabel(page, 65, 126, 52, 23);
 	  label3.setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
 	  label3.setText("Name:");
 	  label3.setTextBold();
