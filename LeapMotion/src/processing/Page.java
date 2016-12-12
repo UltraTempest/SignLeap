@@ -1,6 +1,7 @@
 package processing;
 import com.leapmotion.leap.Controller;
 import com.leapmotion.leap.Frame;
+import com.leapmotion.leap.Gesture;
 import com.leapmotion.leap.Image;
 import com.leapmotion.leap.ImageList;
 
@@ -46,6 +47,8 @@ public class Page extends PApplet{
 	 public void setup(){ 
 		 //initializeClassifiers();
 		 //controller.setPolicy(Controller.PolicyFlag.POLICY_IMAGES);
+		 controller.enableGesture(Gesture.Type.TYPE_KEY_TAP);
+		 controller.enableGesture(Gesture.Type.TYPE_CIRCLE);
 	     background(230);
 	     defaultTextSize=g.textSize;
 	     currentGUIDisplayed=guiFactory.createWelcomeGUI();

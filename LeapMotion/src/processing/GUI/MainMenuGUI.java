@@ -53,45 +53,46 @@ public class MainMenuGUI extends AbstractGeneralGUI{
 	}
 	
 	private void checkIfMouseOverButton(EButton button, Page page){
-		float x=button.getX();
-		float y=button.getY();
-		float height=button.getHeight();
-		float width = button.getWidth();
-		// Test if the cursor is over the box 
-		  if (page.mouseX > x-width && page.mouseX < x+width && 
-		      page.mouseY > y-height && page.mouseY < y+height) {
-			  if(!button.isTimerRunning()){
-			  startTimer(button.getCommand());
-			  button.setTimerRunning(true);
-			  }
-			  return;
-//				page.background(230);			  
-//			    page.fill(255);
-//			    page.textAlign(PConstants.LEFT);
-//			    page.text ("LOADING " + ((page.frameCount%301) / 3) + "%", 50, 130);
-//			    page.rect(48, 138, 204, 24);
-//			    page.fill(0);
-//			    int fillX = ((page.frameCount%301) / 3 * 2);
-//			    page.rect(250, 140, fillX-200, 20);
-		  }
-		 if(button.isTimerRunning()){
-			  timer.cancel();
-			  button.setTimerRunning(false);
-		  }
+		if(page.mouseX==0 && page.mouseY==0)
+			return;
+		float buttonX=button.getX();
+		float buttonY=button.getY();
+		float buttonHeight=button.getHeight();
+		float buttonWidth = button.getWidth();
+
+		if (buttonX <= page.mouseX && page.mouseX <= buttonX+buttonWidth && 
+				buttonY <= page.mouseY && page.mouseY <= buttonY+buttonHeight) {
+			if(!button.isTimerRunning()){
+				startTimer(button.getCommand());
+				button.setTimerRunning(true);
+			}
+		
+				  return;
+		}
+		////				page.background(230);			  
+		////			    page.fill(255);
+		////			    page.textAlign(PConstants.LEFT);
+		////			    page.text ("LOADING " + ((page.frameCount%301) / 3) + "%", 50, 130);
+		////			    page.rect(48, 138, 204, 24);
+		////			    page.fill(0);
+		////			    int fillX = ((page.frameCount%301) / 3 * 2);
+		////			    page.rect(250, 140, fillX-200, 20);
+		//		  }
+				 if(button.isTimerRunning()){
+					  timer.cancel();
+					  timer.purge();
+					  button.setTimerRunning(false);
+				  }
 	}
 	
 	protected void startTimer(ICommand command){
 		timer= new Timer();
-		timer.scheduleAtFixedRate(new TimerTask() {
-            int i = 3;//defined for a 3 second countdown
-            public void run() {
-            	i--;
-                if (i< 0){
-                	this.cancel();
-                	timer.cancel();
-                    command.process();
-                }
-            }
-        }, 0, 1000);
+		timer.schedule(new TimerTask() {
+			private final ICommand task = command;
+			public void run() {
+			 this.cancel();
+             task.process();
+			}
+        }, 3000);
 	}
 }
