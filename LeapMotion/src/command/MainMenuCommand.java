@@ -14,7 +14,7 @@ public class MainMenuCommand extends AbstractCommand{
 	public void process() {
 		Page page=getPage();
 		page.background(230);
-		page.textSize(page.getDefaultTextSize());
+		page.setTextSizeToDefault();
 		executeCommand(new GUIFactory(page).createMainMenuGUI());
 	}
 }
