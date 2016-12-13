@@ -30,17 +30,17 @@ public abstract class AbstractGeneralGUI extends AbstractGUI{
 					button.startCountdown();
 				}
 				int percent=(int) (button.getCountdown()*100);
+				int xCoordinate=674;
+				int yCoordinate=593;
 				page.background(230);			  
-				page.setTextSizeToDefault();
 				page.fill(255);
+				page.rect(xCoordinate, yCoordinate, 204, 24);
+				int fillX = percent*2; 
+				page.fill(100);
+				page.setTextSizeToDefault();
 				page.textAlign(PConstants.LEFT);
-				//page.text ("LOADING " + ((page.frameCount%301) / 3) + "%", 50, 130);
-				page.text ("LOADING " + percent + "%", 50, 130);
-				page.rect(48, 138, 204, 24);
-				page.fill(0);
-				//int fillX = ((page.frameCount%301) / 3 * 2);
-				int fillX = percent*2;
-				page.rect(250, 140, fillX-200, 20);
+				page.text ("LOADING " + percent + "%", xCoordinate, yCoordinate);
+				page.rect(xCoordinate+202, yCoordinate+2, fillX-200, 20);
 				//((Page) page).renderLeapWarning();
 				return true;
 			}
