@@ -13,8 +13,8 @@ import g4p_controls.GEditableTextControl;
 import g4p_controls.GEvent;
 import g4p_controls.GPanel;
 import g4p_controls.GValueControl;
-import processing.GUI.GUIFactory;
 import processing.GUI.IGUI;
+import processing.GUI.WelcomeGUI;
 import processing.core.PApplet;
 import processing.core.PImage;
 import recording.HandData;
@@ -30,8 +30,6 @@ public class Page extends PApplet{
 	private final LeapMouseListener leapListen= new LeapMouseListener();
 
 	private SignClassifier currentClassifier= new SignClassifier(Handedness.RIGHT.toString(), "num");
-
-	private final GUIFactory guiFactory= new GUIFactory(this);
 	private IGUI currentGUIDisplayed;
 
 	private float defaultTextSize;
@@ -51,7 +49,7 @@ public class Page extends PApplet{
 		controller.enableGesture(Gesture.Type.TYPE_CIRCLE);
 		background(230);
 		defaultTextSize=g.textSize;
-		currentGUIDisplayed=guiFactory.createWelcomeGUI();
+		currentGUIDisplayed=new WelcomeGUI(this);
 	}
 
 	public void draw(){
@@ -88,10 +86,6 @@ public class Page extends PApplet{
 
 	public SignClassifier getClassifier(){
 		return this.currentClassifier;
-	}
-
-	public void switchToGameOverGUI(int userScore){
-		stateSwitch(guiFactory.createGameOverGUI(userScore));
 	}
 
 	public void renderLeapWarning(){

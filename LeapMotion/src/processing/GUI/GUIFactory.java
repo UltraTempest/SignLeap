@@ -13,10 +13,6 @@ private static PApplet page;
 	  return new GameOverGUI(page, score);
   }
   
-  public IGUI createWelcomeGUI(){
-	  return new WelcomeGUI(page);
-  }
-  
   public IGUI createIntroductionGUI(){
 	  return new IntroductionGUI(page);
   }

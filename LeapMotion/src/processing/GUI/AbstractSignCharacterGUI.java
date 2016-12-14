@@ -6,6 +6,7 @@ import java.util.TimerTask;
 
 import com.leapmotion.leap.Controller;
 
+import command.GameOverCommand;
 import g4p_controls.G4P;
 import g4p_controls.GAbstractControl;
 import g4p_controls.GSlider;
@@ -70,7 +71,8 @@ public abstract class AbstractSignCharacterGUI extends AbstractGUI{
                 currentTime=i;
                 if (i< 0){
                 	timer.cancel();
-                	getPage().switchToGameOverGUI(userScore);
+                	new GameOverCommand(getPage(), userScore).process();
+                	//getPage().switchToGameOverGUI(userScore);
                 }
             }
         }, 0, 1000);
