@@ -47,7 +47,7 @@ public class Page extends PApplet{
 		//controller.setPolicy(Controller.PolicyFlag.POLICY_IMAGES);
 		controller.enableGesture(Gesture.Type.TYPE_KEY_TAP);
 		controller.enableGesture(Gesture.Type.TYPE_CIRCLE);
-		background(230);
+		setDefaultBackground();
 		defaultTextSize=g.textSize;
 		currentGUIDisplayed=new WelcomeGUI(this);
 	}
@@ -61,7 +61,7 @@ public class Page extends PApplet{
 	public void stateSwitch(IGUI gui){
 		currentGUIDisplayed.dispose();
 		this.currentGUIDisplayed=gui;
-		background(230);
+		setDefaultBackground();
 	} 
 
 	public Controller getLeap(){
@@ -95,7 +95,7 @@ public class Page extends PApplet{
 				text(String.format(leapWarning,hand),250, 50);
 			}
 			else
-				background(230);
+				setDefaultBackground();
 		}
 	}
 
@@ -105,6 +105,10 @@ public class Page extends PApplet{
 
 	public void turnOffLeapMouseControl(){
 		controller.removeListener(leapListen);
+	}
+	
+	public void setDefaultBackground(){
+		background(230);
 	}
 
 	public void handleButtonEvents(Button button, GEvent event) { 

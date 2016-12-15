@@ -32,7 +32,7 @@ public abstract class AbstractGeneralGUI extends AbstractGUI{
 				int percent=(int) (button.getCountdown()*100);
 				int xCoordinate=674;
 				int yCoordinate=593;
-				page.background(230);			  
+				page.setDefaultBackground();			  
 				page.fill(255);
 				page.rect(xCoordinate, yCoordinate, 204, 24);
 				int fillX = percent*2; 
@@ -46,7 +46,7 @@ public abstract class AbstractGeneralGUI extends AbstractGUI{
 			}
 			if(button.isTimerRunning()){
 				button.cancelTimerTask();
-				page.background(230);
+				page.setDefaultBackground();
 			}
 			return false;
 		}

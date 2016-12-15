@@ -26,7 +26,7 @@ public class LeaderboardGUI extends AbstractGeneralGUI{
 	@Override
 	protected void createGUI(){
 		Page page = getPage();
-		page.background(230);
+		page.setDefaultBackground();
 		homeButton = new Button(page, 736, 38, 131, 53, new MainMenuCommand(page));
 		homeButton.setText("Home");
 		homeButton.setTextBold();

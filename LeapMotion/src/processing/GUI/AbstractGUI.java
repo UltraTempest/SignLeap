@@ -22,7 +22,7 @@ public abstract class AbstractGUI implements IGUI{
   
   @Override
   public void dispose(){
-	  getPage().background(230);
+	  getPage().setDefaultBackground();
 	//To be implemented by subclass
   }
   
