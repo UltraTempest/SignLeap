@@ -1,7 +1,6 @@
 package processing;
 import com.leapmotion.leap.Controller;
 import com.leapmotion.leap.Frame;
-import com.leapmotion.leap.Gesture;
 import com.leapmotion.leap.Image;
 import com.leapmotion.leap.ImageList;
 
@@ -24,15 +23,15 @@ public class Page extends PApplet{
 
 	private final Controller controller = new Controller();
 	private Handedness hand;
-	private HandData handInfo= new HandData();
+	private final HandData handInfo= new HandData();
 	private final String leapWarning="Warning! Please keep your %s hand placed over the Leap Motion";
-
 	private final LeapMouseListener leapListen= new LeapMouseListener();
 
-	private SignClassifier currentClassifier= new SignClassifier(Handedness.RIGHT.toString(), "num");
+	private SignClassifier currentClassifier= new SignClassifier(Handedness.RIGHT, "num");
+	
 	private IGUI currentGUIDisplayed;
 
-	private float defaultTextSize;
+	private final float defaultTextSize=(float) 12.0;
 
 	public static void main(String[] args) {
 		PApplet.main("processing.Page");
@@ -45,10 +44,6 @@ public class Page extends PApplet{
 	public void setup(){ 
 		//initializeClassifiers();
 		//controller.setPolicy(Controller.PolicyFlag.POLICY_IMAGES);
-		controller.enableGesture(Gesture.Type.TYPE_KEY_TAP);
-		controller.enableGesture(Gesture.Type.TYPE_CIRCLE);
-		setDefaultBackground();
-		defaultTextSize=g.textSize;
 		currentGUIDisplayed=new WelcomeGUI(this);
 	}
 
@@ -61,7 +56,6 @@ public class Page extends PApplet{
 	public void stateSwitch(IGUI gui){
 		currentGUIDisplayed.dispose();
 		this.currentGUIDisplayed=gui;
-		setDefaultBackground();
 	} 
 
 	public Controller getLeap(){
@@ -90,12 +84,11 @@ public class Page extends PApplet{
 
 	public void renderLeapWarning(){
 		if(currentGUIDisplayed.isWarningRequired()){
+			setDefaultBackground();
 			if(!handInfo.checkIfCorrectHandPlacedOverLeap(controller, hand)){
 				fill(205, 48, 48);
 				text(String.format(leapWarning,hand),250, 50);
 			}
-			else
-				setDefaultBackground();
 		}
 	}
 

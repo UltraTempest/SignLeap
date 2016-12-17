@@ -75,7 +75,6 @@ public class WelcomeGUI extends AbstractGeneralGUI{
 
 	@Override
 	public void dispose() {
-		super.dispose();
 		objectDisposal(PreferredHandText);
 	}
 }

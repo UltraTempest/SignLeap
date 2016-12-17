@@ -85,7 +85,6 @@ public class GameOverGUI extends AbstractGeneralGUI{
 
 	@Override
 	public void dispose() {
-		super.dispose();
 		objectDisposal(gameOverPanel);
 	}
 	

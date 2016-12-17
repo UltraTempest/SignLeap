@@ -12,6 +12,7 @@ public class Button extends GButton{
 	public Button(PApplet arg0, float arg1, float arg2, float arg3, float arg4, ICommand command) {
 		super(arg0, arg1, arg2, arg3, arg4);
 		setCommand(command);
+		setTimerVariables(100, 0.05, 1.0);
 	}
 	
     public void setCommand(ICommand command){

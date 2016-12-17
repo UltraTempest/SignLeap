@@ -26,13 +26,11 @@ public class LeaderboardGUI extends AbstractGeneralGUI{
 	@Override
 	protected void createGUI(){
 		Page page = getPage();
-		page.setDefaultBackground();
 		homeButton = new Button(page, 736, 38, 131, 53, new MainMenuCommand(page));
 		homeButton.setText("Home");
 		homeButton.setTextBold();
 		homeButton.setLocalColorScheme(GCScheme.CYAN_SCHEME);
 		homeButton.addEventHandler(page, "handleButtonEvents");
-		homeButton.setTimerVariables(100, 0.05, 1.0);
 		renderLeaderBoard(page);
 		page.turnOnLeapMouseControl();
 	}
@@ -58,7 +56,6 @@ public class LeaderboardGUI extends AbstractGeneralGUI{
 
 	@Override
 	public void dispose(){
-		super.dispose();
 		objectDisposal(homeButton);
 	}
 

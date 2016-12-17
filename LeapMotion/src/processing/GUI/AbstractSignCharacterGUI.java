@@ -40,12 +40,12 @@ public abstract class AbstractSignCharacterGUI extends AbstractGUI{
 		  signInstruction.setOpaque(false);
 		  signInstruction.setFont(new Font("Dialog", Font.PLAIN, 58));
 		  signInstruction.setTextEditEnabled(false);
-		  scoreTimerText = new GTextField(page, 259, 28, 331, 20);
+		  scoreTimerText = new GTextField(page, 259, 6, 331, 20);
 		  scoreTimerText.setText("Score:                       Time left:");
 		  scoreTimerText.setOpaque(false);
 		  scoreTimerText.setFont(new Font("Dialog", Font.PLAIN, 16));
 		  scoreTimerText.setTextEditEnabled(false);
-		  slider = new GSlider(page, 637, 14, 249, 46, (float) 10.0);
+		  slider = new GSlider(page, 640, 4, 249, 46, (float) 10.0);
 		  slider.setLimits((float)50.0, (float)0.0, (float)100.0);
 		  slider.setNumberFormat(G4P.DECIMAL, 2);
 		  slider.setOpaque(false);
@@ -96,7 +96,6 @@ public abstract class AbstractSignCharacterGUI extends AbstractGUI{
 	
 	@Override
 	public void dispose(){
-		super.dispose();
 		objectDisposal(slider);
 		objectDisposal(signInstruction);
 		objectDisposal(scoreTimerText);

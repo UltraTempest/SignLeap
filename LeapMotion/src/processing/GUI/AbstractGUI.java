@@ -9,6 +9,7 @@ public abstract class AbstractGUI implements IGUI{
  
   public AbstractGUI(PApplet page){
 	  AbstractGUI.page=page;
+	  ((Page) page).setDefaultBackground();
   }
   
   public Page getPage(){
@@ -18,12 +19,6 @@ public abstract class AbstractGUI implements IGUI{
   protected void objectDisposal(GAbstractControl object){
 	  object.setVisible(false);
 	  object.dispose();
-  }
-  
-  @Override
-  public void dispose(){
-	  getPage().setDefaultBackground();
-	//To be implemented by subclass
   }
   
   @Override
