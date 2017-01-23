@@ -1,7 +1,7 @@
 package command;
 
+import gui.IGUI;
 import processing.Page;
-import processing.GUI.IGUI;
 import processing.core.PApplet;
 
 public abstract class AbstractCommand implements ICommand{

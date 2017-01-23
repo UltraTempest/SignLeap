@@ -30,7 +30,6 @@ public class SignClassifier {
 		new SignClassifier(Handedness.RIGHT, "num").evaluate();
 	}
 
-
 	public SignClassifier(Handedness hand, String type){
 		final String filename=language +"_" +  hand + "_" + type + ".model";
 		setupClassifier(filename);
@@ -47,9 +46,9 @@ public class SignClassifier {
 
 	private void setupClassifier(String filename){
 		try {
-			DataSource source = new DataSource("SignData/TrainingData/num.arff");
+			DataSource source = new DataSource("SignData/TrainingData/numRight.arff");
 			trainingSet= source.getDataSet();
-			source= new DataSource("SignData/TestingData/num.arff");
+			source= new DataSource("SignData/TestingData/numRight.arff");
 			testingSet= source.getDataSet();
 			numberOfFeatures=trainingSet.numAttributes()-1;
 			trainingSet.setClassIndex(numberOfFeatures);

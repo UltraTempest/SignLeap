@@ -1,6 +1,6 @@
 package command;
 
-import processing.GUI.GUIFactory;
+import gui.GUIFactory;
 import processing.core.PApplet;
 
 public class IntroductionCommand extends AbstractCommand{

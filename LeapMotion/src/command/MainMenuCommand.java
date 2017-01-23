@@ -1,7 +1,7 @@
 package command;
 
+import gui.GUIFactory;
 import processing.Page;
-import processing.GUI.GUIFactory;
 import processing.core.PApplet;
 
 public class MainMenuCommand extends AbstractCommand{

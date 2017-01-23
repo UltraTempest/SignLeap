@@ -4,8 +4,6 @@ import com.leapmotion.leap.Controller;
 import com.leapmotion.leap.Finger;
 import com.leapmotion.leap.FingerList;
 import com.leapmotion.leap.Frame;
-import com.leapmotion.leap.Gesture;
-import com.leapmotion.leap.GestureList;
 import com.leapmotion.leap.Hand;
 import com.leapmotion.leap.HandList;
 import com.leapmotion.leap.Vector;
@@ -97,15 +95,6 @@ public class HandData {
 	            		
 	    return calibratedFingerBones;
 	}
-	
-	   public boolean isTapped(Controller controller){
-		   GestureList gestures=controller.frame().gestures();
-		   for(Gesture gesture: gestures){
-		        if(gesture.type().equals(Gesture.Type.TYPE_KEY_TAP) || gesture.type().equals(Gesture.Type.TYPE_CIRCLE))
-		        return true;
-		   }
-		    return false;
-	   }
 	   
 	   public boolean checkIfHandPlacedOverLeap(Controller controller){
 			  return controller.frame().hands().count()>0 ? true : false;
@@ -129,8 +118,8 @@ public class HandData {
 	}
 	
 	public enum Handedness {
-	    LEFT ("LEFT"),
-	    RIGHT ("RIGHT");
+	    LEFT ("Left"),
+	    RIGHT ("Right");
 
 	    private final String name;       
 
