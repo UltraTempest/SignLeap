@@ -27,7 +27,7 @@ public class Page extends PApplet{
 	private final String leapWarning="Warning! Please keep your %s hand placed over the Leap Motion";
 	private final LeapMouseListener leapListen= new LeapMouseListener();
 
-	private SignClassifier currentClassifier= new SignClassifier(Handedness.RIGHT, "num");
+	private SignClassifier currentClassifier= new SignClassifier(Handedness.RIGHT, "alpha");
 	
 	private IGUI currentGUIDisplayed;
 

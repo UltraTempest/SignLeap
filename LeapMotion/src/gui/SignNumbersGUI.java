@@ -7,7 +7,6 @@ import com.leapmotion.leap.Frame;
 import classifier.SignClassifier;
 import processing.Page;
 import processing.core.PApplet;
-import recording.HandData;
 
 public class SignNumbersGUI extends AbstractSignCharacterGUI{
 	private final char[] numbersArray = {'1','2','3','4','5','6','7','8','9'};
@@ -25,9 +24,9 @@ public class SignNumbersGUI extends AbstractSignCharacterGUI{
 		if(frame.hands().count()>0){
 			Map<String, Float> data;
 			if(currentLetterPosition<=5)
-				data=new HandData().getOneHandPosition(page.getLeap());
+				data=handData.getOneHandPosition(page.getLeap());
 			else
-				data=new HandData().getTwoHandsPosition(page.getLeap());
+				data=handData.getTwoHandsPosition(page.getLeap());
 			if(data!=null){
 				double score = page.getClassifier().score(data,previousChar);
 				setProgressBarValue((float) (score*100));

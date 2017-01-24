@@ -1,5 +1,8 @@
 package processing;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 import com.leapmotion.leap.Controller;
 import com.leapmotion.leap.Frame;
 import com.leapmotion.leap.Image;
@@ -7,24 +10,33 @@ import com.leapmotion.leap.ImageList;
 
 import classifier.SignClassifier;
 import processing.core.PApplet;
+import processing.core.PFont;
 import processing.core.PImage;
+import recording.AlphabetTrainer;
 import recording.HandData.Handedness;
 import recording.ITrainer;
+import recording.NumberTrainer;
 import recording.OneHandTrainer;
 import recording.TwoHandTrainer;
 
+@SuppressWarnings("unused")
 public class SignTrainer extends PApplet{
 
-	public static final char charToTrain='a';
+	public char charToTrain='b';
 	public static final Handedness hand= Handedness.RIGHT;
 	private final Controller controller = new Controller();
-	private final String filePath="SignData/TrainingData/alpha"+ hand +".arff";
-	private final String filePath2="SignData/TrainingData/num2.arff";
-	private final ITrainer trainer = new OneHandTrainer(controller, charToTrain, hand,filePath);
-	@SuppressWarnings("unused")
-	private final ITrainer trainer2 = new TwoHandTrainer(controller, charToTrain, filePath2);
+
+	private final ITrainer trainer = new AlphabetTrainer(controller,hand);
+	//private final ITrainer trainer = new NumberTrainer(controller,hand);
+	//private final ITrainer trainer = new TwoHandTrainer(controller);
 
 	private PImage charImage; 
+
+	boolean timerSet=false;
+	private Timer timer;
+	int currentTime;
+	PFont font;
+
 
 	public static void main(String[] args) {
 		PApplet.main("processing.SignTrainer");
@@ -36,16 +48,53 @@ public class SignTrainer extends PApplet{
 
 	public void setup(){ 
 		controller.setPolicy(Controller.PolicyFlag.POLICY_IMAGES);
-		String filename=SignClassifier.language +  "/" + hand+"/" + charToTrain + ".jpg";
-		charImage= loadImage(filename);
-		background(230);
+		background(255);
+		font = createFont("Arial", 40);
+		fill(0);
+		textSize(30);
 	}
 
 	public void draw(){
+		if(timerSet){
+			timer();
+			return;}
 		displayLeapImages();
+		char c=trainer.train();
+		if(c!=charToTrain){
+			timer();
+			charToTrain=c;
+		}
+		renderImage();
+	}
+
+	private void renderImage(){
+		String filename=SignClassifier.language +  "/" + hand+"/" + charToTrain + ".jpg";
+		charImage= loadImage(filename);
 		image(charImage,0, 301, 600, 300);
-		trainer.train();
-		//trainer2.train();
+	}
+
+	private void timer(){
+		background(255);
+		if(!timerSet){
+			time();
+			timerSet=true;}
+		text(currentTime +" second(s), next sign is "+ charToTrain, 125, 150);
+		renderImage();
+	}
+
+	protected void time(){
+		timer=new Timer();
+		timer.scheduleAtFixedRate(new TimerTask() {
+			int i = 6;//defined for a 5 second countdown
+			public void run() {
+				i--;
+				currentTime=i;
+				if (i< 0){
+					timer.cancel();
+					timerSet=false;
+				}
+			}
+		}, 0, 1000);
 	}
 
 	private void displayLeapImages(){

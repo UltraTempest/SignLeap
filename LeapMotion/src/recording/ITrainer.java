@@ -1,4 +1,4 @@
 package recording;
 public interface ITrainer{
-	public void train();
+	public char train();
 }

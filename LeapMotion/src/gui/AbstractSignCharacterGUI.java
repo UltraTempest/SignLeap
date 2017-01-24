@@ -14,6 +14,7 @@ import g4p_controls.GTextField;
 import processing.Page;
 import processing.core.PApplet;
 import processing.core.PImage;
+import recording.HandData;
 
 public abstract class AbstractSignCharacterGUI extends AbstractGUI{
 	
@@ -31,6 +32,7 @@ public abstract class AbstractSignCharacterGUI extends AbstractGUI{
 	private int userScore=0;
 	private final Timer timer = new Timer();
 	private int currentTime=0;
+	protected final HandData handData=new HandData();
 	
 	protected void createGUI(String classifierToSet){
 		  Page page=getPage();
@@ -72,7 +74,6 @@ public abstract class AbstractSignCharacterGUI extends AbstractGUI{
                 if (i< 0){
                 	timer.cancel();
                 	new GameOverCommand(getPage(), userScore).process();
-                	//getPage().switchToGameOverGUI(userScore);
                 }
             }
         }, 0, 1000);

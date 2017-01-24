@@ -27,28 +27,18 @@ public class SignClassifier {
 	private Instances testingSet;
 
 	public static void main(String args[]){
-		new SignClassifier(Handedness.RIGHT, "num").evaluate();
+		new SignClassifier(Handedness.RIGHT, "alpha").evaluate();
+		//new SignClassifier(Handedness.RIGHT, "num").evaluate();
+		//new SignClassifier(null, "num2").evaluate();
 	}
 
-	public SignClassifier(Handedness hand, String type){
-		final String filename=language +"_" +  hand + "_" + type + ".model";
-		setupClassifier(filename);
-	}
-
-	private Instance createInstanceFromData(Map<String, Float> data){
-		Instance sampleInstance = new DenseInstance(numberOfFeatures+1);
-		for(int i=0; i<numberOfFeatures;i++){
-			sampleInstance.setValue(i, data.get("feat"+i));
-		}
-		sampleInstance.setDataset(testingSet);
-		return sampleInstance;
-	}
-
-	private void setupClassifier(String filename){
+	public SignClassifier(final Handedness hand, final String type){
+		final String name=type +hand;
+		final String filename=language +name+ ".model";
 		try {
-			DataSource source = new DataSource("SignData/TrainingData/numRight.arff");
+			DataSource source = new DataSource("SignData/TrainingData/"+name+ ".arff");
 			trainingSet= source.getDataSet();
-			source= new DataSource("SignData/TestingData/numRight.arff");
+			source= new DataSource("SignData/TestingData/"+name+".arff");
 			testingSet= source.getDataSet();
 			numberOfFeatures=trainingSet.numAttributes()-1;
 			trainingSet.setClassIndex(numberOfFeatures);
@@ -68,6 +58,15 @@ public class SignClassifier {
 		} catch (Exception e) {
 			System.err.println("Error during classifier building:"+ e);
 		}
+	}
+
+	private Instance createInstanceFromData(Map<String, Float> data){
+		Instance sampleInstance = new DenseInstance(numberOfFeatures+1);
+		for(int i=0; i<numberOfFeatures;i++){
+			sampleInstance.setValue(i, data.get("feat"+i));
+		}
+		sampleInstance.setDataset(testingSet);
+		return sampleInstance;
 	}
 
 	public double score(Map<String, Float> data, char c){
@@ -112,7 +111,8 @@ public class SignClassifier {
 			try {
 				Evaluation eval = new Evaluation(trainingSet);
 				classifier.buildClassifier(trainingSet);
-				eval.crossValidateModel(classifier, testingSet, 10, new Random(1));
+				eval.crossValidateModel(classifier, trainingSet, 10, new Random(1));
+				//eval.crossValidateModel(classifier, testingSet, 10, new Random(1));
 				System.out.println(classifier);
 				System.out.println(eval.toSummaryString());
 				System.out.println(eval.toMatrixString());

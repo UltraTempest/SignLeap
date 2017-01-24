@@ -7,7 +7,6 @@ import com.leapmotion.leap.Frame;
 import classifier.SignClassifier;
 import processing.Page;
 import processing.core.PApplet;
-import recording.HandData;
 
 public class SignAlphabetGUI extends AbstractSignCharacterGUI{
 	private final char[] alphabetArray = "abcdefghijklmnopqrstuvwxyz".toCharArray();
@@ -23,16 +22,13 @@ public class SignAlphabetGUI extends AbstractSignCharacterGUI{
 		Frame frame = leap.frame();
 		Page page=getPage();
 		if(frame.hands().count()>0){
-			Map<String, Float> data=new HandData().getOneHandPosition(page.getLeap());
+			Map<String, Float> data=handData.getOneHandPosition(page.getLeap());
 			if(data!=null){
-				double classProbValue = page.getClassifier().score(data,previousChar);
-				if(classProbValue>0.4)
-					page.text("Close!",50,50);
-				else
-					page.text("",50,50);
-				PApplet.println(classProbValue);
-				if(classProbValue>0.9){
-					incrementUserScore();;
+				double score = page.getClassifier().score(data,previousChar);
+				setProgressBarValue((float) (score*100));
+				PApplet.println(score);
+				if(score>0.9){
+					incrementUserScore();
 					this.currentLetterPosition++;
 					if(this.currentLetterPosition==26)
 						this.currentLetterPosition=0;	  
