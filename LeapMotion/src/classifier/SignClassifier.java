@@ -50,6 +50,9 @@ public class SignClassifier {
 			else{
 				// train classifier
 				classifier= new RandomForest();
+//				classifier= new LibSVM();
+//				String[] options = {"-B"};
+//				((LibSVM) classifier).setOptions(options);
 				classifier.buildClassifier(trainingSet);
 
 				// serialize model
@@ -111,8 +114,8 @@ public class SignClassifier {
 			try {
 				Evaluation eval = new Evaluation(trainingSet);
 				classifier.buildClassifier(trainingSet);
-				eval.crossValidateModel(classifier, trainingSet, 10, new Random(1));
-				//eval.crossValidateModel(classifier, testingSet, 10, new Random(1));
+				//eval.crossValidateModel(classifier, trainingSet, 10, new Random(1));
+				eval.crossValidateModel(classifier, testingSet, 10, new Random(1));
 				System.out.println(classifier);
 				System.out.println(eval.toSummaryString());
 				System.out.println(eval.toMatrixString());

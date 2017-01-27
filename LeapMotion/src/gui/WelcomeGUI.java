@@ -33,7 +33,7 @@ public class WelcomeGUI extends AbstractGeneralGUI{
 		  Controller leap = page.getLeap();
 		  if(handInfo.checkIfHandPlacedOverLeap(leap)){
 			  frameCount++;
-			  if(frameCount<3)
+			  if(frameCount<50)
 				  return;
 			  page.setHand(handInfo.GetHandedness(leap.frame().hands().frontmost()));
 			  if(!checkLeaderBoardFileExistence())

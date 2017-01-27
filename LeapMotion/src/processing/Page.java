@@ -27,8 +27,14 @@ public class Page extends PApplet{
 	private final String leapWarning="Warning! Please keep your %s hand placed over the Leap Motion";
 	private final LeapMouseListener leapListen= new LeapMouseListener();
 
-	private SignClassifier currentClassifier= new SignClassifier(Handedness.RIGHT, "alpha");
-	
+	private SignClassifier alphaClassifier;
+	private SignClassifier numClassifier;
+
+	private final double easy=0.7;
+	private final double medium=0.8;
+	private final double hard=0.9;
+	private final double difficulty=medium;
+
 	private IGUI currentGUIDisplayed;
 
 	private final float defaultTextSize=(float) 12.0;
@@ -42,8 +48,8 @@ public class Page extends PApplet{
 	}
 
 	public void setup(){ 
-		//initializeClassifiers();
 		//controller.setPolicy(Controller.PolicyFlag.POLICY_IMAGES);
+		initializeClassifiers();
 		currentGUIDisplayed=new WelcomeGUI(this);
 	}
 
@@ -68,18 +74,24 @@ public class Page extends PApplet{
 
 	public void setHand(Handedness hand){
 		this.hand=hand;
+		numClassifier=new SignClassifier(hand, "num");
+		alphaClassifier=new SignClassifier(hand, "alpha");
 	}
 
-	public String getHand(){
-		return this.hand.toString();
+	public double getDifficulty(){
+		return this.difficulty;
 	}
 
-	public void setClassifier(String classifierToSet){
-		//currentClassifier=classifierMap.get(classifierToSet);
+	public Handedness getHand(){
+		return this.hand;
 	}
 
-	public SignClassifier getClassifier(){
-		return this.currentClassifier;
+	public SignClassifier getNumberClassifier(){
+		return this.numClassifier;
+	}
+
+	public SignClassifier getAlphabetClassifier(){
+		return this.alphaClassifier;
 	}
 
 	public void renderLeapWarning(){
@@ -99,7 +111,7 @@ public class Page extends PApplet{
 	public void turnOffLeapMouseControl(){
 		controller.removeListener(leapListen);
 	}
-	
+
 	public void setDefaultBackground(){
 		background(230);
 	}
@@ -108,7 +120,9 @@ public class Page extends PApplet{
 		button.getCommand().process();
 	}
 
-	public void handleButtonEvents(GButton button, GEvent event) { /* Not called */ }
+	public void handleButtonEvents(GButton button, GEvent event) { 
+		((Button) button).getCommand().process();
+	}
 
 	public void handleTextEvents(GEditableTextControl textcontrol, GEvent event) { /* Not called */ }
 
@@ -116,12 +130,13 @@ public class Page extends PApplet{
 
 	public void handleSliderEvents(GValueControl slider, GEvent event) { /* Not called */ }
 
-	//	 private void initializeClassifiers(){
-	//		// classifierMap.put(Handedness.LEFT.toString()+"alpha", new OneHandSignClassifier(Handedness.LEFT.toString(), "alpha"));
-	//			// classifierMap.put(Handedness.LEFT.toString()+"num", new OneHandSignClassifier(Handedness.LEFT.toString(), "num"));
-	//			 classifierMap.put(Handedness.RIGHT.toString()+"num", new OneHandSignClassifier(Handedness.RIGHT.toString(), "num"));
-	//			 classifierMap.put(Handedness.RIGHT.toString()+"alpha", new OneHandSignClassifier(Handedness.RIGHT.toString(), "alpha"));
-	//	 }
+	private void initializeClassifiers(){
+		new SignClassifier(Handedness.RIGHT, "alpha");
+		new SignClassifier(Handedness.RIGHT, "num");
+		//		new SignClassifier(Handedness.LEFT, "alpha");
+		//		new SignClassifier(Handedness.LEFT, "num");
+
+	}
 
 	@SuppressWarnings("unused")
 	private void displayLeapImages(){

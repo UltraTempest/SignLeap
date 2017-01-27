@@ -22,6 +22,7 @@ public abstract class AbstractSignCharacterGUI extends AbstractGUI{
 		super(page);
 	}
     
+	protected final double difficulty=getPage().getDifficulty();
 	protected Controller leap;
 	protected final String imageType=".jpg";
 	protected int currentLetterPosition=0;
@@ -34,9 +35,8 @@ public abstract class AbstractSignCharacterGUI extends AbstractGUI{
 	private int currentTime=0;
 	protected final HandData handData=new HandData();
 	
-	protected void createGUI(String classifierToSet){
+	protected void createGUI(){
 		  Page page=getPage();
-		  page.setClassifier(classifierToSet);
 		  leap=page.getLeap();
 		  signInstruction = new GTextField(page, 217, 513, 492, 81, G4P.SCROLLBARS_NONE);
 		  signInstruction.setOpaque(false);
@@ -48,7 +48,8 @@ public abstract class AbstractSignCharacterGUI extends AbstractGUI{
 		  scoreTimerText.setFont(new Font("Dialog", Font.PLAIN, 16));
 		  scoreTimerText.setTextEditEnabled(false);
 		  slider = new GSlider(page, 640, 4, 249, 46, (float) 10.0);
-		  slider.setLimits((float)50.0, (float)0.0, (float)100.0);
+		  //slider.setLimits((float)50.0, (float)0.0, (float)100.0);
+		  slider.setLimits((float)0, (float)0, (float)100);
 		  slider.setNumberFormat(G4P.DECIMAL, 2);
 		  slider.setOpaque(false);
 		  slider.setShowValue(true);
@@ -88,6 +89,7 @@ public abstract class AbstractSignCharacterGUI extends AbstractGUI{
 	}
 	
 	protected void updateSignCharactersGUI(char currentLetter, String imageName){
+		super.render();
 		Page page = getPage();
 		img=page.loadImage(imageName);
 		page.image(img,136, 65, 657, 408);

@@ -6,21 +6,13 @@ import processing.core.PApplet;
 import processing.core.PConstants;
 
 public abstract class AbstractGeneralGUI extends AbstractGUI{
-	protected boolean rendered=false;
 	public AbstractGeneralGUI(PApplet page) {
 		super(page);
 	}
 
-	protected void createGUI(){
-		//To be implemented by subclass
-	}
-
 	@Override
 	public void render(){
-		if(rendered==false){
-			createGUI();
-			rendered=true;
-		}
+		super.render();
 	}	
 
 	protected void checkIfMouseOverButton(Button button){

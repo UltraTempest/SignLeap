@@ -24,26 +24,36 @@ public class SignAlphabetGUI extends AbstractSignCharacterGUI{
 		if(frame.hands().count()>0){
 			Map<String, Float> data=handData.getOneHandPosition(page.getLeap());
 			if(data!=null){
-				double score = page.getClassifier().score(data,previousChar);
+				double score = page.getAlphabetClassifier().score(data,previousChar);
 				setProgressBarValue((float) (score*100));
 				PApplet.println(score);
-				if(score>0.9){
-					incrementUserScore();
-					this.currentLetterPosition++;
-					if(this.currentLetterPosition==26)
-						this.currentLetterPosition=0;	  
+				if(score<0.5)
+					setProgressBarValue((float) (score*2*100));
+				else{
+					displayNextCharacter();
+					return;
+				}
+				PApplet.println(score);
+				if((score*2)>=difficulty){
+					displayNextCharacter();
 				}
 			}
 		}
+		else
+			setProgressBarValue((float)0);
+	}
+
+	private void displayNextCharacter(){
+		incrementUserScore();
+		this.currentLetterPosition++;
+		if(this.currentLetterPosition==26)
+			this.currentLetterPosition=0;	 
 	}
 
 	@Override
 	public void render() {
 		char currentLetter=alphabetArray[currentLetterPosition];
 		String image=imageName+currentLetter + imageType;	
-		if(signInstruction==null){
-			createGUI(getPage().getHand()+"alpha");
-		}
 		updateSignCharactersGUI(currentLetter, image);
 		if(currentLetter!=previousChar){
 			previousChar=currentLetter;

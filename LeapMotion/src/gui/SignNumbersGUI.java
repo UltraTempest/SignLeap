@@ -28,17 +28,28 @@ public class SignNumbersGUI extends AbstractSignCharacterGUI{
 			else
 				data=handData.getTwoHandsPosition(page.getLeap());
 			if(data!=null){
-				double score = page.getClassifier().score(data,previousChar);
-				setProgressBarValue((float) (score*100));
+				double score = page.getNumberClassifier().score(data,previousChar);
+				if(score<0.5)
+					setProgressBarValue((float) (score*2*100));
+				else{
+					displayNextCharacter();
+					return;
+				}
 				PApplet.println(score);
-				if(score>0.95){
-					incrementUserScore();
-					this.currentLetterPosition++;
-					if(this.currentLetterPosition==10)
-						this.currentLetterPosition=0;	  
+				if((score*2)>=difficulty){
+					displayNextCharacter();
 				}
 			}
 		}
+		else
+			setProgressBarValue((float)0);
+	}
+
+	private void displayNextCharacter(){
+		incrementUserScore();
+		this.currentLetterPosition++;
+		if(this.currentLetterPosition==10)
+			this.currentLetterPosition=0;	 
 	}
 
 	@Override
@@ -51,9 +62,6 @@ public class SignNumbersGUI extends AbstractSignCharacterGUI{
 	public void render() {
 		char currentNumber= numbersArray[currentLetterPosition];
 		String image=imageName+currentNumber+imageType;
-		if(signInstruction==null){
-			createGUI(getPage().getHand()+"num");
-		}
 		updateSignCharactersGUI(currentNumber, image);
 		if(currentNumber!=previousChar){
 			previousChar=currentNumber;
