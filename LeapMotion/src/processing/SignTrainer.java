@@ -13,22 +13,19 @@ import processing.core.PApplet;
 import processing.core.PFont;
 import processing.core.PImage;
 import recording.AbstractHandData.Handedness;
-import recording.AlphabetTrainer;
 import recording.ITrainer;
-import recording.NumberTrainer;
-import recording.OneHandTrainer;
 import recording.TwoHandTrainer;
 
-@SuppressWarnings("unused")
+
 public class SignTrainer extends PApplet{
 
-	public char charToTrain='b';
-	public static final Handedness hand= Handedness.RIGHT;
-	private final Controller controller = new Controller();
+	private char charToTrain='b';
+	private final Handedness hand= Handedness.RIGHT;
+	private final static Controller controller = new Controller();
 
-	private final ITrainer trainer = new AlphabetTrainer(controller,hand);
+	//private final ITrainer trainer = new AlphabetTrainer(controller,hand);
 	//private final ITrainer trainer = new NumberTrainer(controller,hand);
-	//private final ITrainer trainer = new TwoHandTrainer(controller);
+	private final ITrainer trainer = new TwoHandTrainer(controller);
 
 	private PImage charImage; 
 
@@ -36,7 +33,6 @@ public class SignTrainer extends PApplet{
 	private Timer timer;
 	int currentTime;
 	PFont font;
-
 
 	public static void main(String[] args) {
 		PApplet.main("processing.SignTrainer");
@@ -68,7 +64,8 @@ public class SignTrainer extends PApplet{
 	}
 
 	private void renderImage(){
-		String filename=SignClassifier.language +  "/" + hand+"/" + charToTrain + ".jpg";
+		String filename=SignClassifier.language +  "/" + hand+"/" 
+				+ charToTrain + ".jpg";
 		charImage= loadImage(filename);
 		image(charImage,0, 301, 600, 300);
 	}

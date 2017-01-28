@@ -25,11 +25,12 @@ public class SignClassifier {
 	private int numberOfFeatures;
 	private Instances trainingSet;
 	private Instances testingSet;
-	private MovingAverage move= new MovingAverage(10);
+	private final int movingAverageFilterPeriods=8;
+	private MovingAverageFilter move= new MovingAverageFilter(movingAverageFilterPeriods);
 
 	public static void main(String args[]){
-		new SignClassifier(Handedness.RIGHT, "alpha").evaluate();
-		//new SignClassifier(Handedness.RIGHT, "num").evaluate();
+		//new SignClassifier(Handedness.RIGHT, "alpha").evaluate();
+		new SignClassifier(Handedness.RIGHT, "num").evaluate();
 		//new SignClassifier(null, "num2").evaluate();
 	}
 
@@ -80,14 +81,12 @@ public class SignClassifier {
 			double i = classifier.classifyInstance(sampleInstance);
 			double[] fDistribution = classifier.distributionForInstance(sampleInstance);
 			System.out.println("Actual: " + testingSet.classAttribute().value((int) i) +" : " + fDistribution[(int) i]);
-			System.out.println();
 			return testingSet.classAttribute().value((int) i);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return "";
 	}
-	
 
 	public double score(Map<String, Float> data, char c){
 		Instance sampleInstance=createInstanceFromData(data);
@@ -95,9 +94,11 @@ public class SignClassifier {
 			double[] fDistribution = classifier.distributionForInstance(sampleInstance);
 			int position=getLabelDistributionPosition(String.valueOf(c), fDistribution);
 			double probabilityForExpected=fDistribution[position];
+			classify(data,c);
 			System.out.println("Expected: "+ c + " : " + probabilityForExpected);
 			double rollingAverage=rollingTotal(probabilityForExpected);
 			System.out.println("Rolling Average: " + rollingAverage);
+			System.out.println();
 			return rollingAverage;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -111,7 +112,7 @@ public class SignClassifier {
 	}
 
 	public void resetRollingAverage(){
-		move=new MovingAverage(10);
+		move=new MovingAverageFilter(movingAverageFilterPeriods);
 	}
 
 	private int getLabelDistributionPosition(String charToFind, double[] fDistribution){
@@ -124,7 +125,7 @@ public class SignClassifier {
 
 	public void evaluate(){	
 		// training using a collection of classifiers (NaiveBayes, SMO (AKA SVM), KNN and Decision trees.)
-		String[] algorithms = {"Random Forest", "nb","smo","knn","j48", "libSVM"};
+		String[] algorithms = {"nb","smo","knn","j48", "libSVM","Random Forest"};
 		for(int w=0; w<algorithms.length;w++){
 			if(algorithms[w].equals("nb"))
 				classifier = new NaiveBayes();
@@ -136,6 +137,8 @@ public class SignClassifier {
 				classifier = new J48();
 			else if(algorithms[w].equals("libSVM"))
 				classifier = new LibSVM();
+			else if(algorithms[w].equals("Random Forest"))
+				classifier = new RandomForest();
 
 			System.out.println("==========================================================================");
 			System.out.println("training using " + algorithms[w] + " classifier");

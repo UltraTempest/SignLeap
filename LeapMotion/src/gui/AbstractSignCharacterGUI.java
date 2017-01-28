@@ -1,11 +1,14 @@
 package gui;
 
 import java.awt.Font;
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import com.leapmotion.leap.Controller;
+import com.leapmotion.leap.Frame;
 
+import classifier.SignClassifier;
 import command.GameOverCommand;
 import g4p_controls.G4P;
 import g4p_controls.GAbstractControl;
@@ -14,16 +17,20 @@ import g4p_controls.GTextField;
 import processing.Page;
 import processing.core.PApplet;
 import processing.core.PImage;
+import recording.IHandData;
+import recording.OneHandData;
 
 public abstract class AbstractSignCharacterGUI extends AbstractGUI{
-	
-	public AbstractSignCharacterGUI(PApplet page) {
+
+	public AbstractSignCharacterGUI(PApplet page, SignClassifier signClassifier,char[] array) {
 		super(page);
+		this.classifier=signClassifier;
+		this.array=array;
 	}
-    
-	protected final double difficulty=getPage().getDifficulty();
-	protected Controller leap;
-	protected final String imageType=".jpg";
+
+	private final double difficulty=getPage().getDifficulty();
+	private final Controller leap=getPage().getLeap();
+	private final String imageType=".jpg";
 	protected int currentLetterPosition=0;
 	private PImage img;
 	protected GTextField signInstruction;
@@ -32,69 +39,119 @@ public abstract class AbstractSignCharacterGUI extends AbstractGUI{
 	private int userScore=0;
 	private final Timer timer = new Timer();
 	private int currentTime=0;
-	
+	private SignClassifier classifier;
+	private IHandData handData= new OneHandData(leap);
+	private char previousChar;
+	private final String imageName=SignClassifier.language +  "/" + getPage().getHand() +"/";
+	private final char[] array;
+
 	protected void createGUI(){
-		  Page page=getPage();
-		  leap=page.getLeap();
-		  signInstruction = new GTextField(page, 217, 513, 492, 81, G4P.SCROLLBARS_NONE);
-		  signInstruction.setOpaque(false);
-		  signInstruction.setFont(new Font("Dialog", Font.PLAIN, 58));
-		  signInstruction.setTextEditEnabled(false);
-		  scoreTimerText = new GTextField(page, 259, 6, 331, 20);
-		  scoreTimerText.setText("Score:                       Time left:");
-		  scoreTimerText.setOpaque(false);
-		  scoreTimerText.setFont(new Font("Dialog", Font.PLAIN, 16));
-		  scoreTimerText.setTextEditEnabled(false);
-		  slider = new GSlider(page, 640, 4, 249, 46, (float) 10.0);
-		  //slider.setLimits((float)50.0, (float)0.0, (float)100.0);
-		  slider.setLimits((float)0, (float)0, (float)100);
-		  slider.setNumberFormat(G4P.DECIMAL, 2);
-		  slider.setOpaque(false);
-		  slider.setShowValue(true);
-		  page.turnOffLeapMouseControl();
-		  time();
+		Page page=getPage();
+		signInstruction = new GTextField(page, 217, 513, 492, 81, G4P.SCROLLBARS_NONE);
+		signInstruction.setOpaque(false);
+		signInstruction.setFont(new Font("Dialog", Font.PLAIN, 58));
+		signInstruction.setTextEditEnabled(false);
+		scoreTimerText = new GTextField(page, 259, 6, 331, 20);
+		scoreTimerText.setText("Score:                       Time left:");
+		scoreTimerText.setOpaque(false);
+		scoreTimerText.setFont(new Font("Dialog", Font.PLAIN, 16));
+		scoreTimerText.setTextEditEnabled(false);
+		slider = new GSlider(page, 640, 4, 249, 46, (float) 10.0);
+		//slider.setLimits((float)50.0, (float)0.0, (float)100.0);
+		slider.setLimits((float)0, (float)0, (float)100);
+		slider.setNumberFormat(G4P.DECIMAL, 2);
+		slider.setOpaque(false);
+		slider.setShowValue(true);
+		page.turnOffLeapMouseControl();
+		time();
 	}
-	
-	protected void setProgressBarValue(float value){
+
+	private void setProgressBarValue(float value){
 		slider.setValue(value);
 	}
 	
-	 protected void objectDisposal(GAbstractControl object){
-		  object.setVisible(false);
-		  object.dispose();
-	  }
-	
-	protected void time(){
-		timer.scheduleAtFixedRate(new TimerTask() {
-            int i = 62;//defined for a 60 second countdown
-            public void run() {
-            	i--;
-                currentTime=i;
-                if (i< 0){
-                	timer.cancel();
-                	new GameOverCommand(getPage(), userScore).process();
-                }
-            }
-        }, 0, 1000);
+	@Override
+	protected void objectDisposal(GAbstractControl object){
+		object.setVisible(false);
+		object.dispose();
 	}
-	
-	protected void incrementUserScore(){
+
+	private void time(){
+		timer.scheduleAtFixedRate(new TimerTask() {
+			int i = 61;//defined for a 60 second countdown
+			public void run() {
+				i--;
+				currentTime=i;
+				if (i< 0){
+					timer.cancel();
+					new GameOverCommand(getPage(), userScore).process();
+				}
+			}
+		}, 0, 1000);
+	}
+
+	private void incrementUserScore(){
 		this.userScore+=1000;
 	}
-	
-	protected int getCurrentUserScore(){
-		return this.userScore;
+
+	protected void setHandData(IHandData handData){
+		this.handData=handData;
 	}
-	
+
+	protected void setClassifier(SignClassifier classifier){
+		this.classifier=classifier;
+	}
+
 	protected void updateSignCharactersGUI(char currentLetter, String imageName){
 		super.render();
 		Page page = getPage();
 		img=page.loadImage(imageName);
 		page.image(img,136, 65, 657, 408);
-		signInstruction.setText("Sign the letter: " + Character.toUpperCase(currentLetter) +" " + currentLetter);
-		scoreTimerText.setText("Score:        " + userScore + "               Time left:" + currentTime);
+		scoreTimerText.setText("Score:        " + userScore +
+				"               Time left:" + currentTime);
 	}
-	
+
+	private void signCharacters(){	
+		Frame frame = leap.frame();
+		if(frame.hands().count()>0){
+			Map<String, Float> data=handData.getHandPosition();
+			if(data!=null){
+				double score = classifier.score(data,previousChar);
+				setProgressBarValue((float) (score*2*100));
+				if(score*2>=difficulty){
+					displayNextCharacter();
+					classifier.resetRollingAverage();
+				}
+			}
+			else
+				setProgressBarValue((float)0);
+		}
+		else
+			setProgressBarValue((float)0);
+	}
+
+	protected void displayNextCharacter(){
+		incrementUserScore();
+		this.currentLetterPosition++;
+		//To be implemented by subclass
+	}
+
+	@Override
+	public void render() {
+		char currentCharacter= array[currentLetterPosition];
+		String image=imageName+currentCharacter+imageType;
+		updateSignCharactersGUI(currentCharacter, image);
+		if(currentCharacter!=previousChar){
+			previousChar=currentCharacter;
+			try {
+				Thread.sleep(500);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+		signCharacters();
+	}
+
 	@Override
 	public void dispose(){
 		objectDisposal(slider);

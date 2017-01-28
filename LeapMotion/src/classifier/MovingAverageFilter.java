@@ -5,13 +5,13 @@ import java.math.RoundingMode;
 import java.util.LinkedList;
 import java.util.Queue;
 
-public class MovingAverage {
+public class MovingAverageFilter {
 
     private final Queue<BigDecimal> window = new LinkedList<BigDecimal>();
     private final int period;
     private BigDecimal sum = BigDecimal.ZERO;
 
-    public MovingAverage(int period) {
+    public MovingAverageFilter(int period) {
         assert period > 0 : "Period must be a positive integer";
         this.period = period;
     }

@@ -13,7 +13,7 @@ public abstract class AbstractGUI implements IGUI{
 		((Page) page).setDefaultBackground();
 	}
 
-	public Page getPage(){
+	protected Page getPage(){
 		return (Page) AbstractGUI.page;
 	}
 

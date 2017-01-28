@@ -29,8 +29,11 @@ public class OneHandData extends AbstractHandData{
 	{
 		Controller controller=getLeap();
 		Frame frame = controller.frame();
-		while (frame.fingers().isEmpty())
+		
+		if (frame.fingers().isEmpty())
 			return null;
+//		while (frame.fingers().isEmpty())
+//	        frame = controller.frame();
 
 		List<Vector> fingerBones=getFingerList();
 
