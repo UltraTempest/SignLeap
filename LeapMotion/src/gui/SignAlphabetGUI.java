@@ -13,21 +13,21 @@ import recording.OneHandData;
 public class SignAlphabetGUI extends AbstractSignCharacterGUI{
 	private final char[] alphabetArray = "abcdefghijklmnopqrstuvwxyz".toCharArray();
 	private final SignClassifier classifier;
-	private final IHandData handData = new OneHandData();
+	private final IHandData handData;
 	private char previousChar;
 	private String imageName;
 
 	public SignAlphabetGUI(PApplet page){
 		super(page);
 		classifier=((Page) page).getAlphabetClassifier();
+		handData=new OneHandData(((Page) page).getLeap());
 		imageName=SignClassifier.language +  "/" + ((Page) page).getHand() +"/";
 	}
 
 	private void signAlphabet(){
 		Frame frame = leap.frame();
-		Page page=getPage();
 		if(frame.hands().count()==1){
-			Map<String, Float> data=handData.getHandPosition(page.getLeap());
+			Map<String, Float> data=handData.getHandPosition();
 			if(data!=null){
 				double score = classifier.score(data,previousChar);
 				setProgressBarValue((float) (score*100));

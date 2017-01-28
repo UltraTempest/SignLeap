@@ -11,24 +11,35 @@ import com.leapmotion.leap.Hand;
 import com.leapmotion.leap.Vector;
 
 public abstract class AbstractHandData implements IHandData{
+	
+	private static Controller controller;
+	
+	public AbstractHandData(Controller controller){
+		AbstractHandData.controller=controller;
+	}
 
-	public boolean checkIfHandPlacedOverLeap(Controller controller){
+	public boolean checkIfHandPlacedOverLeap(){
 		return controller.frame().hands().count()>0 ? true : false;
 	}
 
-	public boolean checkIfCorrectHandPlacedOverLeap(Controller controller, Handedness hand){
-		Handedness current = GetHandedness(controller.frame().hands().frontmost());
+	public boolean checkIfCorrectHandPlacedOverLeap(Handedness hand){
+		Handedness current = GetHandedness();
 		return hand.equals(current);	
 	}
 
-	public Handedness GetHandedness(Hand hand) {
+	public Handedness GetHandedness() {
+		Hand hand=controller.frame().hands().frontmost();
 		if(hand.isValid())
 			return hand.isLeft() ? Handedness.LEFT : Handedness.RIGHT;	
 		else
-			return null;
+			return Handedness.RIGHT;
+	}
+	
+	protected Controller getLeap() {
+		return controller;
 	}
 
-	protected List<Vector> getFingerList(Controller controller){
+	protected List<Vector> getFingerList(){
 		FingerList fingers = controller.frame().fingers();
 		List<Vector>fingerBones = new ArrayList<Vector>();
 		for (Finger finger:fingers){

@@ -11,15 +11,29 @@ import com.leapmotion.leap.HandList;
 import com.leapmotion.leap.Vector;
 
 public class TwoHandData extends AbstractHandData{
+	
+	public TwoHandData(Controller controller) {
+		super(controller);
+	}
 
+	/**
+	gets the current frame from controller
+	for each finger, stores the topmost end of each bone (4 points)
+	adjusts bone location relativity by subtracting the center of the palm
+	returns the adjusted bone locations in the form:
+	{feat0=some_float, feat1=some_float, ... feat59=some_float}
+	 * @param Leap motion Controller
+	 * @return Map<String, Float>
+	 **/
 	@Override
-	public Map<String, Float> getHandPosition(Controller controller)
+	public Map<String, Float> getHandPosition()
 	{
+		Controller controller=getLeap();
 		Frame frame = controller.frame();
 		while (frame.fingers().isEmpty())
 			return null;
 
-		List<Vector> fingerBones=getFingerList(controller);
+		List<Vector> fingerBones=getFingerList();
 
 		HandList hands = controller.frame().hands();
 		Vector[] handCentres = new Vector[2];

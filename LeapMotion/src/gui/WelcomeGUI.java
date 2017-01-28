@@ -2,9 +2,6 @@ package gui;
 
 import java.awt.Font;
 import java.io.File;
-
-import com.leapmotion.leap.Controller;
-
 import command.IntroductionCommand;
 import command.MainMenuCommand;
 import g4p_controls.G4P;
@@ -22,21 +19,21 @@ public class WelcomeGUI extends AbstractGeneralGUI{
 
 	public WelcomeGUI(PApplet page) {
 		super(page);
+		handData=new OneHandData(((Page) page).getLeap());
 	}
 
 	private GLabel PreferredHandText; 
 	private PImage img;
 	private int frameCount;
-	private final IHandData handData= new OneHandData();
+	private final IHandData handData;
 	
 	private void changeStateIfRequired(){
 		  Page page= getPage();
-		  Controller leap = page.getLeap();
-		  if(handData.checkIfHandPlacedOverLeap(leap)){
+		  if(handData.checkIfHandPlacedOverLeap()){
 			  frameCount++;
 			  if(frameCount<50)
 				  return;
-			  page.setHand(handData.GetHandedness(leap.frame().hands().frontmost()));
+			  page.setHand(handData.GetHandedness());
 			  if(!checkLeaderBoardFileExistence())
 				  new IntroductionCommand(page).process();
 			  else

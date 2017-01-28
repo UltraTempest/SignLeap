@@ -11,6 +11,11 @@ import java.util.List;
 import java.util.Map;
 
 public class OneHandData extends AbstractHandData{
+	
+	public OneHandData(Controller controller) {
+		super(controller);
+	}
+
 	/**
 	gets the current frame from controller
 	for each finger, stores the topmost end of each bone (4 points)
@@ -20,13 +25,14 @@ public class OneHandData extends AbstractHandData{
 	 * @param Leap motion Controller
 	 * @return Map<String, Float>
 	 **/
-	public Map<String, Float> getHandPosition(Controller controller)
+	public Map<String, Float> getHandPosition()
 	{
+		Controller controller=getLeap();
 		Frame frame = controller.frame();
 		while (frame.fingers().isEmpty())
 			return null;
 
-		List<Vector> fingerBones=getFingerList(controller);
+		List<Vector> fingerBones=getFingerList();
 
 		HandList hands = controller.frame().hands();
 		Vector handCentre = null;

@@ -21,15 +21,14 @@ public class SignNumbersGUI extends AbstractSignCharacterGUI{
 	public SignNumbersGUI(PApplet page) {
 		super(page);
 		classifier=((Page) page).getNumberClassifier();
-		handData= new OneHandData();
+		handData= new OneHandData(((Page) page).getLeap());
 		imageName=SignClassifier.language +  "/" + ((Page) page).getHand() +"/";
 	}
 
 	private void signNumbers(){	
 		Frame frame = leap.frame();
-		Page page=getPage();
 		if(frame.hands().count()>0){
-			Map<String, Float> data=handData.getHandPosition(page.getLeap());
+			Map<String, Float> data=handData.getHandPosition();
 			if(data!=null){
 				double score = classifier.score(data,previousChar);
 				setProgressBarValue((float) (score*100));
@@ -51,7 +50,7 @@ public class SignNumbersGUI extends AbstractSignCharacterGUI{
 
 		if(this.numbersArray[this.currentLetterPosition]=='6'){
 			classifier=getPage().getNumberClassifier();
-			handData= new TwoHandData();
+			handData= new TwoHandData(getPage().getLeap());
 		}
 
 		if(this.currentLetterPosition==10)

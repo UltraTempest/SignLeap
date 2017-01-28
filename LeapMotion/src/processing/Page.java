@@ -25,7 +25,7 @@ public class Page extends PApplet{
 
 	private final static Controller controller = new Controller();
 	private Handedness hand;
-	private final IHandData handInfo= new OneHandData();
+	private final IHandData handInfo= new OneHandData(controller);
 	private final String leapWarning="Warning! Please keep your %s hand placed over the Leap Motion";
 	private final LeapMouseListener leapListen= new LeapMouseListener();
 
@@ -100,7 +100,7 @@ public class Page extends PApplet{
 	public void renderLeapWarning(){
 		if(currentGUIDisplayed.isWarningRequired()){
 			setDefaultBackground();
-			if(!handInfo.checkIfCorrectHandPlacedOverLeap(controller, hand)){
+			if(!handInfo.checkIfCorrectHandPlacedOverLeap(hand)){
 				fill(205, 48, 48);
 				text(String.format(leapWarning,hand),250, 50);
 			}

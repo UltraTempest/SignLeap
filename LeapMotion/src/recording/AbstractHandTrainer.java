@@ -7,20 +7,18 @@ import java.nio.file.StandardOpenOption;
 import java.util.Collection;
 import java.util.Map;
 
-import com.leapmotion.leap.Controller;
-
 public abstract class AbstractHandTrainer{
 	protected int numSamples;
-	protected final Controller controller;
 	protected char trainingChar; 
 	private int count =0;
 	protected Path filePath;
 	protected int size;
 	private final char[] array;
 	private int position=0;
+	private final IHandData handData;
 
-	protected AbstractHandTrainer(Controller controller,char[] array){
-		this.controller=controller;
+	protected AbstractHandTrainer(IHandData handData,char[] array){
+		this.handData=handData;
 		this.array=array;
 		trainingChar=array[position];
 	}
@@ -61,5 +59,14 @@ public abstract class AbstractHandTrainer{
 		System.out.println("Inserted " + trainingChar +" no." + count + ": " + sample);
 		count++;
 		return trainingChar;
+	}
+	
+	public char train(){
+		try {
+			return training(handData.getHandPosition());
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		return '1';
 	}
 }
