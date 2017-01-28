@@ -12,7 +12,6 @@ import com.leapmotion.leap.Controller;
 public abstract class AbstractHandTrainer{
 	protected int numSamples;
 	protected final Controller controller;
-	protected final HandData handData = new HandData();
 	protected char trainingChar; 
 	private int count =0;
 	protected Path filePath;

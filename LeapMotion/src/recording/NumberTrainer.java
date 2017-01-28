@@ -4,7 +4,8 @@ import java.nio.file.Paths;
 
 import com.leapmotion.leap.Controller;
 
-import recording.HandData.Handedness;
+import recording.AbstractHandData.Handedness;
+
 
 public class NumberTrainer extends OneHandTrainer{
 

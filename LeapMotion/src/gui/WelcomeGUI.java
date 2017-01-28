@@ -15,7 +15,8 @@ import leaderboard.HighScoreManager;
 import processing.Page;
 import processing.core.PApplet;
 import processing.core.PImage;
-import recording.HandData;
+import recording.IHandData;
+import recording.OneHandData;
 
 public class WelcomeGUI extends AbstractGeneralGUI{
 
@@ -26,16 +27,16 @@ public class WelcomeGUI extends AbstractGeneralGUI{
 	private GLabel PreferredHandText; 
 	private PImage img;
 	private int frameCount;
+	private final IHandData handData= new OneHandData();
 	
 	private void changeStateIfRequired(){
-		  HandData handInfo = new HandData();
 		  Page page= getPage();
 		  Controller leap = page.getLeap();
-		  if(handInfo.checkIfHandPlacedOverLeap(leap)){
+		  if(handData.checkIfHandPlacedOverLeap(leap)){
 			  frameCount++;
 			  if(frameCount<50)
 				  return;
-			  page.setHand(handInfo.GetHandedness(leap.frame().hands().frontmost()));
+			  page.setHand(handData.GetHandedness(leap.frame().hands().frontmost()));
 			  if(!checkLeaderBoardFileExistence())
 				  new IntroductionCommand(page).process();
 			  else

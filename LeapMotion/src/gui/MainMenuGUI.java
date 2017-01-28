@@ -10,7 +10,7 @@ import g4p_controls.GCScheme;
 import g4p_controls.GLabel;
 import processing.Page;
 import processing.core.PApplet;
-import recording.HandData.Handedness;
+import recording.AbstractHandData.Handedness;
 
 public class MainMenuGUI extends AbstractGeneralGUI{
 	private Button alphabetButton; 

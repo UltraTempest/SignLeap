@@ -7,37 +7,36 @@ import com.leapmotion.leap.Frame;
 import classifier.SignClassifier;
 import processing.Page;
 import processing.core.PApplet;
+import recording.IHandData;
+import recording.OneHandData;
 
 public class SignAlphabetGUI extends AbstractSignCharacterGUI{
 	private final char[] alphabetArray = "abcdefghijklmnopqrstuvwxyz".toCharArray();
+	private final SignClassifier classifier;
+	private final IHandData handData = new OneHandData();
 	private char previousChar;
 	private String imageName;
 
-	public SignAlphabetGUI(PApplet page) {
+	public SignAlphabetGUI(PApplet page){
 		super(page);
+		classifier=((Page) page).getAlphabetClassifier();
 		imageName=SignClassifier.language +  "/" + ((Page) page).getHand() +"/";
 	}
 
 	private void signAlphabet(){
 		Frame frame = leap.frame();
 		Page page=getPage();
-		if(frame.hands().count()>0){
-			Map<String, Float> data=handData.getOneHandPosition(page.getLeap());
+		if(frame.hands().count()==1){
+			Map<String, Float> data=handData.getHandPosition(page.getLeap());
 			if(data!=null){
-				double score = page.getAlphabetClassifier().score(data,previousChar);
+				double score = classifier.score(data,previousChar);
 				setProgressBarValue((float) (score*100));
-				PApplet.println(score);
-				if(score<0.5)
-					setProgressBarValue((float) (score*2*100));
-				else{
-					displayNextCharacter();
-					return;
-				}
-				PApplet.println(score);
 				if((score*2)>=difficulty){
 					displayNextCharacter();
 				}
 			}
+			else
+				setProgressBarValue((float)0);
 		}
 		else
 			setProgressBarValue((float)0);

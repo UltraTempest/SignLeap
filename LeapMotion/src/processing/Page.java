@@ -1,6 +1,7 @@
 package processing;
 import com.leapmotion.leap.Controller;
 import com.leapmotion.leap.Frame;
+import com.leapmotion.leap.Gesture;
 import com.leapmotion.leap.Image;
 import com.leapmotion.leap.ImageList;
 
@@ -16,14 +17,15 @@ import gui.IGUI;
 import gui.WelcomeGUI;
 import processing.core.PApplet;
 import processing.core.PImage;
-import recording.HandData;
-import recording.HandData.Handedness;
+import recording.AbstractHandData.Handedness;
+import recording.IHandData;
+import recording.OneHandData;
 
 public class Page extends PApplet{
 
-	private final Controller controller = new Controller();
+	private final static Controller controller = new Controller();
 	private Handedness hand;
-	private final HandData handInfo= new HandData();
+	private final IHandData handInfo= new OneHandData();
 	private final String leapWarning="Warning! Please keep your %s hand placed over the Leap Motion";
 	private final LeapMouseListener leapListen= new LeapMouseListener();
 
@@ -48,6 +50,7 @@ public class Page extends PApplet{
 	}
 
 	public void setup(){ 
+		controller.enableGesture( Gesture.Type.TYPE_KEY_TAP);
 		//controller.setPolicy(Controller.PolicyFlag.POLICY_IMAGES);
 		initializeClassifiers();
 		currentGUIDisplayed=new WelcomeGUI(this);
@@ -65,7 +68,7 @@ public class Page extends PApplet{
 	} 
 
 	public Controller getLeap(){
-		return this.controller;
+		return Page.controller;
 	}
 
 	public void setTextSizeToDefault(){

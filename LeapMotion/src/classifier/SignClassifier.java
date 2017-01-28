@@ -4,7 +4,7 @@ import java.io.File;
 import java.util.Map;
 import java.util.Random;
 
-import recording.HandData.Handedness;
+import recording.AbstractHandData.Handedness;
 import weka.classifiers.Classifier;
 import weka.classifiers.Evaluation;
 import weka.classifiers.bayes.NaiveBayes;
@@ -25,6 +25,7 @@ public class SignClassifier {
 	private int numberOfFeatures;
 	private Instances trainingSet;
 	private Instances testingSet;
+	private MovingAverage move= new MovingAverage(10);
 
 	public static void main(String args[]){
 		new SignClassifier(Handedness.RIGHT, "alpha").evaluate();
@@ -47,12 +48,13 @@ public class SignClassifier {
 			if(f.exists() && !f.isDirectory())  
 				// deserialize model
 				classifier=(RandomForest) weka.core.SerializationHelper.read(filename);
+			//classifier=(LibSVM) weka.core.SerializationHelper.read(filename);
 			else{
 				// train classifier
 				classifier= new RandomForest();
-//				classifier= new LibSVM();
-//				String[] options = {"-B"};
-//				((LibSVM) classifier).setOptions(options);
+				//				classifier= new LibSVM();
+				//				String[] options = {"-B"};
+				//				((LibSVM) classifier).setOptions(options);
 				classifier.buildClassifier(trainingSet);
 
 				// serialize model
@@ -71,18 +73,46 @@ public class SignClassifier {
 		sampleInstance.setDataset(testingSet);
 		return sampleInstance;
 	}
+	
+	public String classify(Map<String, Float> data, char c){
+		Instance sampleInstance=createInstanceFromData(data);
+		try {
+			double i = classifier.classifyInstance(sampleInstance);
+			double[] fDistribution = classifier.distributionForInstance(sampleInstance);
+			System.out.println("Actual: " + testingSet.classAttribute().value((int) i) +" : " + fDistribution[(int) i]);
+			System.out.println();
+			return testingSet.classAttribute().value((int) i);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return "";
+	}
+	
 
 	public double score(Map<String, Float> data, char c){
 		Instance sampleInstance=createInstanceFromData(data);
 		try {
 			double[] fDistribution = classifier.distributionForInstance(sampleInstance);
 			int position=getLabelDistributionPosition(String.valueOf(c), fDistribution);
-			return fDistribution[position];
+			double probabilityForExpected=fDistribution[position];
+			System.out.println("Expected: "+ c + " : " + probabilityForExpected);
+			double rollingAverage=rollingTotal(probabilityForExpected);
+			System.out.println("Rolling Average: " + rollingAverage);
+			return rollingAverage;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}	
 		return 0.0;
 	}	
+
+	private double rollingTotal(double d) {
+		move.add(d);
+		return move.getAverage();
+	}
+
+	public void resetRollingAverage(){
+		move=new MovingAverage(10);
+	}
 
 	private int getLabelDistributionPosition(String charToFind, double[] fDistribution){
 		for(int i=0; i<fDistribution.length;i++){

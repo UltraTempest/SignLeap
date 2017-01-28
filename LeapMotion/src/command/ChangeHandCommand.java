@@ -2,7 +2,7 @@ package command;
 
 import processing.Page;
 import processing.core.PApplet;
-import recording.HandData.Handedness;
+import recording.AbstractHandData.Handedness;
 
 public class ChangeHandCommand extends AbstractCommand{
 
