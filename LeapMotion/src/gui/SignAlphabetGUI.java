@@ -2,12 +2,13 @@ package gui;
 
 import processing.Page;
 import processing.core.PApplet;
+import recording.AlphabetTrainer;
 
 public class SignAlphabetGUI extends AbstractSignCharacterGUI{
-	private final static char[] alphabetArray = "abcdefghijklmnopqrstuvwxyz".toCharArray();
 
 	public SignAlphabetGUI(PApplet page) {
-		super(page,((Page) page).getAlphabetClassifier(), alphabetArray);
+		super(page,((Page) page).getAlphabetClassifier(), 
+				AlphabetTrainer.alphabet);
 	}
 
 	@Override
@@ -18,9 +19,9 @@ public class SignAlphabetGUI extends AbstractSignCharacterGUI{
 	}
 
 	@Override
-	protected void updateSignCharactersGUI(char currentLetter, String imageName){
+	protected void updateSignCharactersGUI(String currentLetter, String imageName){
 		super.updateSignCharactersGUI(currentLetter, imageName);
 		signInstruction.setText("Sign the letter: " + 
-				Character.toUpperCase(currentLetter) +" " + currentLetter);
+				currentLetter.toUpperCase()+" " + currentLetter);
 	}
 }

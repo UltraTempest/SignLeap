@@ -31,6 +31,7 @@ public class Page extends PApplet{
 
 	private SignClassifier alphaClassifier;
 	private SignClassifier numClassifier;
+	private SignClassifier num2Classifier;
 
 	private final double easy=0.75;
 	private final double medium=0.8;
@@ -92,6 +93,10 @@ public class Page extends PApplet{
 	public SignClassifier getNumberClassifier(){
 		return this.numClassifier;
 	}
+	
+	public SignClassifier getTwoHandNumberClassifier(){
+		return this.num2Classifier;
+	}
 
 	public SignClassifier getAlphabetClassifier(){
 		return this.alphaClassifier;
@@ -136,7 +141,7 @@ public class Page extends PApplet{
 	private void initializeClassifiers(){
 		new SignClassifier(Handedness.RIGHT, "alpha");
 		new SignClassifier(Handedness.RIGHT, "num");
-		//new SignClassifier(null, "num2");
+		num2Classifier=new SignClassifier(null, "num2");
 		//		new SignClassifier(Handedness.LEFT, "alpha");
 		//		new SignClassifier(Handedness.LEFT, "num");
 	}

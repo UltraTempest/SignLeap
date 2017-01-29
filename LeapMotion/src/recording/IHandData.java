@@ -8,5 +8,5 @@ public interface IHandData {
 	public Map<String, Float> getHandPosition();
 	public boolean checkIfHandPlacedOverLeap();
 	public boolean checkIfCorrectHandPlacedOverLeap(Handedness hand);
-	public Handedness GetHandedness();
+	public Handedness getHandedness();
 }

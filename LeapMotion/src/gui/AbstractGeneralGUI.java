@@ -10,11 +10,6 @@ public abstract class AbstractGeneralGUI extends AbstractGUI{
 		super(page);
 	}
 
-	@Override
-	public void render(){
-		super.render();
-	}	
-
 	protected void checkIfMouseOverButton(Button button){
 		Page page=getPage();
 		if(button.isMouseOver(page)){

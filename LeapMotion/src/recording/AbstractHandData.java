@@ -11,9 +11,9 @@ import com.leapmotion.leap.Hand;
 import com.leapmotion.leap.Vector;
 
 public abstract class AbstractHandData implements IHandData{
-	
+
 	private static Controller controller;
-	
+
 	public AbstractHandData(Controller controller){
 		AbstractHandData.controller=controller;
 	}
@@ -23,18 +23,18 @@ public abstract class AbstractHandData implements IHandData{
 	}
 
 	public boolean checkIfCorrectHandPlacedOverLeap(Handedness hand){
-		Handedness current = GetHandedness();
+		Handedness current = getHandedness();
 		return hand.equals(current);	
 	}
 
-	public Handedness GetHandedness() {
+	public Handedness getHandedness() {
 		Hand hand=controller.frame().hands().frontmost();
 		if(hand.isValid())
 			return hand.isLeft() ? Handedness.LEFT : Handedness.RIGHT;	
 		else
-			return Handedness.RIGHT;
+			return null;
 	}
-	
+
 	protected Controller getLeap() {
 		return controller;
 	}

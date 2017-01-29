@@ -30,12 +30,16 @@ public class SignClassifier {
 
 	public static void main(String args[]){
 		//new SignClassifier(Handedness.RIGHT, "alpha").evaluate();
-		new SignClassifier(Handedness.RIGHT, "num").evaluate();
-		//new SignClassifier(null, "num2").evaluate();
+		//new SignClassifier(Handedness.RIGHT, "num").evaluate();
+		new SignClassifier(null, "num2").evaluate();
 	}
 
 	public SignClassifier(final Handedness hand, final String type){
-		final String name=type +hand;
+		String name;
+		if(hand!=null)
+			name=type +hand;
+		else
+			name=type;
 		final String filename=language +name+ ".model";
 		try {
 			DataSource source = new DataSource("SignData/TrainingData/"+name+ ".arff");
@@ -74,8 +78,8 @@ public class SignClassifier {
 		sampleInstance.setDataset(testingSet);
 		return sampleInstance;
 	}
-	
-	public String classify(Map<String, Float> data, char c){
+
+	public String classify(Map<String, Float> data,final String previousChar){
 		Instance sampleInstance=createInstanceFromData(data);
 		try {
 			double i = classifier.classifyInstance(sampleInstance);
@@ -88,14 +92,14 @@ public class SignClassifier {
 		return "";
 	}
 
-	public double score(Map<String, Float> data, char c){
+	public double score(Map<String, Float> data,final String previousChar){
 		Instance sampleInstance=createInstanceFromData(data);
 		try {
 			double[] fDistribution = classifier.distributionForInstance(sampleInstance);
-			int position=getLabelDistributionPosition(String.valueOf(c), fDistribution);
+			int position=getLabelDistributionPosition(previousChar, fDistribution);
 			double probabilityForExpected=fDistribution[position];
-			classify(data,c);
-			System.out.println("Expected: "+ c + " : " + probabilityForExpected);
+			classify(data,previousChar);
+			System.out.println("Expected: "+ previousChar + " : " + probabilityForExpected);
 			double rollingAverage=rollingTotal(probabilityForExpected);
 			System.out.println("Rolling Average: " + rollingAverage);
 			System.out.println();
@@ -115,7 +119,7 @@ public class SignClassifier {
 		move=new MovingAverageFilter(movingAverageFilterPeriods);
 	}
 
-	private int getLabelDistributionPosition(String charToFind, double[] fDistribution){
+	private int getLabelDistributionPosition(final String charToFind, double[] fDistribution){
 		for(int i=0; i<fDistribution.length;i++){
 			if(charToFind.equals(testingSet.classAttribute().value(i)))
 				return i;
@@ -147,7 +151,6 @@ public class SignClassifier {
 			try {
 				Evaluation eval = new Evaluation(trainingSet);
 				classifier.buildClassifier(trainingSet);
-				//eval.crossValidateModel(classifier, trainingSet, 10, new Random(1));
 				eval.crossValidateModel(classifier, testingSet, 10, new Random(1));
 				System.out.println(classifier);
 				System.out.println(eval.toSummaryString());

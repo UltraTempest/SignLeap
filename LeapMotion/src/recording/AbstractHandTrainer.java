@@ -7,40 +7,46 @@ import java.nio.file.StandardOpenOption;
 import java.util.Collection;
 import java.util.Map;
 
+import recording.AbstractHandData.Handedness;
+
 public abstract class AbstractHandTrainer{
+	private final Handedness hand;
 	protected int numSamples;
-	protected char trainingChar; 
+	protected String trainingChar; 
 	private int count =0;
-	protected Path filePath;
+	protected Path trainPath;
+	protected Path testPath;
 	protected int size;
-	private final char[] array;
-	private int position=0;
+	private final String[] array;
+	private int currentPosition=0;
 	private final IHandData handData;
 
-	protected AbstractHandTrainer(IHandData handData,char[] array){
+	protected AbstractHandTrainer(final IHandData handData,final String[] array, 
+			final Handedness hand){
+		this.hand=hand;
 		this.handData=handData;
 		this.array=array;
-		trainingChar=array[position];
+		trainingChar=array[currentPosition];
 	}
 
-	private String formatString(Collection<Float> sample){
-		StringBuilder sb = new StringBuilder();
+	private String formatString(final Collection<Float> sample){
+		final StringBuilder sb = new StringBuilder();
 		for(Float i: sample){
 			sb.append(i+",");
 		}
 		return sb.toString();	
 	}
 
-	protected char training(Map<String, Float> sample) throws InterruptedException{
+	protected String training(final Map<String, Float> sample) throws InterruptedException{
 		if(count==numSamples){
 			System.out.println("Done training " + trainingChar);
-			position++;
+			currentPosition++;
 
-			if(position==array.length)
+			if(currentPosition==array.length)
 				System.exit(0);
 
 			count=0;
-			trainingChar=array[position];
+			trainingChar=array[currentPosition];
 			return trainingChar;
 		}
 
@@ -49,10 +55,20 @@ public abstract class AbstractHandTrainer{
 			return trainingChar;
 		}
 
-		String toInsert = "\n" + formatString(sample.values())+String.valueOf(trainingChar);
+		if(hand!=null && !handData.checkIfCorrectHandPlacedOverLeap(hand)){
+			System.out.println("Wrong hand used");
+			return trainingChar;
+		}
+
+		String toInsert = "\n" + formatString(sample.values())+ trainingChar;
 
 		try {
-			Files.write(filePath, toInsert.getBytes(), StandardOpenOption.APPEND);
+
+			if(count>=numSamples/2)
+				Files.write(trainPath, toInsert.getBytes(), StandardOpenOption.APPEND);
+			else
+				Files.write(testPath, toInsert.getBytes(), StandardOpenOption.APPEND);
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -60,13 +76,17 @@ public abstract class AbstractHandTrainer{
 		count++;
 		return trainingChar;
 	}
-	
-	public char train(){
+
+	public String train(){
 		try {
 			return training(handData.getHandPosition());
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		return '1';
+		return "";
+	}
+
+	public String getCurrentCharacter(){
+		return array[currentPosition];
 	}
 }

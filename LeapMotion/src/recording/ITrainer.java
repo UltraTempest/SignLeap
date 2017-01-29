@@ -1,4 +1,5 @@
 package recording;
 public interface ITrainer{
-	public char train();
+	public String train();
+	public String getCurrentCharacter();
 }

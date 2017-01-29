@@ -12,6 +12,7 @@ import leaderboard.HighScoreManager;
 import processing.Page;
 import processing.core.PApplet;
 import processing.core.PImage;
+import recording.AbstractHandData.Handedness;
 import recording.IHandData;
 import recording.OneHandData;
 
@@ -33,7 +34,10 @@ public class WelcomeGUI extends AbstractGeneralGUI{
 			  frameCount++;
 			  if(frameCount<50)
 				  return;
-			  page.setHand(handData.GetHandedness());
+			  Handedness hand=handData.getHandedness();
+			  if(hand==null)
+				  return;
+			  page.setHand(handData.getHandedness());
 			  if(!checkLeaderBoardFileExistence())
 				  new IntroductionCommand(page).process();
 			  else

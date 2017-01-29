@@ -2,12 +2,15 @@ package recording;
 
 import com.leapmotion.leap.Controller;
 
+import recording.AbstractHandData.Handedness;
+
 public abstract class OneHandTrainer extends AbstractHandTrainer implements ITrainer{
 
 	public static final int ONE_HAND_NUM_FEATURES = 60;
 
-	public OneHandTrainer(Controller controller,char[] array){
-		super(new OneHandData(controller),array);
+	protected OneHandTrainer(final Controller controller,final String[] array,
+			final Handedness hand){
+		super(new OneHandData(controller),array,hand);
 		size=ONE_HAND_NUM_FEATURES;
 	}
 }

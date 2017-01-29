@@ -22,7 +22,7 @@ import recording.OneHandData;
 
 public abstract class AbstractSignCharacterGUI extends AbstractGUI{
 
-	public AbstractSignCharacterGUI(PApplet page, SignClassifier signClassifier,char[] array) {
+	public AbstractSignCharacterGUI(PApplet page, SignClassifier signClassifier,String[] array) {
 		super(page);
 		this.classifier=signClassifier;
 		this.array=array;
@@ -41,9 +41,9 @@ public abstract class AbstractSignCharacterGUI extends AbstractGUI{
 	private int currentTime=0;
 	private SignClassifier classifier;
 	private IHandData handData= new OneHandData(leap);
-	private char previousChar;
+	private String previousChar;
 	private final String imageName=SignClassifier.language +  "/" + getPage().getHand() +"/";
-	private final char[] array;
+	private final String[] array;
 
 	protected void createGUI(){
 		Page page=getPage();
@@ -69,7 +69,7 @@ public abstract class AbstractSignCharacterGUI extends AbstractGUI{
 	private void setProgressBarValue(float value){
 		slider.setValue(value);
 	}
-	
+
 	@Override
 	protected void objectDisposal(GAbstractControl object){
 		object.setVisible(false);
@@ -94,15 +94,15 @@ public abstract class AbstractSignCharacterGUI extends AbstractGUI{
 		this.userScore+=1000;
 	}
 
-	protected void setHandData(IHandData handData){
+	protected void setHandData(final IHandData handData){
 		this.handData=handData;
 	}
 
-	protected void setClassifier(SignClassifier classifier){
+	protected void setClassifier(final SignClassifier classifier){
 		this.classifier=classifier;
 	}
 
-	protected void updateSignCharactersGUI(char currentLetter, String imageName){
+	protected void updateSignCharactersGUI(final String currentCharacter, String imageName){
 		super.render();
 		Page page = getPage();
 		img=page.loadImage(imageName);
@@ -138,10 +138,10 @@ public abstract class AbstractSignCharacterGUI extends AbstractGUI{
 
 	@Override
 	public void render() {
-		char currentCharacter= array[currentLetterPosition];
+		String currentCharacter= array[currentLetterPosition];
 		String image=imageName+currentCharacter+imageType;
 		updateSignCharactersGUI(currentCharacter, image);
-		if(currentCharacter!=previousChar){
+		if(!currentCharacter.equals(previousChar)){
 			previousChar=currentCharacter;
 			try {
 				Thread.sleep(500);

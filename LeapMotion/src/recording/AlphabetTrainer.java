@@ -9,12 +9,13 @@ import recording.AbstractHandData.Handedness;
 
 public class AlphabetTrainer extends OneHandTrainer{
 
-	private static char[] alpha="abcdefghijklmnopqrstuvwxyz".toCharArray();
+	public final static String[] alphabet = {"a","b","c","d","e","f","g","h","i","j","k","l","m","n",
+			"o","p","q","r","s","t","u","v","w","x","y","z"};
 
-	public AlphabetTrainer(Controller controller, Handedness hand) {
-		super(controller,alpha);
-		numSamples=100;
-		this.filePath=Paths.get("SignData/TrainingData/alpha"+ hand +".arff");
-		//this.filePath=Paths.get("SignData/TestingData/alpha"+ hand +".arff");
+	public AlphabetTrainer(final Controller controller,final Handedness hand) {
+		super(controller,alphabet,hand);
+		numSamples=150*2;
+		trainPath=Paths.get("SignData/TrainingData/alpha"+ hand +".arff");
+		testPath=Paths.get("SignData/TestingData/alpha"+ hand +".arff");
 	}
 }

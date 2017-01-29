@@ -5,7 +5,8 @@ import processing.core.PApplet;
 import recording.TwoHandData;
 
 public class SignNumbersGUI extends AbstractSignCharacterGUI{
-	private final static char[] numbersArray = {'1','2','3','4','5','6','7','8','9'};
+	private final static String[] numbersArray = {"1","2","3","4","5","6","7"
+			,"8","9", "10"};
 
 	public SignNumbersGUI(PApplet page) {
 		super(page,((Page) page).getNumberClassifier(),numbersArray);
@@ -15,19 +16,19 @@ public class SignNumbersGUI extends AbstractSignCharacterGUI{
 	protected void displayNextCharacter(){
 		super.displayNextCharacter();
 
-		if(SignNumbersGUI.numbersArray[this.currentLetterPosition]=='6'){
-			setClassifier(getPage().getNumberClassifier());
-			setHandData(new TwoHandData(getPage().getLeap()));
+		if(numbersArray[this.currentLetterPosition].equals("6")){
+			Page page=getPage();
+			setClassifier(page.getTwoHandNumberClassifier());
+			setHandData(new TwoHandData(page.getLeap()));
 		}
 
-		if(this.currentLetterPosition==10)
+		if(this.currentLetterPosition==numbersArray.length)
 			this.currentLetterPosition=0;	 
 	}
 
 	@Override
-	protected void updateSignCharactersGUI(char currentLetter, String imageName){
+	protected void updateSignCharactersGUI(final String currentLetter,final String imageName){
 		super.updateSignCharactersGUI(currentLetter, imageName);
-		signInstruction.setText("Sign the number: " + 
-				Character.toUpperCase(currentLetter));
+		signInstruction.setText("Sign the number: " + currentLetter);
 	}
 }
