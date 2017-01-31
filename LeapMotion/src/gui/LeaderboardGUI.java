@@ -19,11 +19,6 @@ public class LeaderboardGUI extends AbstractGeneralGUI{
 	}
 
 	@Override
-	public boolean isWarningRequired(){
-		return false;
-	}
-
-	@Override
 	protected void createGUI(){
 		Page page = getPage();
 		homeButton = new Button(page, 736, 38, 131, 53, new MainMenuCommand(page));

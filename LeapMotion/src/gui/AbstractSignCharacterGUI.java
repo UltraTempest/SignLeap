@@ -71,7 +71,7 @@ public abstract class AbstractSignCharacterGUI extends AbstractGUI{
 	}
 
 	@Override
-	protected void objectDisposal(GAbstractControl object){
+	protected void objectDisposal(final GAbstractControl object){
 		object.setVisible(false);
 		object.dispose();
 	}

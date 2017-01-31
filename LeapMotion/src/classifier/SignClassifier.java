@@ -26,7 +26,7 @@ public class SignClassifier {
 	private Instances trainingSet;
 	private Instances testingSet;
 	private final int movingAverageFilterPeriods=8;
-	private MovingAverageFilter move= new MovingAverageFilter(movingAverageFilterPeriods);
+	private MovingAverageFilter move;
 
 	public static void main(String args[]){
 		//new SignClassifier(Handedness.RIGHT, "alpha").evaluate();
@@ -35,6 +35,7 @@ public class SignClassifier {
 	}
 
 	public SignClassifier(final Handedness hand, final String type){
+		resetRollingAverage();
 		String name;
 		if(hand!=null)
 			name=type +hand;
@@ -117,9 +118,11 @@ public class SignClassifier {
 
 	public void resetRollingAverage(){
 		move=new MovingAverageFilter(movingAverageFilterPeriods);
+		for(int i=0; i<movingAverageFilterPeriods;i++)
+		move.add(0.0);
 	}
 
-	private int getLabelDistributionPosition(final String charToFind, double[] fDistribution){
+	private int getLabelDistributionPosition(final String charToFind,final double[] fDistribution){
 		for(int i=0; i<fDistribution.length;i++){
 			if(charToFind.equals(testingSet.classAttribute().value(i)))
 				return i;
