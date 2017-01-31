@@ -21,17 +21,17 @@ import weka.core.converters.ConverterUtils.DataSource;
 public class SignClassifier {
 
 	public static final String language= "ISL";
-	private Classifier classifier;
+	protected Classifier classifier;
 	private int numberOfFeatures;
 	private Instances trainingSet;
 	private Instances testingSet;
-	private final int movingAverageFilterPeriods=8;
-	private MovingAverageFilter move;
+	protected final int movingAverageFilterPeriods=8;
+	protected MovingAverageFilter move;
 
 	public static void main(String args[]){
-		//new SignClassifier(Handedness.RIGHT, "alpha").evaluate();
+		new SignClassifier(Handedness.RIGHT, "alpha").evaluate();
 		//new SignClassifier(Handedness.RIGHT, "num").evaluate();
-		new SignClassifier(null, "num2").evaluate();
+		//new SignClassifier(null, "num2").evaluate();
 	}
 
 	public SignClassifier(final Handedness hand, final String type){
@@ -71,7 +71,7 @@ public class SignClassifier {
 		}
 	}
 
-	private Instance createInstanceFromData(Map<String, Float> data){
+	protected Instance createInstanceFromData(Map<String, Float> data){
 		Instance sampleInstance = new DenseInstance(numberOfFeatures+1);
 		for(int i=0; i<numberOfFeatures;i++){
 			sampleInstance.setValue(i, data.get("feat"+i));
@@ -93,14 +93,13 @@ public class SignClassifier {
 		return "";
 	}
 
-	public double score(Map<String, Float> data,final String previousChar){
+	public double score(Map<String, Float> data,final String expectedChar){
 		Instance sampleInstance=createInstanceFromData(data);
 		try {
 			double[] fDistribution = classifier.distributionForInstance(sampleInstance);
-			int position=getLabelDistributionPosition(previousChar, fDistribution);
-			double probabilityForExpected=fDistribution[position];
-			classify(data,previousChar);
-			System.out.println("Expected: "+ previousChar + " : " + probabilityForExpected);
+			double probabilityForExpected=getProbabilityForClass(expectedChar, fDistribution);
+			classify(data,expectedChar);
+			System.out.println("Expected: "+ expectedChar + " : " + probabilityForExpected);
 			double rollingAverage=rollingTotal(probabilityForExpected);
 			System.out.println("Rolling Average: " + rollingAverage);
 			System.out.println();
@@ -111,7 +110,7 @@ public class SignClassifier {
 		return 0.0;
 	}	
 
-	private double rollingTotal(double d) {
+	protected double rollingTotal(double d) {
 		move.add(d);
 		return move.getAverage();
 	}
@@ -119,7 +118,7 @@ public class SignClassifier {
 	public void resetRollingAverage(){
 		move=new MovingAverageFilter(movingAverageFilterPeriods);
 		for(int i=0; i<movingAverageFilterPeriods;i++)
-		move.add(0.0);
+			move.add(0.0);
 	}
 
 	private int getLabelDistributionPosition(final String charToFind,final double[] fDistribution){
@@ -128,6 +127,11 @@ public class SignClassifier {
 				return i;
 		}
 		return -1;
+	}
+	
+	protected double getProbabilityForClass(final String charToFind,final double[] fDistribution){
+		int position=getLabelDistributionPosition(charToFind, fDistribution);
+		return fDistribution[position];
 	}
 
 	public void evaluate(){	

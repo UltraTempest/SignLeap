@@ -65,9 +65,9 @@ public abstract class AbstractHandTrainer{
 		try {
 
 			if(count>=numSamples/2)
-				Files.write(trainPath, toInsert.getBytes(), StandardOpenOption.APPEND);
-			else
 				Files.write(testPath, toInsert.getBytes(), StandardOpenOption.APPEND);
+			else
+				Files.write(trainPath, toInsert.getBytes(), StandardOpenOption.APPEND);
 
 		} catch (IOException e) {
 			e.printStackTrace();

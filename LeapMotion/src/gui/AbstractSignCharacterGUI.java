@@ -113,7 +113,7 @@ public abstract class AbstractSignCharacterGUI extends AbstractGUI{
 
 	private void signCharacters(){	
 		Frame frame = leap.frame();
-		if(frame.hands().count()>0){
+		if(frame.hands().count()>0 && !getPage().isWarningDisplayed()){
 			Map<String, Float> data=handData.getHandPosition();
 			if(data!=null){
 				double score = classifier.score(data,previousChar);

@@ -6,6 +6,7 @@ import com.leapmotion.leap.Image;
 import com.leapmotion.leap.ImageList;
 
 import button.Button;
+import classifier.AlphabetClassifier;
 import classifier.SignClassifier;
 import controller.LeapMouseListener;
 import g4p_controls.GButton;
@@ -28,6 +29,8 @@ public class Page extends PApplet{
 	private final IHandData handInfo= new OneHandData(controller);
 	private final String leapWarning="Warning! Please keep your %s hand placed over the Leap Motion";
 	private final LeapMouseListener leapListen= new LeapMouseListener();
+	private boolean isWarningDisplayed;
+	
 
 	private SignClassifier alphaClassifier;
 	private SignClassifier numClassifier;
@@ -90,7 +93,7 @@ public class Page extends PApplet{
 	public void setHand(Handedness hand){
 		this.hand=hand;
 		numClassifier=new SignClassifier(hand, "num");
-		alphaClassifier=new SignClassifier(hand, "alpha");
+		alphaClassifier=new AlphabetClassifier(hand);
 	}
 
 	public double getDifficulty(){
@@ -119,8 +122,15 @@ public class Page extends PApplet{
 			if(!handInfo.checkIfCorrectHandPlacedOverLeap(hand)){
 				fill(205, 48, 48);
 				text(String.format(leapWarning,hand),250, 50);
+				isWarningDisplayed=true;
 			}
+			else
+				isWarningDisplayed=false;
 		}
+	}
+	
+	public boolean isWarningDisplayed() {
+		return isWarningDisplayed;
 	}
 
 	public void turnOnLeapMouseControl(){
@@ -150,7 +160,7 @@ public class Page extends PApplet{
 	public void handleSliderEvents(GValueControl slider, GEvent event) { /* Not called */ }
 
 	private void initializeClassifiers(){
-		new SignClassifier(Handedness.RIGHT, "alpha");
+		new AlphabetClassifier(Handedness.RIGHT);
 		new SignClassifier(Handedness.RIGHT, "num");
 		num2Classifier=new SignClassifier(null, "num2");
 		//		new SignClassifier(Handedness.LEFT, "alpha");
