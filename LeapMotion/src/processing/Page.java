@@ -36,9 +36,9 @@ public class Page extends PApplet{
 	private SignClassifier numClassifier;
 	private SignClassifier num2Classifier;
 
-	private final double easy=0.75;
-	private final double medium=0.8;
-	private final double hard=0.9;
+	private final double easy=0.25;
+	private final double medium=0.3;
+	private final double hard=0.4;
 	private final double difficulty=medium;
 
 	private IGUI currentGUIDisplayed;

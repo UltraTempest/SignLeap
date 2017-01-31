@@ -58,10 +58,11 @@ public abstract class AbstractSignCharacterGUI extends AbstractGUI{
 		scoreTimerText.setTextEditEnabled(false);
 		slider = new GSlider(page, 640, 4, 249, 46, (float) 10.0);
 		//slider.setLimits((float)50.0, (float)0.0, (float)100.0);
-		slider.setLimits((float)0, (float)0, (float)100);
+		slider.setLimits((float)0, (float)0, (float)50);
 		slider.setNumberFormat(G4P.DECIMAL, 2);
 		slider.setOpaque(false);
-		slider.setShowValue(true);
+		//slider.setShowValue(true);
+		slider.setShowValue(false);
 		page.turnOffLeapMouseControl();
 		time();
 	}
@@ -82,7 +83,7 @@ public abstract class AbstractSignCharacterGUI extends AbstractGUI{
 			public void run() {
 				i--;
 				currentTime=i;
-				if (i< 0){
+				if (i<= 0){
 					timer.cancel();
 					new GameOverCommand(getPage(), userScore).process();
 				}
@@ -117,8 +118,8 @@ public abstract class AbstractSignCharacterGUI extends AbstractGUI{
 			Map<String, Float> data=handData.getHandPosition();
 			if(data!=null){
 				double score = classifier.score(data,previousChar);
-				setProgressBarValue((float) (score*2*100));
-				if(score*2>=difficulty){
+				setProgressBarValue((float) (score*100));
+				if(score>=difficulty){
 					displayNextCharacter();
 					classifier.resetRollingAverage();
 				}

@@ -25,8 +25,8 @@ public class SignClassifier {
 	private int numberOfFeatures;
 	private Instances trainingSet;
 	private Instances testingSet;
-	protected final int movingAverageFilterPeriods=8;
-	protected MovingAverageFilter move;
+	private final int movingAverageFilterPeriods=8;
+	private MovingAverageFilter move;
 
 	public static void main(String args[]){
 		new SignClassifier(Handedness.RIGHT, "alpha").evaluate();

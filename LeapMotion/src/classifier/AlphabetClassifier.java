@@ -22,8 +22,8 @@ public class AlphabetClassifier extends SignClassifier{
 			double rollingAverage=rollingTotal(probabilityForExpected);
 			System.out.println("Rolling Average: " + rollingAverage);
 			System.out.println();
-			if((classified.equals(expectedChar) && rollingAverage<0.5)||probabilityForExpected>0.15){
-				while(rollingAverage<0.9){
+			if((classified.equals(expectedChar) && rollingAverage<0.5)||probabilityForExpected>0.2){
+				while(rollingAverage<0.5){
 					rollingAverage+=0.1;
 				}
 			 rollingAverage=rollingTotal(rollingAverage);
@@ -34,9 +34,4 @@ public class AlphabetClassifier extends SignClassifier{
 		}	
 		return 0.0;
 	}	
-	
-	@Override
-	public void resetRollingAverage(){
-		move=new MovingAverageFilter(movingAverageFilterPeriods);
-	}
 }
