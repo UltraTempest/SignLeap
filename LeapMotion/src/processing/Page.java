@@ -23,6 +23,9 @@ import recording.IHandData;
 import recording.OneHandData;
 
 public class Page extends PApplet{
+	
+	private final String appTitle="Irish Sign Language Tool";
+	private final String appIcon="hand.png";
 
 	private final static Controller controller = new Controller();
 	private Handedness hand;
@@ -54,8 +57,8 @@ public class Page extends PApplet{
 	}
 
 	public void setup(){ 
-		changeAppTitle("Irish Sign Language Tool");
-		changeAppIcon("hand.png");
+		surface.setTitle(appTitle);
+		surface.setIcon(loadImage(appIcon));
 		controller.enableGesture( Gesture.Type.TYPE_KEY_TAP);
 		//controller.setPolicy(Controller.PolicyFlag.POLICY_IMAGES);
 		initializeClassifiers();
@@ -66,15 +69,6 @@ public class Page extends PApplet{
 		// displayLeapImages();
 		renderLeapWarning();
 		currentGUIDisplayed.render();
-	}
-
-	private void changeAppIcon(final String img) {
-		PImage icon = loadImage(img);
-		surface.setIcon(icon);
-	}
-
-	private void changeAppTitle(final String title) {
-		surface.setTitle(title);
 	}
 
 	public void stateSwitch(IGUI gui){
