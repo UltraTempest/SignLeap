@@ -22,7 +22,7 @@ import recording.AbstractHandData.Handedness;
 import recording.IHandData;
 import recording.OneHandData;
 
-public class Page extends PApplet{
+public final class Page extends PApplet{
 	
 	private final String appTitle="Irish Sign Language Tool";
 	private final String appIcon="hand.png";
@@ -69,9 +69,10 @@ public class Page extends PApplet{
 		// displayLeapImages();
 		renderLeapWarning();
 		currentGUIDisplayed.render();
+		//println(frameRate);
 	}
 
-	public void stateSwitch(IGUI gui){
+	public void stateSwitch(final IGUI gui){
 		currentGUIDisplayed.dispose();
 		this.currentGUIDisplayed=gui;
 	} 
@@ -84,7 +85,7 @@ public class Page extends PApplet{
 		textSize(this.defaultTextSize);
 	}
 
-	public void setHand(Handedness hand){
+	public void setHand(final Handedness hand){
 		this.hand=hand;
 		numClassifier=new SignClassifier(hand, "num");
 		alphaClassifier=new AlphabetClassifier(hand);

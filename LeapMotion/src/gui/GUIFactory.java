@@ -2,14 +2,14 @@ package gui;
 
 import processing.core.PApplet;
 
-public class GUIFactory {
+public final class GUIFactory {
 private static PApplet page;
 
-  public GUIFactory(PApplet page){
+  public GUIFactory(final PApplet page){
 	  GUIFactory.page=page;
   }
   
-  public IGUI createGameOverGUI(int score){
+  public IGUI createGameOverGUI(final int score){
 	  return new GameOverGUI(page, score);
   }
   

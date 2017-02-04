@@ -3,11 +3,12 @@ package command;
 import gui.IntroductionGUI;
 import processing.core.PApplet;
 
-public class IntroductionInfoCommand extends AbstractCommand{
+public final class IntroductionInfoCommand extends AbstractCommand{
 
 	private final IntroductionGUI gui;
 
-	public IntroductionInfoCommand(PApplet page,IntroductionGUI gui) {
+	public IntroductionInfoCommand(final PApplet page,
+			final IntroductionGUI gui) {
 		super(page);
 		this.gui=gui;
 	}

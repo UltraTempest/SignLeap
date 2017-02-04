@@ -4,7 +4,7 @@ import processing.Page;
 import processing.core.PApplet;
 import recording.AlphabetTrainer;
 
-public class SignAlphabetGUI extends AbstractSignCharacterGUI{
+public final class SignAlphabetGUI extends AbstractSignCharacterGUI{
 
 	public SignAlphabetGUI(PApplet page) {
 		super(page,((Page) page).getAlphabetClassifier(), 

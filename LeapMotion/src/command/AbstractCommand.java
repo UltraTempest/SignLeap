@@ -7,7 +7,7 @@ import processing.core.PApplet;
 public abstract class AbstractCommand implements ICommand{
 	private static PApplet page;
 	
-	public AbstractCommand(PApplet page){
+	public AbstractCommand(final PApplet page){
 	AbstractCommand.page=page;
 	}
 	
@@ -15,7 +15,7 @@ public abstract class AbstractCommand implements ICommand{
 		return (Page) AbstractCommand.page;
 	}
 	
-	protected void executeCommand(IGUI gui){
+	protected void executeCommand(final IGUI gui){
 		getPage().stateSwitch(gui);
 	}
 }

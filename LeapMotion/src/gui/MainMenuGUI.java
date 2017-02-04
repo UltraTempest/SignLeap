@@ -12,7 +12,7 @@ import processing.Page;
 import processing.core.PApplet;
 import recording.AbstractHandData.Handedness;
 
-public class MainMenuGUI extends AbstractGeneralGUI{
+public final class MainMenuGUI extends AbstractGeneralGUI{
 	private Button alphabetButton; 
 	private Button numbersButton;
 	private GLabel preferredHandText;

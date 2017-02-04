@@ -4,7 +4,7 @@ import processing.Page;
 import processing.core.PApplet;
 import recording.TwoHandData;
 
-public class SignNumbersGUI extends AbstractSignCharacterGUI{
+public final class SignNumbersGUI extends AbstractSignCharacterGUI{
 	private final static String[] numbersArray = {"1","2","3","4","5","6","7"
 			,"8","9", "10"};
 

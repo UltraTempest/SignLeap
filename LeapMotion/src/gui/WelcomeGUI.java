@@ -16,7 +16,7 @@ import recording.AbstractHandData.Handedness;
 import recording.IHandData;
 import recording.OneHandData;
 
-public class WelcomeGUI extends AbstractGeneralGUI{
+public final class WelcomeGUI extends AbstractGeneralGUI{
 
 	public WelcomeGUI(PApplet page) {
 		super(page);

@@ -15,14 +15,14 @@ import java.io.InputStreamReader;
 
 import com.leapmotion.leap.*;
 
-class LeapMouse {
+public final class LeapMouse {
 
 	public static void main(String[] args) throws IOException {
 
 		// Create a sample listener and controller
-		LeapMouseListener listener = new LeapMouseListener();
-		Controller controller = new Controller();
-		  controller.enableGesture( Gesture.Type.TYPE_KEY_TAP );
+		final LeapMouseListener listener = new LeapMouseListener();
+		final Controller controller = new Controller();
+		controller.enableGesture( Gesture.Type.TYPE_KEY_TAP );
 		//  controller.enableGesture( Gesture.Type.TYPE_SWIPE );
 		//  controller.enableGesture( Gesture.Type.TYPE_CIRCLE );
 

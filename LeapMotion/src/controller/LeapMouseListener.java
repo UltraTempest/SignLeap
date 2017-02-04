@@ -7,7 +7,7 @@ import java.awt.event.KeyEvent;
 
 import com.leapmotion.leap.*;
 
-public class LeapMouseListener extends Listener {
+public final class LeapMouseListener extends Listener {
 
 	//True for Debugging
 	boolean DEBUG = false;

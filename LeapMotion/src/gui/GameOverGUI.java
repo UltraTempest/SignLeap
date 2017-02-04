@@ -13,7 +13,7 @@ import leaderboard.HighScoreManager;
 import processing.Page;
 import processing.core.PApplet;
 
-public class GameOverGUI extends AbstractGeneralGUI{
+public final class GameOverGUI extends AbstractGeneralGUI{
 
 	private final int score;
 

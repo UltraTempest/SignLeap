@@ -10,7 +10,7 @@ import leaderboard.Score;
 import processing.Page;
 import processing.core.PApplet;
 
-public class LeaderboardGUI extends AbstractGeneralGUI{
+public final class LeaderboardGUI extends AbstractGeneralGUI{
 
 	private Button homeButton;
 

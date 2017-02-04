@@ -4,9 +4,9 @@ import processing.Page;
 import processing.core.PApplet;
 import recording.AbstractHandData.Handedness;
 
-public class ChangeHandCommand extends AbstractCommand{
+public final class ChangeHandCommand extends AbstractCommand{
 
-	public ChangeHandCommand(PApplet page) {
+	public ChangeHandCommand(final PApplet page) {
 		super(page);
 	}
 

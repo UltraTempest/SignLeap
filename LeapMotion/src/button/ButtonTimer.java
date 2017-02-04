@@ -12,8 +12,9 @@ public class ButtonTimer {
 	private ICommand command;
 	private double increment;
 	private double limit;
-	
-	public ButtonTimer(int period, ICommand command, double increment, double limit){
+
+	public ButtonTimer(final int period,final ICommand command,
+			final double increment,final double limit){
 		this.period=period;
 		this.command=command;
 		this.increment=increment;

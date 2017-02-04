@@ -9,13 +9,14 @@ public class Button extends GButton{
     private boolean timerRunning=false;
     private ButtonTimer bTimer;
 	
-	public Button(PApplet arg0, float arg1, float arg2, float arg3, float arg4, ICommand command) {
+	public Button(final PApplet arg0,final  float arg1,final float arg2,
+			final float arg3,final float arg4,final ICommand command) {
 		super(arg0, arg1, arg2, arg3, arg4);
 		setCommand(command);
 		setTimerVariables(100, 0.05, 1.0);
 	}
 	
-    public void setCommand(ICommand command){
+    public void setCommand(final ICommand command){
     	this.command=command;
     }
     
@@ -27,7 +28,7 @@ public class Button extends GButton{
     	return timerRunning;
     }
     
-    public void setTimerVariables(int period, double increment, double limit){
+    public void setTimerVariables(final int period,final double increment,final double limit){
     	bTimer=new ButtonTimer(period, command, increment, limit);
     }
     
@@ -45,7 +46,7 @@ public class Button extends GButton{
     	return this.bTimer.getCountdown();
     }
     
-    public boolean isMouseOver(PApplet page){
+    public boolean isMouseOver(final PApplet page){
 		float buttonX=getX();
 		float buttonY=getY();
 		float buttonHeight=getHeight();

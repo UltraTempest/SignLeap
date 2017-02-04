@@ -22,7 +22,8 @@ import recording.OneHandData;
 
 public abstract class AbstractSignCharacterGUI extends AbstractGUI{
 
-	public AbstractSignCharacterGUI(PApplet page, SignClassifier signClassifier,String[] array) {
+	public AbstractSignCharacterGUI(final PApplet page,
+			final SignClassifier signClassifier,final String[] array) {
 		super(page);
 		this.classifier=signClassifier;
 		this.array=array;
@@ -103,7 +104,8 @@ public abstract class AbstractSignCharacterGUI extends AbstractGUI{
 		this.classifier=classifier;
 	}
 
-	protected void updateSignCharactersGUI(final String currentCharacter, String imageName){
+	protected void updateSignCharactersGUI(final String currentCharacter, 
+			String imageName){
 		super.render();
 		Page page = getPage();
 		img=page.loadImage(imageName);

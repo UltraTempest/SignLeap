@@ -3,9 +3,9 @@ package command;
 import gui.GUIFactory;
 import processing.core.PApplet;
 
-public class NumberGUICommand extends AbstractCommand{
+public final class NumberGUICommand extends AbstractCommand{
 
-	public NumberGUICommand(PApplet page) {
+	public NumberGUICommand(final PApplet page) {
 		super(page);
 	}
 

@@ -10,7 +10,7 @@ import g4p_controls.GTextField;
 import processing.Page;
 import processing.core.PApplet;
 
-public class IntroductionGUI extends AbstractGeneralGUI{
+public final class IntroductionGUI extends AbstractGeneralGUI{
 
 	public IntroductionGUI(PApplet page) {
 		super(page);
