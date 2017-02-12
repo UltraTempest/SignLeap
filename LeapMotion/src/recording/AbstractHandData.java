@@ -14,34 +14,34 @@ public abstract class AbstractHandData implements IHandData{
 
 	private static Controller controller;
 
-	public AbstractHandData(Controller controller){
+	public AbstractHandData(final Controller controller){
 		AbstractHandData.controller=controller;
 	}
 
-	public boolean checkIfHandPlacedOverLeap(){
+	public final boolean checkIfHandPlacedOverLeap(){
 		return controller.frame().hands().count()>0 ? true : false;
 	}
 
-	public boolean checkIfCorrectHandPlacedOverLeap(Handedness hand){
+	public final boolean checkIfCorrectHandPlacedOverLeap(Handedness hand){
 		Handedness current = getHandedness();
 		return hand.equals(current);	
 	}
 
-	public Handedness getHandedness() {
-		Hand hand=controller.frame().hands().frontmost();
+	public final Handedness getHandedness() {
+		final Hand hand=controller.frame().hands().frontmost();
 		if(hand.isValid())
 			return hand.isLeft() ? Handedness.LEFT : Handedness.RIGHT;	
 		else
 			return null;
 	}
 
-	protected Controller getLeap() {
+	protected final Controller getLeap() {
 		return controller;
 	}
 
-	protected List<Vector> getFingerList(){
-		FingerList fingers = controller.frame().fingers();
-		List<Vector>fingerBones = new ArrayList<Vector>();
+	protected final List<Vector> getFingerList(){
+		final FingerList fingers = controller.frame().fingers();
+		final List<Vector>fingerBones = new ArrayList<Vector>();
 		for (Finger finger:fingers){
 			fingerBones.add(finger.bone(Bone.Type.TYPE_METACARPAL).nextJoint());
 			fingerBones.add(finger.bone(Bone.Type.TYPE_PROXIMAL).nextJoint());
@@ -57,11 +57,11 @@ public abstract class AbstractHandData implements IHandData{
 
 		private final String name;       
 
-		private Handedness(String s) {
+		private Handedness(final String s) {
 			name = s;
 		}
 
-		public String toString() {
+		public final String toString() {
 			return this.name;
 		}
 	}

@@ -14,13 +14,13 @@ public final class LeaderboardGUI extends AbstractGeneralGUI{
 
 	private Button homeButton;
 
-	public LeaderboardGUI(PApplet page) {
+	public LeaderboardGUI(final PApplet page) {
 		super(page);
 	}
 
 	@Override
 	protected void createGUI(){
-		Page page = getPage();
+		final Page page = getPage();
 		homeButton = new Button(page, 736, 38, 131, 53, new MainMenuCommand(page));
 		homeButton.setText("Home");
 		homeButton.setTextBold();
@@ -30,18 +30,19 @@ public final class LeaderboardGUI extends AbstractGeneralGUI{
 		page.turnOnLeapMouseControl();
 	}
 
-	private void renderLeaderBoard(PApplet page){
+	private void renderLeaderBoard(final PApplet page){
+		page.fill(PApplet.RGB);
 		page.textSize(50);
-		page.text("Leaderboard", 50, 60);
+		page.text("Leaderboard", 50, 130);
 		page.textSize(40);
 		page.text("Name", 50, 180);
 		page.text("Score", 500, 180);
 		page.textSize(30);
 		int position=240;
 		page.line(0, position-45, 575, position-45);
-		ArrayList<Score> scores= new HighScoreManager().getScores();
+		final ArrayList<Score> scores= new HighScoreManager().getScores();
 		for(int i=0; i< scores.size();i++) {
-			Score score=scores.get(i);
+			final Score score=scores.get(i);
 			position=240+60*i;
 			page.text(score.getName(), 50, 240+60*i);
 			page.text(score.getScore(), 500, 240+60*i);
@@ -57,7 +58,7 @@ public final class LeaderboardGUI extends AbstractGeneralGUI{
 	@Override
 	public void render(){
 		super.render();
-		checkIfMouseOverButton(homeButton);
+		handleMouseOverButton(homeButton);
 		renderLeaderBoard(getPage());
 	}
 }

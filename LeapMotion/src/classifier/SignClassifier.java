@@ -43,17 +43,19 @@ public class SignClassifier {
 			name=type;
 		final String filename=language +name+ ".model";
 		try {
-			DataSource source = new DataSource("SignData/TrainingData/"+name+ ".arff");
+			DataSource source = new DataSource("SignData/TrainingData/"+name+ 
+					".arff");
 			trainingSet= source.getDataSet();
 			source= new DataSource("SignData/TestingData/"+name+".arff");
 			testingSet= source.getDataSet();
 			numberOfFeatures=trainingSet.numAttributes()-1;
 			trainingSet.setClassIndex(numberOfFeatures);
 			testingSet.setClassIndex(numberOfFeatures);
-			File f = new File(filename);
+			final File f = new File(filename);
 			if(f.exists() && !f.isDirectory())  
 				// deserialize model
-				classifier=(RandomForest) weka.core.SerializationHelper.read(filename);
+				classifier=(RandomForest) weka.core.SerializationHelper.read(
+						filename);
 			//classifier=(LibSVM) weka.core.SerializationHelper.read(filename);
 			else{
 				// train classifier
@@ -66,13 +68,13 @@ public class SignClassifier {
 				// serialize model
 				weka.core.SerializationHelper.write(filename, classifier);
 			}
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			System.err.println("Error during classifier building:"+ e);
 		}
 	}
 
-	protected Instance createInstanceFromData(Map<String, Float> data){
-		Instance sampleInstance = new DenseInstance(numberOfFeatures+1);
+	protected Instance createInstanceFromData(final Map<String, Float> data){
+		final Instance sampleInstance = new DenseInstance(numberOfFeatures+1);
 		for(int i=0; i<numberOfFeatures;i++){
 			sampleInstance.setValue(i, data.get("feat"+i));
 		}
@@ -80,37 +82,55 @@ public class SignClassifier {
 		return sampleInstance;
 	}
 
-	public String classify(Map<String, Float> data,final String previousChar){
-		Instance sampleInstance=createInstanceFromData(data);
+	protected final String classify(final Map<String, Float> data,
+			final String previousChar){
+		final Instance sampleInstance=createInstanceFromData(data);
 		try {
-			double i = classifier.classifyInstance(sampleInstance);
-			double[] fDistribution = classifier.distributionForInstance(sampleInstance);
-			System.out.println("Actual: " + testingSet.classAttribute().value((int) i) +" : " + fDistribution[(int) i]);
+			final double i = classifier.classifyInstance(sampleInstance);
+			final double[] fDistribution = classifier.distributionForInstance(
+					sampleInstance);
+			System.out.println("Actual: " + testingSet.classAttribute().value(
+					(int) i) +" : " + fDistribution[(int) i]);
 			return testingSet.classAttribute().value((int) i);
-		} catch (Exception e) {
+		} catch (final Exception e) {
+			e.printStackTrace();
+		}
+		return "";
+	}
+	
+	protected final String classify(final double[] fDistribution,
+			final Instance sampleInstance){
+		try {
+			final double i = classifier.classifyInstance(sampleInstance);
+			System.out.println("Actual: " + testingSet.classAttribute().value(
+					(int) i) +" : " + fDistribution[(int) i]);
+			return testingSet.classAttribute().value((int) i);
+		} catch (final Exception e) {
 			e.printStackTrace();
 		}
 		return "";
 	}
 
 	public double score(Map<String, Float> data,final String expectedChar){
-		Instance sampleInstance=createInstanceFromData(data);
+		final Instance sampleInstance=createInstanceFromData(data);
 		try {
-			double[] fDistribution = classifier.distributionForInstance(sampleInstance);
-			double probabilityForExpected=getProbabilityForClass(expectedChar, fDistribution);
-			classify(data,expectedChar);
-			System.out.println("Expected: "+ expectedChar + " : " + probabilityForExpected);
+			final double[] fDistribution = classifier.distributionForInstance(
+					sampleInstance);
+			final double probabilityForExpected=getProbabilityForClass(
+					expectedChar, fDistribution);
+			classify(fDistribution,sampleInstance);
+			System.out.println("Expected: "+ expectedChar + " : " + 
+					probabilityForExpected);
 			double rollingAverage=rollingTotal(probabilityForExpected);
-			System.out.println("Rolling Average: " + rollingAverage);
-			System.out.println();
+			System.out.println("Rolling Average: " + rollingAverage + "\n");
 			return rollingAverage;
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			e.printStackTrace();
 		}	
 		return 0.0;
 	}	
 
-	protected double rollingTotal(double d) {
+	protected double rollingTotal(final double d) {
 		move.add(d);
 		return move.getAverage();
 	}
@@ -121,22 +141,24 @@ public class SignClassifier {
 			move.add(0.0);
 	}
 
-	private int getLabelDistributionPosition(final String charToFind,final double[] fDistribution){
+	private int getLabelDistributionPosition(final String charToFind,
+			final double[] fDistribution){
 		for(int i=0; i<fDistribution.length;i++){
 			if(charToFind.equals(testingSet.classAttribute().value(i)))
 				return i;
 		}
 		return -1;
 	}
-	
-	protected double getProbabilityForClass(final String charToFind,final double[] fDistribution){
+
+	protected double getProbabilityForClass(final String charToFind,
+			final double[] fDistribution){
 		int position=getLabelDistributionPosition(charToFind, fDistribution);
 		return fDistribution[position];
 	}
 
 	public void evaluate(){	
 		// training using a collection of classifiers (NaiveBayes, SMO (AKA SVM), KNN and Decision trees.)
-		String[] algorithms = {"nb","smo","knn","j48", "libSVM","Random Forest"};
+		final String[] algorithms = {"nb","smo","knn","j48", "libSVM","Random Forest"};
 		for(int w=0; w<algorithms.length;w++){
 			if(algorithms[w].equals("nb"))
 				classifier = new NaiveBayes();
@@ -156,7 +178,7 @@ public class SignClassifier {
 
 			//perform 10 fold cross validation
 			try {
-				Evaluation eval = new Evaluation(trainingSet);
+				final Evaluation eval = new Evaluation(trainingSet);
 				classifier.buildClassifier(trainingSet);
 				eval.crossValidateModel(classifier, testingSet, 10, new Random(1));
 				System.out.println(classifier);

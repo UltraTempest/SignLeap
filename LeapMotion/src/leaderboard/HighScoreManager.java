@@ -3,7 +3,7 @@ package leaderboard;
 import java.util.*;
 import java.io.*;
 
-public class HighScoreManager {
+public final class HighScoreManager {
 	// An arraylist of the type "score" we will use to work with the scores inside the class
 	private ArrayList<Score> scores;
 
@@ -11,28 +11,28 @@ public class HighScoreManager {
 	public static final String HIGHSCORE_FILE = "leaderboard.dat";
 
 	//Initialising an in and outputStream for working with the file
-	ObjectOutputStream outputStream = null;
-	ObjectInputStream inputStream = null;
+	private ObjectOutputStream outputStream;
+	private ObjectInputStream inputStream;
 
 	public HighScoreManager() {
 		//initialising the scores-arraylist
 		scores = new ArrayList<Score>();
 	}
 
-	public ArrayList<Score> getScores() {
+	public final ArrayList<Score> getScores() {
 		loadScoreFile();
 		Collections.sort(scores);
 		return scores;
 	}
 
-	public void addScore(String name, int score) {
+	public final void addScore(final String name,final int score) {
 		loadScoreFile();
 		scores.add(new Score(name, score));
 		updateScoreFile();
 	}
 
 	@SuppressWarnings("unchecked")
-	private void loadScoreFile() {
+	private final void loadScoreFile() {
 		try {
 			File file = new File(HIGHSCORE_FILE);
 			if(!file.exists() || file.toString().equals("")){
@@ -56,18 +56,20 @@ public class HighScoreManager {
 				}
 				if (inputStream != null) 
 					inputStream.close();
-			} catch (IOException e) {
+			} catch (final IOException e) {
 				System.out.println("[Laad] IO Error: " + e.getMessage());
 			}
 		}
 	}
 
-	private void updateScoreFile() {
+	private final void updateScoreFile() {
 		try {
-			outputStream = new ObjectOutputStream(new FileOutputStream(HIGHSCORE_FILE));
+			outputStream = new ObjectOutputStream(
+					new FileOutputStream(HIGHSCORE_FILE));
 			outputStream.writeObject(scores);
 		} catch (FileNotFoundException e) {
-			System.out.println("[Update] FNF Error: " + e.getMessage() + ",the program will try and make a new file");
+			System.out.println("[Update] FNF Error: " + e.getMessage() +
+					",the program will try and make a new file");
 		} catch (IOException e) {
 			System.out.println("[Update] IO Error: " + e.getMessage());
 		} finally {
@@ -84,12 +86,10 @@ public class HighScoreManager {
 		}
 	}
 
-	public String getHighscoreString() {
+	public final String getHighscoreString() {
 		String highscoreString = "";
 		final int max = 10;
-
-		ArrayList<Score> scores;
-		scores = getScores();
+		getScores();
 
 		int i = 0;
 		int x = scores.size();
@@ -97,7 +97,8 @@ public class HighScoreManager {
 			x = max;
 		}
 		while (i < x) {
-			highscoreString += (i + 1) + ".\t" + scores.get(i).getName() + "\t\t" + scores.get(i).getScore() + "\n";
+			highscoreString = (i + 1) + ".\t" + scores.get(i).getName() 
+					+ "\t\t" + scores.get(i).getScore() + "\n";
 			i++;
 		}
 		return highscoreString;

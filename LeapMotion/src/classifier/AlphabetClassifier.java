@@ -5,31 +5,35 @@ import java.util.Map;
 import recording.AbstractHandData.Handedness;
 import weka.core.Instance;
 
-public class AlphabetClassifier extends SignClassifier{
+public final class AlphabetClassifier extends SignClassifier{
 
-	public AlphabetClassifier(Handedness hand) {
+	public AlphabetClassifier(final Handedness hand) {
 		super(hand, "alpha");
 	}
-	
+
 	@Override
-	public double score(Map<String, Float> data,final String expectedChar){
-		Instance sampleInstance=createInstanceFromData(data);
+	public final double score(final Map<String, Float> data,
+			final String expectedChar){
+		final Instance sampleInstance=createInstanceFromData(data);
 		try {
-			double[] fDistribution = classifier.distributionForInstance(sampleInstance);
-			double probabilityForExpected=getProbabilityForClass(expectedChar, fDistribution);
-			String classified=classify(data,expectedChar);
-			System.out.println("Expected: "+ expectedChar + " : " + probabilityForExpected);
+			final double[] fDistribution = classifier.distributionForInstance(
+					sampleInstance);
+			final double probabilityForExpected=getProbabilityForClass(expectedChar,
+					fDistribution);
+			final String classified=classify(fDistribution,sampleInstance);
+			System.out.println("Expected: "+ expectedChar + " : "
+					+ probabilityForExpected);
 			double rollingAverage=rollingTotal(probabilityForExpected);
-			System.out.println("Rolling Average: " + rollingAverage);
-			System.out.println();
-			if((classified.equals(expectedChar) && rollingAverage<0.5)||probabilityForExpected>0.2){
+			System.out.println("Rolling Average: " + rollingAverage + "\n");
+			if((classified.equals(expectedChar) && rollingAverage<0.5)||
+					probabilityForExpected>0.2){
 				while(rollingAverage<0.5){
 					rollingAverage+=0.1;
 				}
-			 rollingAverage=rollingTotal(rollingAverage);
+				rollingAverage=rollingTotal(rollingAverage);
 			}
 			return rollingAverage;
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			e.printStackTrace();
 		}	
 		return 0.0;

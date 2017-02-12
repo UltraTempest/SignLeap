@@ -1,7 +1,9 @@
-package recording;
+package trainer;
 
 import java.nio.file.Paths;
 import com.leapmotion.leap.Controller;
+
+import recording.TwoHandData;
 
 
 public class TwoHandTrainer extends AbstractHandTrainer implements ITrainer{

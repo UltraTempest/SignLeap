@@ -12,8 +12,8 @@ import classifier.SignClassifier;
 import processing.core.PApplet;
 import processing.core.PImage;
 import recording.AbstractHandData.Handedness;
-import recording.AlphabetTrainer;
-import recording.ITrainer;
+import trainer.AlphabetTrainer;
+import trainer.ITrainer;
 
 
 public class SignTrainer extends PApplet{
@@ -32,15 +32,15 @@ public class SignTrainer extends PApplet{
 	private Timer timer;
 	private int currentTime;
 
-	public static void main(String[] args) {
+	public final static void main(String[] args) {
 		PApplet.main("processing.SignTrainer");
 	}
 
-	public void settings(){
+	public final void settings(){
 		size(600, 600);
 	}
 
-	public void setup(){ 
+	public final void setup(){ 
 		controller.setPolicy(Controller.PolicyFlag.POLICY_IMAGES);
 		background(255);
 		createFont("Arial", 40);

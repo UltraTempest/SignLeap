@@ -11,7 +11,9 @@ import com.leapmotion.leap.Frame;
 import classifier.SignClassifier;
 import command.GameOverCommand;
 import g4p_controls.G4P;
-import g4p_controls.GAbstractControl;
+import g4p_controls.GAlign;
+import g4p_controls.GCScheme;
+import g4p_controls.GLabel;
 import g4p_controls.GSlider;
 import g4p_controls.GTextField;
 import processing.Page;
@@ -37,17 +39,21 @@ public abstract class AbstractSignCharacterGUI extends AbstractGUI{
 	protected GTextField signInstruction;
 	private GTextField scoreTimerText;
 	private GSlider slider;
+	private GLabel sliderAcceptance;
+	private GLabel sliderAcceptance2;
+	private GLabel sliderExplanation;
 	private int userScore=0;
 	private final Timer timer = new Timer();
 	private int currentTime=0;
 	private SignClassifier classifier;
 	private IHandData handData= new OneHandData(leap);
 	private String previousChar;
-	private final String imageName=SignClassifier.language +  "/" + getPage().getHand() +"/";
+	private final String imageName=SignClassifier.language +  
+			"/" + getPage().getHand() +"/";
 	private final String[] array;
 
 	protected void createGUI(){
-		Page page=getPage();
+		final Page page=getPage();
 		signInstruction = new GTextField(page, 217, 513, 492, 81, G4P.SCROLLBARS_NONE);
 		signInstruction.setOpaque(false);
 		signInstruction.setFont(new Font("Dialog", Font.PLAIN, 58));
@@ -58,24 +64,42 @@ public abstract class AbstractSignCharacterGUI extends AbstractGUI{
 		scoreTimerText.setFont(new Font("Dialog", Font.PLAIN, 16));
 		scoreTimerText.setTextEditEnabled(false);
 		slider = new GSlider(page, 640, 4, 249, 46, (float) 10.0);
-		//slider.setLimits((float)50.0, (float)0.0, (float)100.0);
-		slider.setLimits((float)0, (float)0, (float)50);
-		slider.setNumberFormat(G4P.DECIMAL, 2);
+		slider.setNumberFormat(G4P.INTEGER, 0);
+		slider.setLimits(0, 0,50);
 		slider.setOpaque(false);
 		//slider.setShowValue(true);
 		slider.setShowValue(false);
+		setSliderAcceptance();
+		sliderAcceptance.setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
+		sliderAcceptance.setText("|");
+		sliderAcceptance.setTextBold();
+		sliderAcceptance.setLocalColorScheme(GCScheme.RED_SCHEME);
+		sliderAcceptance.setOpaque(false);
+		sliderAcceptance2 = new GLabel(page, 641, 2, 32, 19);
+		sliderAcceptance2.setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
+		sliderAcceptance2.setText("|");
+		sliderAcceptance2.setTextBold();
+		sliderAcceptance2.setLocalColorScheme(GCScheme.RED_SCHEME);
+		sliderAcceptance2.setOpaque(false);
+		sliderExplanation = new GLabel(page, 662, 5, 263, 18);
+		sliderExplanation.setText("indicates point when your sign is accepted");
+		sliderExplanation.setLocalColorScheme(GCScheme.GREEN_SCHEME);
+		sliderExplanation.setOpaque(false);
 		page.turnOffLeapMouseControl();
 		time();
 	}
 
-	private void setProgressBarValue(float value){
-		slider.setValue(value);
+	private void setSliderAcceptance(){
+		int x=740;
+		if(difficulty==Page.MEDIUM)
+			x= 770;
+		else if(difficulty==Page.HARD)
+			x= 829;
+		sliderAcceptance = new GLabel(getPage(), x, 28, 33, 18);
 	}
 
-	@Override
-	protected void objectDisposal(final GAbstractControl object){
-		object.setVisible(false);
-		object.dispose();
+	private void setProgressBarValue(float value){
+		slider.setValue(value);
 	}
 
 	private void time(){
@@ -157,8 +181,7 @@ public abstract class AbstractSignCharacterGUI extends AbstractGUI{
 
 	@Override
 	public void dispose(){
-		objectDisposal(slider);
-		objectDisposal(signInstruction);
-		objectDisposal(scoreTimerText);
+		objectDisposal(slider, signInstruction, scoreTimerText,
+				sliderAcceptance, sliderAcceptance2, sliderExplanation);
 	}
 }

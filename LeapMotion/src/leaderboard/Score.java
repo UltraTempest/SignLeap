@@ -2,26 +2,26 @@ package leaderboard;
 
 import java.io.Serializable;
 
-public class Score  implements Serializable, Comparable<Score>{    
+public final class Score  implements Serializable, Comparable<Score>{    
 	private static final long serialVersionUID = 1L;
-    private int score;
-    private String name;
+    private final int score;
+    private final String name;
 
-    public int getScore() {
+    public final int getScore() {
         return score;
     }
 
-    public String getName() {
+    public final String getName() {
         return name;
     }
 
-    public Score(String name, int score) {
+    public Score(final String name,final int score) {
         this.score = score;
         this.name = name;
     }    
     
     @Override
-    public int compareTo(Score score1) {              
+    public final int compareTo(final Score score1) {              
         return ((Integer)(score1.getScore())).compareTo(getScore());
     }
 }

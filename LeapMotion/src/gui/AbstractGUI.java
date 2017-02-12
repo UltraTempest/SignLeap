@@ -8,18 +8,20 @@ public abstract class AbstractGUI implements IGUI{
 	private static PApplet page;
 	private boolean rendered=false;
 
-	public AbstractGUI(PApplet page){
+	public AbstractGUI(final PApplet page){
 		AbstractGUI.page=page;
-		((Page) page).setDefaultBackground();
+		((Page) AbstractGUI.page).setDefaultBackground();
 	}
 
-	protected Page getPage(){
+	protected final Page getPage(){
 		return (Page) AbstractGUI.page;
 	}
 
-	protected void objectDisposal(GAbstractControl object){
-		object.setVisible(false);
-		object.dispose();
+	protected final void objectDisposal(final GAbstractControl... objects){
+		for(GAbstractControl object:objects){
+			object.setVisible(false);
+			object.dispose();
+		}
 	}
 
 	@Override

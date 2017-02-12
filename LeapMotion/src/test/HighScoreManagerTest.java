@@ -10,15 +10,15 @@ import org.junit.Test;
 
 import leaderboard.HighScoreManager;
 
-public class HighScoreManagerTest {
+public final class HighScoreManagerTest {
 
 	@After
-	public void cleanUp() throws IOException{
+	public final void cleanUp() throws IOException{
 		Files.delete(Paths.get(HighScoreManager.HIGHSCORE_FILE));
 	}
 
 	@Test
-	public void test(){
+	public final void test(){
 		final HighScoreManager hm = new HighScoreManager();
 		hm.addScore("Bart",240);
 		hm.addScore("Marge",300);

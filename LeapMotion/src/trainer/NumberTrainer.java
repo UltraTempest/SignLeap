@@ -1,4 +1,4 @@
-package recording;
+package trainer;
 
 import java.nio.file.Paths;
 
@@ -7,7 +7,7 @@ import com.leapmotion.leap.Controller;
 import recording.AbstractHandData.Handedness;
 
 
-public class NumberTrainer extends OneHandTrainer{
+public final class NumberTrainer extends OneHandTrainer{
 
 	private final static String[] numbers={"1","2","3","4","5"};
 

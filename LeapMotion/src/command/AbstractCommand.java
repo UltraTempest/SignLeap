@@ -6,16 +6,16 @@ import processing.core.PApplet;
 
 public abstract class AbstractCommand implements ICommand{
 	private static PApplet page;
-	
+
 	public AbstractCommand(final PApplet page){
-	AbstractCommand.page=page;
+		AbstractCommand.page=page;
 	}
-	
-	protected Page getPage(){
+
+	protected final Page getPage(){
 		return (Page) AbstractCommand.page;
 	}
-	
-	protected void executeCommand(final IGUI gui){
+
+	protected final void executeCommand(final IGUI gui){
 		getPage().stateSwitch(gui);
 	}
 }

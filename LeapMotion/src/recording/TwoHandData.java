@@ -10,9 +10,9 @@ import com.leapmotion.leap.Hand;
 import com.leapmotion.leap.HandList;
 import com.leapmotion.leap.Vector;
 
-public class TwoHandData extends AbstractHandData{
-	
-	public TwoHandData(Controller controller) {
+public final class TwoHandData extends AbstractHandData{
+
+	public TwoHandData(final Controller controller) {
 		super(controller);
 	}
 
@@ -26,17 +26,18 @@ public class TwoHandData extends AbstractHandData{
 	 * @return Map<String, Float>
 	 **/
 	@Override
-	public Map<String, Float> getHandPosition()
+	public final Map<String, Float> getHandPosition()
 	{
-		Controller controller=getLeap();
-		Frame frame = controller.frame();
+		final Controller controller=getLeap();
+		final Frame frame = controller.frame();
+
 		while (frame.fingers().isEmpty())
 			return null;
 
-		List<Vector> fingerBones=getFingerList();
+		final List<Vector> fingerBones=getFingerList();
 
-		HandList hands = controller.frame().hands();
-		Vector[] handCentres = new Vector[2];
+		final HandList hands = controller.frame().hands();
+		final Vector[] handCentres = new Vector[2];
 		int x=0;
 		for (Hand hand : hands){
 			handCentres[x] = hand.palmPosition();
@@ -46,19 +47,26 @@ public class TwoHandData extends AbstractHandData{
 		if(handCentres[1]==null)
 			return null;
 
-		Map<String,Float> calibratedFingerBones = new LinkedHashMap<String,Float>();
+		final Map<String,Float> calibratedFingerBones = new
+				LinkedHashMap<String,Float>();
 		Vector handCentre=handCentres[0];
+		Vector normalizedJoint;
+
 		for(int i=0; i< fingerBones.size();i++){
 			if(i>=20)
 				handCentre=handCentres[1];
-			Vector normalizedJoint = fingerBones.get(i).minus(handCentre);
+			normalizedJoint = fingerBones.get(i).minus(handCentre);
+
 			for(int j=0; j<3;j++)
 				if(j==0)
-					calibratedFingerBones.put("feat" + Integer.toString(i*3+j),normalizedJoint.getX());
+					calibratedFingerBones.put("feat" + Integer.toString(i*3+j),
+							normalizedJoint.getX());
 				else if(j==1)
-					calibratedFingerBones.put("feat" + Integer.toString(i*3+j),normalizedJoint.getY());
+					calibratedFingerBones.put("feat" + Integer.toString(i*3+j),
+							normalizedJoint.getY());
 				else
-					calibratedFingerBones.put("feat" + Integer.toString(i*3+j),normalizedJoint.getZ());
+					calibratedFingerBones.put("feat" + Integer.toString(i*3+j),
+							normalizedJoint.getZ());
 		}
 
 		return calibratedFingerBones;

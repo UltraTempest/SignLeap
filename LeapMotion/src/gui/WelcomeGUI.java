@@ -18,7 +18,7 @@ import recording.OneHandData;
 
 public final class WelcomeGUI extends AbstractGeneralGUI{
 
-	public WelcomeGUI(PApplet page) {
+	public WelcomeGUI(final PApplet page) {
 		super(page);
 		handData=new OneHandData(((Page) page).getLeap());
 	}
@@ -27,56 +27,57 @@ public final class WelcomeGUI extends AbstractGeneralGUI{
 	private PImage img;
 	private int frameCount;
 	private final IHandData handData;
-	
-	private void changeStateIfRequired(){
-		  Page page= getPage();
-		  if(handData.checkIfHandPlacedOverLeap()){
-			  frameCount++;
-			  if(frameCount<50)
-				  return;
-			  Handedness hand=handData.getHandedness();
-			  if(hand==null)
-				  return;
-			  page.setHand(handData.getHandedness());
-			  if(!checkLeaderBoardFileExistence())
-				  new IntroductionCommand(page).process();
-			  else
-				  new MainMenuCommand(page).process();
-		  }
+
+	private final void changeStateIfRequired(){
+		final Page page= getPage();
+		if(handData.checkIfHandPlacedOverLeap()){
+			frameCount++;
+			if(frameCount<50)
+				return;
+			final Handedness hand=handData.getHandedness();
+			if(hand==null)
+				return;
+			page.setHand(handData.getHandedness());
+			if(!checkLeaderBoardFileExistence())
+				new IntroductionCommand(page).process();
+			else
+				new MainMenuCommand(page).process();
+		}
 	}
-	
-	private boolean checkLeaderBoardFileExistence(){
+
+	private final boolean checkLeaderBoardFileExistence(){
 		return new File(HighScoreManager.HIGHSCORE_FILE).exists();
 	}
-	
+
 	@Override
-	protected void createGUI(){
-		  G4P.setGlobalColorScheme(GCScheme.BLUE_SCHEME);
-		  Page page = getPage();
-		  page.getSurface().setTitle("Sketch Window");  
-		  PreferredHandText = new GLabel(page, 3, 497, 950, 139);
-		  PreferredHandText.setTextAlign(GAlign.CENTER, GAlign.BOTTOM);
-		  PreferredHandText.setText("Place your preferred hand over the Leap Motion to begin!");
-		  PreferredHandText.setFont(new Font("Dialog", Font.PLAIN, 58));
-		  PreferredHandText.setOpaque(false);
-		  String logoFile="ISL_logo.png";
-		  img=page.loadImage(logoFile);
-		  page.image(img,31, 7, 886, 482);
-		}
-	
+	protected final void createGUI(){
+		final Page page = getPage();
+		G4P.setGlobalColorScheme(GCScheme.BLUE_SCHEME);
+		G4P.messagesEnabled(false);
+		G4P.setMouseOverEnabled(false);
+		PreferredHandText = new GLabel(page, 3, 497, 950, 139);
+		PreferredHandText.setTextAlign(GAlign.CENTER, GAlign.BOTTOM);
+		PreferredHandText.setText("Place your preferred hand over the Leap Motion to begin!");
+		PreferredHandText.setFont(new Font("Dialog", Font.PLAIN, 58));
+		PreferredHandText.setOpaque(false);
+		String logoFile="ISL_logo.png";
+		img=page.loadImage(logoFile);
+		page.image(img,31, 7, 886, 482);
+	}
+
 	@Override
-	public boolean isWarningRequired(){
+	public final boolean isWarningRequired(){
 		return false;
 	}
 
 	@Override
-	public void render() {
+	public final void render() {
 		super.render();
 		changeStateIfRequired();
 	}
 
 	@Override
-	public void dispose() {
+	public final void dispose() {
 		objectDisposal(PreferredHandText);
 	}
 }

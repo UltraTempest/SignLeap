@@ -2,7 +2,7 @@ package gui;
 
 import processing.Page;
 import processing.core.PApplet;
-import recording.AlphabetTrainer;
+import trainer.AlphabetTrainer;
 
 public final class SignAlphabetGUI extends AbstractSignCharacterGUI{
 

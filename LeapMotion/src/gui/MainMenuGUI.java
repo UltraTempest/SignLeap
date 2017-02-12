@@ -50,10 +50,8 @@ public final class MainMenuGUI extends AbstractGeneralGUI{
 
 	@Override
 	public void dispose() {
-		objectDisposal(alphabetButton);
-		objectDisposal(numbersButton);
-		objectDisposal(preferredHandText);
-		objectDisposal(changeHandButton);
+		objectDisposal(alphabetButton, numbersButton, 
+				preferredHandText,changeHandButton);
 	}
 
 	private void handChangeCheck(){
@@ -68,8 +66,8 @@ public final class MainMenuGUI extends AbstractGeneralGUI{
 	public void render(){
 		super.render();
 		handChangeCheck();
-		checkIfMouseOverButton(alphabetButton);
-		checkIfMouseOverButton(numbersButton);
-		checkIfMouseOverButton(changeHandButton);
+		handleMouseOverButton(alphabetButton);
+		handleMouseOverButton(numbersButton);
+		handleMouseOverButton(changeHandButton);
 	}
 }

@@ -10,9 +10,9 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-public class OneHandData extends AbstractHandData{
-	
-	public OneHandData(Controller controller) {
+public final class OneHandData extends AbstractHandData{
+
+	public OneHandData(final Controller controller) {
 		super(controller);
 	}
 
@@ -25,19 +25,19 @@ public class OneHandData extends AbstractHandData{
 	 * @param Leap motion Controller
 	 * @return Map<String, Float>
 	 **/
-	public Map<String, Float> getHandPosition()
+	public final Map<String, Float> getHandPosition()
 	{
-		Controller controller=getLeap();
-		Frame frame = controller.frame();
-		
+		final Controller controller=getLeap();
+		final Frame frame = controller.frame();
+
 		if (frame.fingers().isEmpty())
 			return null;
-//		while (frame.fingers().isEmpty())
-//	        frame = controller.frame();
+		//		while (frame.fingers().isEmpty())
+		//	        frame = controller.frame();
 
-		List<Vector> fingerBones=getFingerList();
+		final List<Vector> fingerBones=getFingerList();
 
-		HandList hands = controller.frame().hands();
+		final HandList hands = controller.frame().hands();
 		Vector handCentre = null;
 		for (Hand hand : hands){
 			handCentre = hand.palmPosition();
@@ -46,16 +46,21 @@ public class OneHandData extends AbstractHandData{
 		if(handCentre==null)
 			return null;
 
-		Map<String,Float> calibratedFingerBones = new LinkedHashMap<String,Float>();
+		final Map<String,Float> calibratedFingerBones = new 
+				LinkedHashMap<String,Float>();
+		Vector normalizedJoint;
 		for(int i=0; i< fingerBones.size();i++){
-			Vector normalizedJoint = fingerBones.get(i).minus(handCentre);
+			normalizedJoint = fingerBones.get(i).minus(handCentre);
 			for(int j=0; j<3;j++)
 				if(j==0)
-					calibratedFingerBones.put("feat" + Integer.toString(i*3+j),normalizedJoint.getX());
+					calibratedFingerBones.put("feat" + 
+							Integer.toString(i*3+j),normalizedJoint.getX());
 				else if(j==1)
-					calibratedFingerBones.put("feat" + Integer.toString(i*3+j),normalizedJoint.getY());
+					calibratedFingerBones.put("feat" + 
+							Integer.toString(i*3+j),normalizedJoint.getY());
 				else
-					calibratedFingerBones.put("feat" + Integer.toString(i*3+j),normalizedJoint.getZ());
+					calibratedFingerBones.put("feat" + 
+							Integer.toString(i*3+j),normalizedJoint.getZ());
 		}
 
 		return calibratedFingerBones;

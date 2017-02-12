@@ -9,8 +9,8 @@ import classifier.SignClassifier;
 import processing.core.PApplet;
 import processing.core.PImage;
 import recording.AbstractHandData.Handedness;
-import recording.ITrainer;
-import recording.TwoHandTrainer;
+import trainer.ITrainer;
+import trainer.TwoHandTrainer;
 
 
 public class SingleCharacterTrainer extends PApplet{

@@ -1,4 +1,4 @@
-package recording;
+package trainer;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -7,6 +7,7 @@ import java.nio.file.StandardOpenOption;
 import java.util.Collection;
 import java.util.Map;
 
+import recording.IHandData;
 import recording.AbstractHandData.Handedness;
 
 public abstract class AbstractHandTrainer{
@@ -29,7 +30,7 @@ public abstract class AbstractHandTrainer{
 		trainingChar=array[currentPosition];
 	}
 
-	private String formatString(final Collection<Float> sample){
+	private final String formatString(final Collection<Float> sample){
 		final StringBuilder sb = new StringBuilder();
 		for(Float i: sample){
 			sb.append(i+",");
@@ -69,7 +70,7 @@ public abstract class AbstractHandTrainer{
 			else
 				Files.write(trainPath, toInsert.getBytes(), StandardOpenOption.APPEND);
 
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			e.printStackTrace();
 		}
 		System.out.println("Inserted " + trainingChar +" no." + count + ": " + sample);
@@ -77,7 +78,7 @@ public abstract class AbstractHandTrainer{
 		return trainingChar;
 	}
 
-	public String train(){
+	public final String train(){
 		try {
 			return training(handData.getHandPosition());
 		} catch (InterruptedException e) {
@@ -86,7 +87,7 @@ public abstract class AbstractHandTrainer{
 		return "";
 	}
 
-	public String getCurrentCharacter(){
+	public final String getCurrentCharacter(){
 		return array[currentPosition];
 	}
 }
