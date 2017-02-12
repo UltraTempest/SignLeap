@@ -5,19 +5,19 @@ import java.math.RoundingMode;
 import java.util.LinkedList;
 import java.util.Queue;
 
-public class MovingAverageFilter {
+public final class MovingAverageFilter {
 
     private final Queue<BigDecimal> window = new LinkedList<BigDecimal>();
     private final int period;
     private BigDecimal sum = BigDecimal.ZERO;
 
-    public MovingAverageFilter(int period) {
+    public MovingAverageFilter(final int period) {
         assert period > 0 : "Period must be a positive integer";
         this.period = period;
     }
 
-    public void add(double num) {
-    	BigDecimal bd=new BigDecimal(num);
+    public final void add(final double num) {
+    	final BigDecimal bd=new BigDecimal(num);
         sum = sum.add(bd);
         window.add(bd);
         if (window.size() > period) {
@@ -25,9 +25,9 @@ public class MovingAverageFilter {
         }
     }
 
-    public Double getAverage() {
+    public final Double getAverage() {
         if (window.isEmpty()) return BigDecimal.ZERO.doubleValue();
-        BigDecimal divisor = BigDecimal.valueOf(window.size());
+        final BigDecimal divisor = BigDecimal.valueOf(window.size());
         return sum.divide(divisor, 2, RoundingMode.HALF_UP).doubleValue();
     }
 }

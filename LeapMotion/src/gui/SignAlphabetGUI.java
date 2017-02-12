@@ -6,20 +6,21 @@ import trainer.AlphabetTrainer;
 
 public final class SignAlphabetGUI extends AbstractSignCharacterGUI{
 
-	public SignAlphabetGUI(PApplet page) {
+	public SignAlphabetGUI(final PApplet page) {
 		super(page,((Page) page).getAlphabetClassifier(), 
 				AlphabetTrainer.alphabet);
 	}
 
 	@Override
-	protected void displayNextCharacter(){
+	protected final void displayNextCharacter(){
 		super.displayNextCharacter();
 		if(this.currentLetterPosition==26)
 			this.currentLetterPosition=0;	 
 	}
 
 	@Override
-	protected void updateSignCharactersGUI(String currentLetter, String imageName){
+	protected final void updateSignCharactersGUI(final String currentLetter, 
+			final String imageName){
 		super.updateSignCharactersGUI(currentLetter, imageName);
 		signInstruction.setText("Sign the letter: " + 
 				currentLetter.toUpperCase()+" " + currentLetter);

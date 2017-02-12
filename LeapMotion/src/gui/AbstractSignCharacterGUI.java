@@ -24,24 +24,17 @@ import recording.OneHandData;
 
 public abstract class AbstractSignCharacterGUI extends AbstractGUI{
 
-	public AbstractSignCharacterGUI(final PApplet page,
-			final SignClassifier signClassifier,final String[] array) {
-		super(page);
-		this.classifier=signClassifier;
-		this.array=array;
-	}
-
 	private final double difficulty=getPage().getDifficulty();
 	private final Controller leap=getPage().getLeap();
 	private final String imageType=".jpg";
 	protected int currentLetterPosition=0;
 	private PImage img;
-	protected GTextField signInstruction;
-	private GTextField scoreTimerText;
-	private GSlider slider;
+	protected final GTextField signInstruction;
+	private final GTextField scoreTimerText;
+	private final GSlider slider;
 	private GLabel sliderAcceptance;
-	private GLabel sliderAcceptance2;
-	private GLabel sliderExplanation;
+	private final GLabel sliderAcceptance2;
+	private final GLabel sliderExplanation;
 	private int userScore=0;
 	private final Timer timer = new Timer();
 	private int currentTime=0;
@@ -52,9 +45,15 @@ public abstract class AbstractSignCharacterGUI extends AbstractGUI{
 			"/" + getPage().getHand() +"/";
 	private final String[] array;
 
-	protected void createGUI(){
+	public AbstractSignCharacterGUI(final PApplet papplet,
+			final SignClassifier signClassifier,final String[] array) {
+		super(papplet);
+		this.classifier=signClassifier;
+		this.array=array;
+
 		final Page page=getPage();
-		signInstruction = new GTextField(page, 217, 513, 492, 81, G4P.SCROLLBARS_NONE);
+		signInstruction = new GTextField(page, 217, 513, 492, 81, 
+				G4P.SCROLLBARS_NONE);
 		signInstruction.setOpaque(false);
 		signInstruction.setFont(new Font("Dialog", Font.PLAIN, 58));
 		signInstruction.setTextEditEnabled(false);
@@ -89,7 +88,7 @@ public abstract class AbstractSignCharacterGUI extends AbstractGUI{
 		time();
 	}
 
-	private void setSliderAcceptance(){
+	private final  void setSliderAcceptance(){
 		int x=740;
 		if(difficulty==Page.MEDIUM)
 			x= 770;
@@ -98,11 +97,11 @@ public abstract class AbstractSignCharacterGUI extends AbstractGUI{
 		sliderAcceptance = new GLabel(getPage(), x, 28, 33, 18);
 	}
 
-	private void setProgressBarValue(float value){
+	private final void setProgressBarValue(final float value){
 		slider.setValue(value);
 	}
 
-	private void time(){
+	private final void time(){
 		timer.scheduleAtFixedRate(new TimerTask() {
 			int i = 61;//defined for a 60 second countdown
 			public void run() {
@@ -116,30 +115,29 @@ public abstract class AbstractSignCharacterGUI extends AbstractGUI{
 		}, 0, 1000);
 	}
 
-	private void incrementUserScore(){
+	private final void incrementUserScore(){
 		this.userScore+=1000;
 	}
 
-	protected void setHandData(final IHandData handData){
+	protected final void setHandData(final IHandData handData){
 		this.handData=handData;
 	}
 
-	protected void setClassifier(final SignClassifier classifier){
+	protected final void setClassifier(final SignClassifier classifier){
 		this.classifier=classifier;
 	}
 
 	protected void updateSignCharactersGUI(final String currentCharacter, 
-			String imageName){
-		super.render();
-		Page page = getPage();
+			final String imageName){
+		final Page page = getPage();
 		img=page.loadImage(imageName);
 		page.image(img,136, 65, 657, 408);
 		scoreTimerText.setText("Score:        " + userScore +
 				"               Time left:" + currentTime);
 	}
 
-	private void signCharacters(){	
-		Frame frame = leap.frame();
+	private final void signCharacters(){	
+		final Frame frame = leap.frame();
 		if(frame.hands().count()>0 && !getPage().isWarningDisplayed()){
 			Map<String, Float> data=handData.getHandPosition();
 			if(data!=null){
@@ -164,15 +162,15 @@ public abstract class AbstractSignCharacterGUI extends AbstractGUI{
 	}
 
 	@Override
-	public void render() {
-		String currentCharacter= array[currentLetterPosition];
-		String image=imageName+currentCharacter+imageType;
+	public final void render() {
+		final String currentCharacter= array[currentLetterPosition];
+		final String image=imageName+currentCharacter+imageType;
 		updateSignCharactersGUI(currentCharacter, image);
 		if(!currentCharacter.equals(previousChar)){
 			previousChar=currentCharacter;
 			try {
 				Thread.sleep(500);
-			} catch (InterruptedException e) {
+			} catch (final InterruptedException e) {
 				e.printStackTrace();
 			}
 		}
@@ -180,7 +178,7 @@ public abstract class AbstractSignCharacterGUI extends AbstractGUI{
 	}
 
 	@Override
-	public void dispose(){
+	public final void dispose(){
 		objectDisposal(slider, signInstruction, scoreTimerText,
 				sliderAcceptance, sliderAcceptance2, sliderExplanation);
 	}

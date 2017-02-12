@@ -18,15 +18,26 @@ import recording.OneHandData;
 
 public final class WelcomeGUI extends AbstractGeneralGUI{
 
-	public WelcomeGUI(final PApplet page) {
-		super(page);
-		handData=new OneHandData(((Page) page).getLeap());
-	}
-
-	private GLabel PreferredHandText; 
-	private PImage img;
+	private final GLabel PreferredHandText; 
+	private final PImage img;
 	private int frameCount;
 	private final IHandData handData;
+
+	public WelcomeGUI(final PApplet papplet) {
+		super(papplet);
+		final Page page = getPage();
+		handData=new OneHandData(page.getLeap());
+		G4P.setGlobalColorScheme(GCScheme.BLUE_SCHEME);
+		G4P.messagesEnabled(false);
+		G4P.setMouseOverEnabled(false);
+		PreferredHandText = new GLabel(page, 3, 497, 950, 139);
+		PreferredHandText.setTextAlign(GAlign.CENTER, GAlign.BOTTOM);
+		PreferredHandText.setText("Place your preferred hand over the Leap Motion to begin!");
+		PreferredHandText.setFont(new Font("Dialog", Font.PLAIN, 58));
+		PreferredHandText.setOpaque(false);
+		img=page.loadImage("ISL_logo.png");
+		page.image(img,31, 7, 886, 482);
+	}
 
 	private final void changeStateIfRequired(){
 		final Page page= getPage();
@@ -50,29 +61,12 @@ public final class WelcomeGUI extends AbstractGeneralGUI{
 	}
 
 	@Override
-	protected final void createGUI(){
-		final Page page = getPage();
-		G4P.setGlobalColorScheme(GCScheme.BLUE_SCHEME);
-		G4P.messagesEnabled(false);
-		G4P.setMouseOverEnabled(false);
-		PreferredHandText = new GLabel(page, 3, 497, 950, 139);
-		PreferredHandText.setTextAlign(GAlign.CENTER, GAlign.BOTTOM);
-		PreferredHandText.setText("Place your preferred hand over the Leap Motion to begin!");
-		PreferredHandText.setFont(new Font("Dialog", Font.PLAIN, 58));
-		PreferredHandText.setOpaque(false);
-		String logoFile="ISL_logo.png";
-		img=page.loadImage(logoFile);
-		page.image(img,31, 7, 886, 482);
-	}
-
-	@Override
 	public final boolean isWarningRequired(){
 		return false;
 	}
 
 	@Override
 	public final void render() {
-		super.render();
 		changeStateIfRequired();
 	}
 

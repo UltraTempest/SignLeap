@@ -12,14 +12,10 @@ import processing.core.PApplet;
 
 public final class LeaderboardGUI extends AbstractGeneralGUI{
 
-	private Button homeButton;
+	private final Button homeButton;
 
-	public LeaderboardGUI(final PApplet page) {
-		super(page);
-	}
-
-	@Override
-	protected void createGUI(){
+	public LeaderboardGUI(final PApplet papplet) {
+		super(papplet);
 		final Page page = getPage();
 		homeButton = new Button(page, 736, 38, 131, 53, new MainMenuCommand(page));
 		homeButton.setText("Home");
@@ -30,7 +26,7 @@ public final class LeaderboardGUI extends AbstractGeneralGUI{
 		page.turnOnLeapMouseControl();
 	}
 
-	private void renderLeaderBoard(final PApplet page){
+	private final void renderLeaderBoard(final PApplet page){
 		page.fill(PApplet.RGB);
 		page.textSize(50);
 		page.text("Leaderboard", 50, 130);
@@ -51,13 +47,12 @@ public final class LeaderboardGUI extends AbstractGeneralGUI{
 	}
 
 	@Override
-	public void dispose(){
+	public final void dispose(){
 		objectDisposal(homeButton);
 	}
 
 	@Override
-	public void render(){
-		super.render();
+	public final void render(){
 		handleMouseOverButton(homeButton);
 		renderLeaderBoard(getPage());
 	}

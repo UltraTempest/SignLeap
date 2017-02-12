@@ -17,7 +17,7 @@ import com.leapmotion.leap.*;
 
 public final class LeapMouse {
 
-	public static void main(String[] args) throws IOException {
+	public final static void main(final String[] args) throws IOException {
 
 		// Create a sample listener and controller
 		final LeapMouseListener listener = new LeapMouseListener();
@@ -30,7 +30,7 @@ public final class LeapMouse {
 
 		try{
 
-			BufferedReader bufferRead = new BufferedReader(new InputStreamReader(System.in));
+			final BufferedReader bufferRead = new BufferedReader(new InputStreamReader(System.in));
 
 			if(bufferRead.readLine().equalsIgnoreCase("Y"))
 			{
@@ -61,7 +61,7 @@ public final class LeapMouse {
 
 
 		}
-		catch(IOException e)
+		catch(final IOException e)
 		{
 			e.printStackTrace();
 		}
@@ -73,7 +73,7 @@ public final class LeapMouse {
 		System.out.println("Press Enter to quit...");
 		try {
 			System.in.read();
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			e.printStackTrace();
 		}
 

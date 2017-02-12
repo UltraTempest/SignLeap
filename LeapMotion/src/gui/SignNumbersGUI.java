@@ -8,16 +8,16 @@ public final class SignNumbersGUI extends AbstractSignCharacterGUI{
 	private final static String[] numbersArray = {"1","2","3","4","5","6","7"
 			,"8","9", "10"};
 
-	public SignNumbersGUI(PApplet page) {
+	public SignNumbersGUI(final PApplet page) {
 		super(page,((Page) page).getNumberClassifier(),numbersArray);
 	}
 
 	@Override
-	protected void displayNextCharacter(){
+	protected final void displayNextCharacter(){
 		super.displayNextCharacter();
 
 		if(numbersArray[this.currentLetterPosition].equals("6")){
-			Page page=getPage();
+			final Page page=getPage();
 			setClassifier(page.getTwoHandNumberClassifier());
 			setHandData(new TwoHandData(page.getLeap()));
 		}
@@ -27,7 +27,8 @@ public final class SignNumbersGUI extends AbstractSignCharacterGUI{
 	}
 
 	@Override
-	protected void updateSignCharactersGUI(final String currentLetter,final String imageName){
+	protected final void updateSignCharactersGUI(final String currentLetter,
+			final String imageName){
 		super.updateSignCharactersGUI(currentLetter, imageName);
 		signInstruction.setText("Sign the number: " + currentLetter);
 	}

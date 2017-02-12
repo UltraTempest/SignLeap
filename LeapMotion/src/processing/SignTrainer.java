@@ -32,7 +32,7 @@ public class SignTrainer extends PApplet{
 	private Timer timer;
 	private int currentTime;
 
-	public final static void main(String[] args) {
+	public final static void main(final String[] args) {
 		PApplet.main("processing.SignTrainer");
 	}
 
@@ -55,7 +55,7 @@ public class SignTrainer extends PApplet{
 			timer();
 			return;}
 		displayLeapImages();
-		String c=trainer.train();
+		final String c=trainer.train();
 		if(!c.equals(charToTrain)){
 			timer();
 			charToTrain=c;
@@ -64,7 +64,7 @@ public class SignTrainer extends PApplet{
 	}
 
 	private void renderImage(){
-		String filename=SignClassifier.language +  "/" + hand+"/" 
+		final String filename=SignClassifier.language +  "/" + hand+"/" 
 				+ charToTrain + ".jpg";
 		charImage= loadImage(filename);
 		image(charImage,0, 301, 600, 300);
@@ -94,33 +94,35 @@ public class SignTrainer extends PApplet{
 		}, 0, 1000);
 	}
 
-	private void displayLeapImages(){
-		Frame frame = controller.frame();
+	private final void displayLeapImages(){
+		final Frame frame = controller.frame();
 		if(frame.isValid()){
-			ImageList images = frame.images();
+			final ImageList images = frame.images();
 			for(Image image : images)
 			{
-				PImage[] cameras = new PImage[2];
+				final PImage[] cameras = new PImage[2];
 				//Processing PImage class
 				PImage camera = cameras[image.id()];
 				camera = createImage(image.width(), image.height(), RGB);
 				camera.loadPixels();
 
 				//Get byte array containing the image data from Image object
-				byte[] imageData = image.data();
+				final byte[] imageData = image.data();
 
 				//Copy image data into display object, in this case PImage defined in Processing
+				int r,g,b;
 				for(int i = 0; i < image.width() * image.height(); i++){
-					int r = (imageData[i] & 0xFF) << 16; //convert to unsigned and shift into place
-					int g = (imageData[i] & 0xFF) << 8;
-					int b = imageData[i] & 0xFF;
+					r = (imageData[i] & 0xFF) << 16; //convert to unsigned and shift into place
+					g = (imageData[i] & 0xFF) << 8;
+					b = imageData[i] & 0xFF;
 					camera.pixels[i] =  r | g | b; 
 				}
 
 				//Show the image
 				camera.updatePixels();
-				image(camera, 300 * image.id(), 0, 300, 300);  
+				image(camera, 640 * image.id(), 0);  
 			}
 		}
 	}
+
 }	

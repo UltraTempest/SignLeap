@@ -5,13 +5,13 @@ import java.util.TimerTask;
 
 import command.ICommand;
 
-public class ButtonTimer {
+public final class ButtonTimer {
 	private double countdownVariable;
 	private Timer timer;
-	private int period;
-	private ICommand command;
-	private double increment;
-	private double limit;
+	private final int period;
+	private final ICommand command;
+	private final double increment;
+	private final double limit;
 
 	public ButtonTimer(final int period,final ICommand command,
 			final double increment,final double limit){
@@ -21,7 +21,7 @@ public class ButtonTimer {
 		this.limit=limit;
 	}  
 
-	public void schuedule(){
+	public final void schuedule(){
 		timer= new Timer();
 		timer.scheduleAtFixedRate(new TimerTask() {
 			public void run() {
@@ -34,11 +34,11 @@ public class ButtonTimer {
 		},0, period);
 	}
 
-	public double getCountdown(){
+	public final double getCountdown(){
 		return this.countdownVariable;
 	}
 
-	public void cancel(){
+	public final void cancel(){
 		countdownVariable=0.0;
 		timer.cancel();
 		timer.purge();

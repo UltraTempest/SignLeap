@@ -56,7 +56,7 @@ public abstract class AbstractHandTrainer{
 			return trainingChar;
 		}
 
-		if(hand!=null && !handData.checkIfCorrectHandPlacedOverLeap(hand)){
+		if(hand!=null && !handData.isCorrectHandPlacedOverLeap(hand)){
 			System.out.println("Wrong hand used");
 			return trainingChar;
 		}

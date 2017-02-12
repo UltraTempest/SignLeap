@@ -73,7 +73,7 @@ public class SignClassifier {
 		}
 	}
 
-	protected Instance createInstanceFromData(final Map<String, Float> data){
+	protected final Instance createInstanceFromData(final Map<String, Float> data){
 		final Instance sampleInstance = new DenseInstance(numberOfFeatures+1);
 		for(int i=0; i<numberOfFeatures;i++){
 			sampleInstance.setValue(i, data.get("feat"+i));
@@ -130,18 +130,18 @@ public class SignClassifier {
 		return 0.0;
 	}	
 
-	protected double rollingTotal(final double d) {
+	protected final double rollingTotal(final double d) {
 		move.add(d);
 		return move.getAverage();
 	}
 
-	public void resetRollingAverage(){
+	public final void resetRollingAverage(){
 		move=new MovingAverageFilter(movingAverageFilterPeriods);
 		for(int i=0; i<movingAverageFilterPeriods;i++)
 			move.add(0.0);
 	}
 
-	private int getLabelDistributionPosition(final String charToFind,
+	private final int getLabelDistributionPosition(final String charToFind,
 			final double[] fDistribution){
 		for(int i=0; i<fDistribution.length;i++){
 			if(charToFind.equals(testingSet.classAttribute().value(i)))
@@ -150,13 +150,13 @@ public class SignClassifier {
 		return -1;
 	}
 
-	protected double getProbabilityForClass(final String charToFind,
+	protected final double getProbabilityForClass(final String charToFind,
 			final double[] fDistribution){
 		int position=getLabelDistributionPosition(charToFind, fDistribution);
 		return fDistribution[position];
 	}
 
-	public void evaluate(){	
+	public final void evaluate(){	
 		// training using a collection of classifiers (NaiveBayes, SMO (AKA SVM), KNN and Decision trees.)
 		final String[] algorithms = {"nb","smo","knn","j48", "libSVM","Random Forest"};
 		for(int w=0; w<algorithms.length;w++){
@@ -185,7 +185,7 @@ public class SignClassifier {
 				System.out.println(eval.toSummaryString());
 				System.out.println(eval.toMatrixString());
 				System.out.println(eval.toClassDetailsString());
-			} catch (Exception e) {
+			} catch (final Exception e) {
 				e.printStackTrace();
 			}
 		}

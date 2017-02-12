@@ -16,40 +16,26 @@ import processing.core.PApplet;
 public final class GameOverGUI extends AbstractGeneralGUI{
 
 	private final int score;
+	private final GPanel gameOverPanel; 
+	private final GTextField userInputName; 
+	private final GButton submitButton; 
+	private final GLabel label1; 
+	private final GLabel label2; 
+	private final GLabel label3; 
 
-	public GameOverGUI(PApplet page, int score) {
-		super(page);
+	public GameOverGUI(final PApplet papplet,final int score) {
+		super(papplet);
+		final Page page=getPage();
 		this.score=score;
-	}
-
-	private GPanel gameOverPanel; 
-	private GTextField userInputName; 
-	private GButton submitButton; 
-	private GLabel label1; 
-	private GLabel label2; 
-	private GLabel label3; 
-
-	public void submitButtonClicked(GButton source, GEvent event) {
-		new HighScoreManager().addScore(userInputName.getText(), score);
-		new LeaderboardCommand(getPage()).process();
-	} 
-
-	public void userInputFieldEventHandle(GTextField source, GEvent event) { 
-		if(event.toString().equals("ENTERED"))
-			submitButtonClicked(null, null);
-	}
-
-	// Create all the GUI controls. 
-	@Override
-	protected void createGUI(){
-		Page page=getPage();
-		gameOverPanel = new GPanel(page, 245, 182, 442, 232, "                                                             Game Over!");
+		page.setDefaultBackground();
+		gameOverPanel = new GPanel(page, 245, 182, 442, 232, "                                                        Game Over!");
 		gameOverPanel.setDraggable(false);
 		gameOverPanel.setCollapsible(false);
-		gameOverPanel.setText("                                                             Game Over!");
+		//gameOverPanel.setText("                                                        Game Over!");
 		gameOverPanel.setTextBold();
 		gameOverPanel.setLocalColorScheme(GCScheme.CYAN_SCHEME);
 		gameOverPanel.setOpaque(true);
+		gameOverPanel.clearDragArea();
 		userInputName = new GTextField(page, 71, 148, 192, 21, 
 				G4P.SCROLLBARS_NONE);
 		userInputName.setOpaque(true);
@@ -78,13 +64,29 @@ public final class GameOverGUI extends AbstractGeneralGUI{
 		gameOverPanel.addControl(label3);
 	}
 
+	public final void submitButtonClicked(final GButton source,final GEvent event){
+		new HighScoreManager().addScore(userInputName.getText(), score);
+		new LeaderboardCommand(getPage()).process();
+	} 
+
+	public final void userInputFieldEventHandle(final GTextField source,
+			final GEvent event) { 
+		if(event.toString().equals("ENTERED"))
+			submitButtonClicked(null, null);
+	}
+
 	@Override
-	public boolean isWarningRequired(){
+	public final boolean isWarningRequired(){
 		return false;
 	}
 
 	@Override
-	public void dispose() {
+	public final void dispose() {
 		objectDisposal(gameOverPanel);
+	}
+
+	@Override
+	public final void render() {
+		//No action needed
 	}
 }

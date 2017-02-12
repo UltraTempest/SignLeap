@@ -48,7 +48,7 @@ public final class Page extends PApplet{
 
 	private final float defaultTextSize=(float) 12.0;
 
-	public final static void main(String[] args) {
+	public final static void main(final String[] args) {
 		PApplet.main("processing.Page");
 	}
 
@@ -57,13 +57,14 @@ public final class Page extends PApplet{
 	}
 
 	public final void setup(){ 
+		cursor(WAIT);
 		surface.setTitle(appTitle);
 		final PImage image=loadImage(appIcon);
 		surface.setIcon(image);
-		cursor(image);
-		controller.enableGesture( Gesture.Type.TYPE_KEY_TAP);
+		controller.enableGesture(Gesture.Type.TYPE_KEY_TAP);
 		//controller.setPolicy(Controller.PolicyFlag.POLICY_IMAGES);
 		initializeClassifiers();
+		cursor(image);
 		currentGUIDisplayed=new WelcomeGUI(this);
 	}
 
@@ -116,7 +117,7 @@ public final class Page extends PApplet{
 	private final void renderLeapWarning(){
 		if(currentGUIDisplayed.isWarningRequired()){
 			setDefaultBackground();
-			if(!handInfo.checkIfCorrectHandPlacedOverLeap(hand)){
+			if(!handInfo.isCorrectHandPlacedOverLeap(hand)){
 				setTextSizeToDefault();
 				fill(205, 48, 48);
 				text(String.format(leapWarning,hand),250, 50);
@@ -151,7 +152,8 @@ public final class Page extends PApplet{
 		((Button) button).getCommand().process();
 	}
 
-	public final void handlePanelEvents(final GPanel panel,final GEvent event) { /* Not called */ }
+	public final void handlePanelEvents(final GPanel panel,final GEvent event){
+	/* Not called */ }
 
 	public final void handleSliderEvents(final GValueControl slider,
 			final GEvent event) { /* Not called */ }
@@ -168,23 +170,24 @@ public final class Page extends PApplet{
 	private final void displayLeapImages(){
 		final Frame frame = controller.frame();
 		if(frame.isValid()){
-			ImageList images = frame.images();
+			final ImageList images = frame.images();
 			for(Image image : images)
 			{
-				PImage[] cameras = new PImage[2];
+				final PImage[] cameras = new PImage[2];
 				//Processing PImage class
 				PImage camera = cameras[image.id()];
 				camera = createImage(image.width(), image.height(), RGB);
 				camera.loadPixels();
 
 				//Get byte array containing the image data from Image object
-				byte[] imageData = image.data();
+				final byte[] imageData = image.data();
 
 				//Copy image data into display object, in this case PImage defined in Processing
+				int r,g,b;
 				for(int i = 0; i < image.width() * image.height(); i++){
-					int r = (imageData[i] & 0xFF) << 16; //convert to unsigned and shift into place
-					int g = (imageData[i] & 0xFF) << 8;
-					int b = imageData[i] & 0xFF;
+					r = (imageData[i] & 0xFF) << 16; //convert to unsigned and shift into place
+					g = (imageData[i] & 0xFF) << 8;
+					b = imageData[i] & 0xFF;
 					camera.pixels[i] =  r | g | b; 
 				}
 

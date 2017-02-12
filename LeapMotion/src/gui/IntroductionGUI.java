@@ -11,13 +11,8 @@ import processing.core.PApplet;
 
 public final class IntroductionGUI extends AbstractGeneralGUI{
 
-	public IntroductionGUI(PApplet page) {
-		super(page);
-	}
-
-	//private GTextField introText;
-	private GLabel introText;
-	private Button continueButton;
+	private final GLabel introText;
+	private final Button continueButton;
 	private final String[] introTextArray= new String[]{
 			"Welcome to the Irish Sign Language Tutor through Leap Motion!",
 			"You will be given a series of signs and be scored based "
@@ -26,8 +21,8 @@ public final class IntroductionGUI extends AbstractGeneralGUI{
 							+ "either Numbers or Letters."};
 	private int postionOfStringDisplayed=0;
 
-	@Override
-	protected void createGUI(){
+	public IntroductionGUI(final PApplet papplet) {
+		super(papplet);
 		final Page page=getPage();
 		introText = new GLabel(page,198, 25, 585, 400);
 		introText.setText(introTextArray[postionOfStringDisplayed]);
@@ -43,23 +38,22 @@ public final class IntroductionGUI extends AbstractGeneralGUI{
 		page.turnOnLeapMouseControl();
 	}
 
-	public void changeTextDisplayed(){
+	public final void changeTextDisplayed(){
 		postionOfStringDisplayed++;
 	}
 
-	public boolean isLastTextDisplayed(){
+	public final boolean isLastTextDisplayed(){
 		return postionOfStringDisplayed==introTextArray.length-1;
 	}
 
 	@Override
-	public void render(){
-		super.render();
+	public final void render(){
 		handleMouseOverButton(continueButton);
 		introText.setText(introTextArray[postionOfStringDisplayed]);
 	}
 
 	@Override
-	public void dispose() {
+	public final void dispose() {
 		objectDisposal(introText,continueButton);
 	}
 }

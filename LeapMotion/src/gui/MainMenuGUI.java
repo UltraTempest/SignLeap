@@ -13,58 +13,58 @@ import processing.core.PApplet;
 import recording.AbstractHandData.Handedness;
 
 public final class MainMenuGUI extends AbstractGeneralGUI{
-	private Button alphabetButton; 
-	private Button numbersButton;
-	private GLabel preferredHandText;
-	private Button changeHandButton;
+	private final Button alphabetButton; 
+	private final Button numbersButton;
+	private final GLabel preferredHandText;
+	private final Button changeHandButton;
 	private Handedness hand;
 
-	public MainMenuGUI(PApplet page) {
-		super(page);
-	} 
-
-	@Override
-	protected void createGUI(){
-		Page page=getPage();
+	public MainMenuGUI(final PApplet papplet) {
+		super(papplet);
+		final Page page=getPage();
 		hand=page.getHand();
-		alphabetButton = new Button(page, 245, 111, 449, 142, new AlphabetGUICommand(page));
+		alphabetButton = new Button(page, 245, 111, 449, 142, 
+				new AlphabetGUICommand(page));
 		alphabetButton.setText("Alphabet");
 		alphabetButton.setFont(new Font("Dialog", Font.PLAIN, 30));
 		alphabetButton.setLocalColorScheme(GCScheme.CYAN_SCHEME); 
 		alphabetButton.addEventHandler(page, "handleButtonEvents");
-		numbersButton = new Button(page, 245, 371, 449, 142, new NumberGUICommand(page));
+		numbersButton = new Button(page, 245, 371, 449, 142, 
+				new NumberGUICommand(page));
 		numbersButton.setText("Numbers");
 		numbersButton.setFont(new Font("Dialog", Font.PLAIN, 30));
 		numbersButton.setLocalColorScheme(GCScheme.CYAN_SCHEME);
 		numbersButton.addEventHandler(page, "handleButtonEvents");
 		preferredHandText = new GLabel(page,309, 572, 187, 34);
-		preferredHandText.setText("Your preferred hand is " + hand.toString().toUpperCase());
+		preferredHandText.setText("Your preferred hand is " + 
+				hand.toString().toUpperCase());
 		preferredHandText.setOpaque(false);
-		changeHandButton = new Button(page,480, 568, 181, 42,new ChangeHandCommand(page));
+		changeHandButton = new Button(page,480, 568, 181, 42,
+				new ChangeHandCommand(page));
 		changeHandButton.setText("Change");
 		changeHandButton.setTextBold();
 		changeHandButton.setLocalColorScheme(GCScheme.YELLOW_SCHEME);
 		changeHandButton.addEventHandler(page, "handleButtonEvents");
 		page.turnOnLeapMouseControl();
-	}
+	} 
 
 	@Override
-	public void dispose() {
+	public final void dispose() {
 		objectDisposal(alphabetButton, numbersButton, 
 				preferredHandText,changeHandButton);
 	}
 
-	private void handChangeCheck(){
-		Handedness oldHand=getPage().getHand();
+	private final void handChangeCheck(){
+		final Handedness oldHand=getPage().getHand();
 		if(!hand.equals(oldHand)){
 			hand=oldHand;
-			preferredHandText.setText("Your preferred hand is " + hand.toString().toUpperCase());
+			preferredHandText.setText("Your preferred hand is " + 
+					hand.toString().toUpperCase());
 		}
 	}
 
 	@Override
-	public void render(){
-		super.render();
+	public final void render(){
 		handChangeCheck();
 		handleMouseOverButton(alphabetButton);
 		handleMouseOverButton(numbersButton);

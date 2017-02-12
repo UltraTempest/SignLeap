@@ -22,7 +22,7 @@ public abstract class AbstractHandData implements IHandData{
 		return controller.frame().hands().count()>0 ? true : false;
 	}
 
-	public final boolean checkIfCorrectHandPlacedOverLeap(Handedness hand){
+	public final boolean isCorrectHandPlacedOverLeap(Handedness hand){
 		Handedness current = getHandedness();
 		return hand.equals(current);	
 	}

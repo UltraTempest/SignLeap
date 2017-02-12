@@ -6,7 +6,6 @@ import processing.core.PApplet;
 
 public abstract class AbstractGUI implements IGUI{
 	private static PApplet page;
-	private boolean rendered=false;
 
 	public AbstractGUI(final PApplet page){
 		AbstractGUI.page=page;
@@ -28,17 +27,4 @@ public abstract class AbstractGUI implements IGUI{
 	public boolean isWarningRequired(){
 		return true;
 	}
-
-	protected void createGUI(){
-		//To be implemented by subclass  
-	}
-
-	@Override
-	public void render(){
-		if(rendered==false){
-			createGUI();
-			rendered=true;
-		}
-	}
-
 }
