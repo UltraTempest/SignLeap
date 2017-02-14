@@ -10,6 +10,10 @@ public final class AlphabetClassifier extends SignClassifier{
 	public AlphabetClassifier(final Handedness hand) {
 		super(hand, "alpha");
 	}
+	
+	public final static void main(final String args[]) {
+		new AlphabetClassifier(Handedness.RIGHT).evaluate();
+	}
 
 	@Override
 	public final double score(final Map<String, Float> data,

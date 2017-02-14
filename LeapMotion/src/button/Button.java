@@ -38,7 +38,8 @@ public final class Button extends GButton{
     	return this.bTimer.getCountdown();
     }
     
-    public final boolean isMouseOver(final PApplet page){
+    public final boolean isMouseOver(){
+    	final PApplet page= getPApplet();
 		final float buttonX=getX();
 		final float buttonY=getY();
 		final float buttonHeight=getHeight();

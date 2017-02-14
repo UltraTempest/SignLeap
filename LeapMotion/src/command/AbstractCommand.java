@@ -12,7 +12,7 @@ public abstract class AbstractCommand implements ICommand{
 	}
 
 	protected final Page getPage(){
-		return (Page) AbstractCommand.page;
+		return (Page) page;
 	}
 
 	protected final void executeCommand(final IGUI gui){

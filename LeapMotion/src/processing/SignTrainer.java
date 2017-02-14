@@ -14,16 +14,17 @@ import processing.core.PImage;
 import recording.AbstractHandData.Handedness;
 import trainer.AlphabetTrainer;
 import trainer.ITrainer;
+import trainer.NumberTrainer;
 
 
-public class SignTrainer extends PApplet{
+public final class SignTrainer extends PApplet{
 
 	private String charToTrain;
-	private final Handedness hand= Handedness.RIGHT;
+	private final Handedness hand= Handedness.LEFT;
 	private final static Controller controller = new Controller();
 
-	private final ITrainer trainer = new AlphabetTrainer(controller,hand);
-	//private final ITrainer trainer = new NumberTrainer(controller,hand);
+	//private final ITrainer trainer = new AlphabetTrainer(controller,hand);
+	private final ITrainer trainer = new NumberTrainer(controller,hand);
 	//private final ITrainer trainer = new TwoHandTrainer(controller);
 
 	private PImage charImage; 

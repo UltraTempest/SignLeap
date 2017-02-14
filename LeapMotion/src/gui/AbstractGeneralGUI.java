@@ -12,10 +12,13 @@ public abstract class AbstractGeneralGUI extends AbstractGUI{
 
 	protected final void handleMouseOverButton(final Button button){
 		final Page page=getPage();
-		if(button.isMouseOver(page)){
+		outerif:
+		if(button.isMouseOver()){
 			if(!button.isTimerRunning())
 				button.startCountdown();
 			final int percent=(int) (button.getCountdown()*100);
+			if(percent==100)
+				break outerif;
 			final int xCoordinate=674;
 			final int yCoordinate=593;
 			page.setDefaultBackground();			  

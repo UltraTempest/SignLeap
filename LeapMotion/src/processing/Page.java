@@ -30,7 +30,8 @@ public final class Page extends PApplet{
 	private final static Controller controller = new Controller();
 	private Handedness hand;
 	private final IHandData handInfo= new OneHandData(controller);
-	private final String leapWarning="Warning! Please keep your %s hand placed over the Leap Motion";
+	private final String leapWarning="Warning! Please keep your %s hand "
+			+ "placed over the Leap Motion";
 	private final LeapMouseListener leapListen= new LeapMouseListener();
 	private boolean isWarningDisplayed;
 
@@ -161,6 +162,7 @@ public final class Page extends PApplet{
 	private final void initializeClassifiers(){
 		new AlphabetClassifier(Handedness.RIGHT);
 		new NumberClassifier(Handedness.RIGHT);
+		new NumberClassifier(Handedness.LEFT);
 		num2Classifier=new SignClassifier(null, "num2");
 		//		new SignClassifier(Handedness.LEFT, "alpha");
 		//		new SignClassifier(Handedness.LEFT, "num");
