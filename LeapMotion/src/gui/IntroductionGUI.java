@@ -35,25 +35,24 @@ public final class IntroductionGUI extends AbstractGeneralGUI{
 		continueButton.setLocalColorScheme(GCScheme.CYAN_SCHEME);
 		continueButton.setFont(new Font("Dialog", Font.PLAIN, 30));
 		continueButton.addEventHandler(page, "handleButtonEvents");
-		page.turnOnLeapMouseControl();
 	}
 
-	public final void changeTextDisplayed(){
+	public void changeTextDisplayed(){
 		postionOfStringDisplayed++;
 	}
 
-	public final boolean isLastTextDisplayed(){
+	public boolean isLastTextDisplayed(){
 		return postionOfStringDisplayed==introTextArray.length-1;
 	}
 
 	@Override
-	public final void render(){
+	public void render(){
 		handleMouseOverButton(continueButton);
 		introText.setText(introTextArray[postionOfStringDisplayed]);
 	}
 
 	@Override
-	public final void dispose() {
+	public void dispose() {
 		objectDisposal(introText,continueButton);
 	}
 }

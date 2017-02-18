@@ -28,7 +28,9 @@ public abstract class AbstractSignCharacterGUI extends AbstractGUI{
 
 	private final double difficulty=getPage().getDifficulty();
 	private final Controller leap=getPage().getLeap();
-	private final String imageType=".jpg";
+	public static final String imageType=".jpg";
+	private final String imageName=SignClassifier.language +  
+			"/" + getPage().getHand() +"/";
 	protected int currentLetterPosition=0;
 	private PImage img;
 	protected final GTextField signInstruction;
@@ -43,8 +45,6 @@ public abstract class AbstractSignCharacterGUI extends AbstractGUI{
 	private SignClassifier classifier;
 	private IHandData handData= new OneHandData(leap);
 	private String previousChar;
-	private final String imageName=SignClassifier.language +  
-			"/" + getPage().getHand() +"/";
 	private final String[] array;
 
 	public AbstractSignCharacterGUI(final PApplet papplet,
@@ -69,7 +69,7 @@ public abstract class AbstractSignCharacterGUI extends AbstractGUI{
 		slider.setNumberFormat(G4P.INTEGER, 0);
 		slider.setLimits(0,0,50);
 		slider.setOpaque(false);
-		slider.setShowValue(true);
+		//slider.setShowValue(true);
 		setSliderAcceptance();
 		sliderAcceptance.setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
 		sliderAcceptance.setText("_______");
@@ -138,7 +138,7 @@ public abstract class AbstractSignCharacterGUI extends AbstractGUI{
 				"               Time left:" + currentTime);
 	}
 
-	private final void signCharacters(){	
+	private void signCharacters(){	
 		final Frame frame = leap.frame();
 		if(frame.hands().count()>0 && !getPage().isWarningDisplayed()){
 			Map<String, Float> data=handData.getHandPosition();

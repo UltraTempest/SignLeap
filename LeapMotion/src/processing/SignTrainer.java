@@ -12,7 +12,6 @@ import classifier.SignClassifier;
 import processing.core.PApplet;
 import processing.core.PImage;
 import recording.AbstractHandData.Handedness;
-import trainer.AlphabetTrainer;
 import trainer.ITrainer;
 import trainer.NumberTrainer;
 
@@ -33,14 +32,16 @@ public final class SignTrainer extends PApplet{
 	private Timer timer;
 	private int currentTime;
 
-	public final static void main(final String[] args) {
+	public static void main(final String[] args) {
 		PApplet.main("processing.SignTrainer");
 	}
-
-	public final void settings(){
+	
+	@Override
+	public void settings(){
 		size(600, 600);
 	}
-
+	
+	@Override
 	public final void setup(){ 
 		controller.setPolicy(Controller.PolicyFlag.POLICY_IMAGES);
 		background(255);
@@ -50,7 +51,8 @@ public final class SignTrainer extends PApplet{
 		charToTrain=trainer.getCurrentCharacter();
 		timer();
 	}
-
+	
+	@Override
 	public void draw(){
 		if(timerSet){
 			timer();
@@ -80,7 +82,7 @@ public final class SignTrainer extends PApplet{
 		renderImage();
 	}
 
-	protected void time(){
+	private void time(){
 		timer=new Timer();
 		timer.scheduleAtFixedRate(new TimerTask() {
 			int i = 6;//defined for a 5 second countdown
@@ -95,11 +97,11 @@ public final class SignTrainer extends PApplet{
 		}, 0, 1000);
 	}
 
-	private final void displayLeapImages(){
+	private void displayLeapImages(){
 		final Frame frame = controller.frame();
 		if(frame.isValid()){
 			final ImageList images = frame.images();
-			for(Image image : images)
+			for(final Image image : images)
 			{
 				final PImage[] cameras = new PImage[2];
 				//Processing PImage class

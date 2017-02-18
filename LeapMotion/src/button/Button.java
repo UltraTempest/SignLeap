@@ -4,7 +4,7 @@ import command.ICommand;
 import g4p_controls.GButton;
 import processing.core.PApplet;
 
-public final class Button extends GButton{
+public final class Button extends GButton implements IButton{
     private final ICommand command;
     private boolean timerRunning=false;
     private final ButtonTimer bTimer;
@@ -16,29 +16,35 @@ public final class Button extends GButton{
 		bTimer=new ButtonTimer(100, command, 0.05, 1.0);
 	}
     
-    public final ICommand getCommand(){
-    	return this.command;
+	@Override
+    public ICommand getCommand(){
+    	return command;
     }
     
-    public final boolean isTimerRunning(){
+	@Override
+    public boolean isTimerRunning(){
     	return timerRunning;
     }
     
-    public final void cancelTimerTask(){
+	@Override
+    public void cancelTimerTask(){
     	bTimer.cancel();
     	timerRunning=false;
     }
     
-    public final void startCountdown(){
+	@Override
+    public void startCountdown(){
     	bTimer.schuedule();
     	timerRunning=true;
     }
     
-    public final double getCountdown(){
-    	return this.bTimer.getCountdown();
+	@Override
+    public double getCountdown(){
+    	return bTimer.getCountdown();
     }
     
-    public final boolean isMouseOver(){
+	@Override
+    public boolean isMouseOver(){
     	final PApplet page= getPApplet();
 		final float buttonX=getX();
 		final float buttonY=getY();

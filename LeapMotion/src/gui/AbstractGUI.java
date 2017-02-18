@@ -17,7 +17,7 @@ public abstract class AbstractGUI implements IGUI{
 	}
 
 	protected final void objectDisposal(final GAbstractControl... objects){
-		for(GAbstractControl object:objects){
+		for(final GAbstractControl object:objects){
 			object.setVisible(false);
 			object.dispose();
 		}

@@ -13,6 +13,7 @@ import processing.core.PApplet;
 public final class LeaderboardGUI extends AbstractGeneralGUI{
 
 	private final Button homeButton;
+	private final ArrayList<Score> scores=new HighScoreManager().getScores();
 
 	public LeaderboardGUI(final PApplet papplet) {
 		super(papplet);
@@ -23,10 +24,9 @@ public final class LeaderboardGUI extends AbstractGeneralGUI{
 		homeButton.setLocalColorScheme(GCScheme.CYAN_SCHEME);
 		homeButton.addEventHandler(page, "handleButtonEvents");
 		renderLeaderBoard(page);
-		page.turnOnLeapMouseControl();
 	}
 
-	private final void renderLeaderBoard(final PApplet page){
+	private void renderLeaderBoard(final PApplet page){
 		page.fill(PApplet.RGB);
 		page.textSize(50);
 		page.text("Leaderboard", 50, 130);
@@ -36,7 +36,6 @@ public final class LeaderboardGUI extends AbstractGeneralGUI{
 		page.textSize(30);
 		int position=240;
 		page.line(0, position-45, 575, position-45);
-		final ArrayList<Score> scores= new HighScoreManager().getScores();
 		for(int i=0; i< scores.size();i++) {
 			final Score score=scores.get(i);
 			position=240+60*i;
@@ -47,12 +46,12 @@ public final class LeaderboardGUI extends AbstractGeneralGUI{
 	}
 
 	@Override
-	public final void dispose(){
+	public void dispose(){
 		objectDisposal(homeButton);
 	}
 
 	@Override
-	public final void render(){
+	public void render(){
 		handleMouseOverButton(homeButton);
 		renderLeaderBoard(getPage());
 	}

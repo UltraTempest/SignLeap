@@ -6,11 +6,12 @@ import com.leapmotion.leap.Image;
 import com.leapmotion.leap.ImageList;
 
 import button.Button;
+import button.IButton;
+import button.ImageButton;
 import classifier.AlphabetClassifier;
 import classifier.NumberClassifier;
 import classifier.SignClassifier;
 import controller.LeapMouseListener;
-import g4p_controls.GButton;
 import g4p_controls.GEvent;
 import g4p_controls.GPanel;
 import g4p_controls.GValueControl;
@@ -53,10 +54,12 @@ public final class Page extends PApplet{
 		PApplet.main("processing.Page");
 	}
 
+	@Override
 	public void settings(){
 		size(960, 640,JAVA2D);
 	}
 
+	@Override
 	public void setup(){ 
 		cursor(WAIT);
 		surface.setTitle(appTitle);
@@ -69,6 +72,7 @@ public final class Page extends PApplet{
 		currentGUIDisplayed=new WelcomeGUI(this);
 	}
 
+	@Override
 	public void draw(){
 		// displayLeapImages();
 		renderLeapWarning();
@@ -133,7 +137,7 @@ public final class Page extends PApplet{
 		return isWarningDisplayed;
 	}
 
-	public void turnOnLeapMouseControl(){
+	public void turnOnLeapMouse(){
 		controller.addListener(leapListen);
 	}
 
@@ -145,12 +149,16 @@ public final class Page extends PApplet{
 		background(230);
 	}
 
-	public void handleButtonEvents(final Button button,final GEvent event){ 
+	public void handleButtonEvents(final IButton button){ 
 		button.getCommand().process();
 	}
 
-	public void handleButtonEvents(final GButton button,final GEvent event){ 
-		((Button) button).getCommand().process();
+	public void handleButtonEvents(final Button button,final GEvent event){ 
+		handleButtonEvents(((IButton)button));
+	}
+
+	public void handleButtonEvents(final ImageButton button,final GEvent event){ 
+		handleButtonEvents(((IButton)button));
 	}
 
 	public void handlePanelEvents(final GPanel panel,final GEvent event){
@@ -173,7 +181,7 @@ public final class Page extends PApplet{
 		final Frame frame = controller.frame();
 		if(frame.isValid()){
 			final ImageList images = frame.images();
-			for(Image image : images)
+			for(final Image image : images)
 			{
 				final PImage[] cameras = new PImage[2];
 				//Processing PImage class
