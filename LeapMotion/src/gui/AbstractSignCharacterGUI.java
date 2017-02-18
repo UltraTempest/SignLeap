@@ -13,11 +13,13 @@ import command.GameOverCommand;
 import g4p_controls.G4P;
 import g4p_controls.GAlign;
 import g4p_controls.GCScheme;
+import g4p_controls.GControlMode;
 import g4p_controls.GLabel;
 import g4p_controls.GSlider;
 import g4p_controls.GTextField;
 import processing.Page;
 import processing.core.PApplet;
+import processing.core.PConstants;
 import processing.core.PImage;
 import recording.IHandData;
 import recording.OneHandData;
@@ -62,25 +64,25 @@ public abstract class AbstractSignCharacterGUI extends AbstractGUI{
 		scoreTimerText.setOpaque(false);
 		scoreTimerText.setFont(new Font("Dialog", Font.PLAIN, 16));
 		scoreTimerText.setTextEditEnabled(false);
-		slider = new GSlider(page, 640, 4, 249, 46, (float) 10.0);
+		slider = new GSlider(page,  931, 49, 568, 110,(float) 10.0);
+		slider.setRotation(PConstants.PI/2, GControlMode.CORNER);
 		slider.setNumberFormat(G4P.INTEGER, 0);
-		slider.setLimits(0, 0,50);
+		slider.setLimits(0,0,50);
 		slider.setOpaque(false);
-		//slider.setShowValue(true);
-		slider.setShowValue(false);
+		slider.setShowValue(true);
 		setSliderAcceptance();
 		sliderAcceptance.setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
-		sliderAcceptance.setText("|");
+		sliderAcceptance.setText("_______");
 		sliderAcceptance.setTextBold();
 		sliderAcceptance.setLocalColorScheme(GCScheme.RED_SCHEME);
 		sliderAcceptance.setOpaque(false);
-		sliderAcceptance2 = new GLabel(page, 641, 2, 32, 19);
+		sliderAcceptance2 = new GLabel(page, 704, 12, 32, 30);
 		sliderAcceptance2.setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
-		sliderAcceptance2.setText("|");
+		sliderAcceptance2.setText("___");
 		sliderAcceptance2.setTextBold();
 		sliderAcceptance2.setLocalColorScheme(GCScheme.RED_SCHEME);
 		sliderAcceptance2.setOpaque(false);
-		sliderExplanation = new GLabel(page, 662, 5, 263, 18);
+		sliderExplanation = new GLabel(page, 735, 19, 215, 22);
 		sliderExplanation.setText("indicates point when your sign is accepted");
 		sliderExplanation.setLocalColorScheme(GCScheme.GREEN_SCHEME);
 		sliderExplanation.setOpaque(false);
@@ -88,20 +90,20 @@ public abstract class AbstractSignCharacterGUI extends AbstractGUI{
 		time();
 	}
 
-	private final  void setSliderAcceptance(){
-		int x=740;
+	private void setSliderAcceptance(){
+		int y=325;
 		if(difficulty==Page.MEDIUM)
-			x= 770;
+			y= 260;
 		else if(difficulty==Page.HARD)
-			x= 829;
-		sliderAcceptance = new GLabel(getPage(), x, 28, 33, 18);
+			y= 155;
+		sliderAcceptance = new GLabel(getPage(),846, y, 59, 15);
 	}
 
-	private final void setProgressBarValue(final float value){
-		slider.setValue(value);
+	private void setProgressBarValue(final float value){
+		slider.setValue(50-value);
 	}
 
-	private final void time(){
+	private void time(){
 		timer.scheduleAtFixedRate(new TimerTask() {
 			int i = 61;//defined for a 60 second countdown
 			public void run() {
@@ -115,7 +117,7 @@ public abstract class AbstractSignCharacterGUI extends AbstractGUI{
 		}, 0, 1000);
 	}
 
-	private final void incrementUserScore(){
+	private void incrementUserScore(){
 		this.userScore+=1000;
 	}
 
