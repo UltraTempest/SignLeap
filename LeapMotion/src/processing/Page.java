@@ -49,15 +49,15 @@ public final class Page extends PApplet{
 
 	private final float defaultTextSize=(float) 12.0;
 
-	public final static void main(final String[] args) {
+	public static void main(final String[] args) {
 		PApplet.main("processing.Page");
 	}
 
-	public final void settings(){
+	public void settings(){
 		size(960, 640,JAVA2D);
 	}
 
-	public final void setup(){ 
+	public void setup(){ 
 		cursor(WAIT);
 		surface.setTitle(appTitle);
 		final PImage image=loadImage(appIcon);
@@ -69,53 +69,53 @@ public final class Page extends PApplet{
 		currentGUIDisplayed=new WelcomeGUI(this);
 	}
 
-	public final void draw(){
+	public void draw(){
 		// displayLeapImages();
 		renderLeapWarning();
 		currentGUIDisplayed.render();
 		//println(frameRate);
 	}
 
-	public final void stateSwitch(final IGUI gui){
+	public void stateSwitch(final IGUI gui){
 		currentGUIDisplayed.dispose();
 		this.currentGUIDisplayed=gui;
 	} 
 
-	public final Controller getLeap(){
+	public Controller getLeap(){
 		return controller;
 	}
 
-	public final void setTextSizeToDefault(){
+	public void setTextSizeToDefault(){
 		textSize(defaultTextSize);
 	}
 
-	public final void setHand(final Handedness hand){
+	public void setHand(final Handedness hand){
 		this.hand=hand;
 		numClassifier=new NumberClassifier(hand);
 		alphaClassifier=new AlphabetClassifier(hand);
 	}
 
-	public final double getDifficulty(){
+	public double getDifficulty(){
 		return this.difficulty;
 	}
 
-	public final Handedness getHand(){
+	public Handedness getHand(){
 		return this.hand;
 	}
 
-	public final SignClassifier getNumberClassifier(){
+	public SignClassifier getNumberClassifier(){
 		return this.numClassifier;
 	}
 
-	public final SignClassifier getTwoHandNumberClassifier(){
+	public SignClassifier getTwoHandNumberClassifier(){
 		return this.num2Classifier;
 	}
 
-	public final SignClassifier getAlphabetClassifier(){
+	public SignClassifier getAlphabetClassifier(){
 		return this.alphaClassifier;
 	}
 
-	private final void renderLeapWarning(){
+	private void renderLeapWarning(){
 		if(currentGUIDisplayed.isWarningRequired()){
 			setDefaultBackground();
 			if(!handInfo.isCorrectHandPlacedOverLeap(hand)){
@@ -129,37 +129,37 @@ public final class Page extends PApplet{
 		}
 	}
 
-	public final boolean isWarningDisplayed() {
+	public boolean isWarningDisplayed() {
 		return isWarningDisplayed;
 	}
 
-	public final void turnOnLeapMouseControl(){
+	public void turnOnLeapMouseControl(){
 		controller.addListener(leapListen);
 	}
 
-	public final void turnOffLeapMouseControl(){
+	public void turnOffLeapMouseControl(){
 		controller.removeListener(leapListen);
 	}
 
-	public final void setDefaultBackground(){
+	public void setDefaultBackground(){
 		background(230);
 	}
 
-	public final void handleButtonEvents(final Button button,final GEvent event){ 
+	public void handleButtonEvents(final Button button,final GEvent event){ 
 		button.getCommand().process();
 	}
 
-	public final void handleButtonEvents(final GButton button,final GEvent event){ 
+	public void handleButtonEvents(final GButton button,final GEvent event){ 
 		((Button) button).getCommand().process();
 	}
 
-	public final void handlePanelEvents(final GPanel panel,final GEvent event){
+	public void handlePanelEvents(final GPanel panel,final GEvent event){
 	/* Not called */ }
 
-	public final void handleSliderEvents(final GValueControl slider,
+	public void handleSliderEvents(final GValueControl slider,
 			final GEvent event) { /* Not called */ }
 
-	private final void initializeClassifiers(){
+	private void initializeClassifiers(){
 		new AlphabetClassifier(Handedness.RIGHT);
 		new NumberClassifier(Handedness.RIGHT);
 		new NumberClassifier(Handedness.LEFT);
@@ -169,7 +169,7 @@ public final class Page extends PApplet{
 	}
 
 	@SuppressWarnings("unused")
-	private final void displayLeapImages(){
+	private void displayLeapImages(){
 		final Frame frame = controller.frame();
 		if(frame.isValid()){
 			final ImageList images = frame.images();

@@ -5,20 +5,21 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 import leaderboard.HighScoreManager;
 
-public final class HighScoreManagerTest {
+public final class HighScoreManagerTest{
 
 	@After
-	public final void cleanUp() throws IOException{
+	public void cleanUp() throws IOException{
 		Files.delete(Paths.get(HighScoreManager.HIGHSCORE_FILE));
 	}
 
 	@Test
-	public final void test(){
+	public void test(){
 		final HighScoreManager hm = new HighScoreManager();
 		hm.addScore("Bart",240);
 		hm.addScore("Marge",300);
@@ -26,7 +27,7 @@ public final class HighScoreManagerTest {
 		hm.addScore("Homer",100);
 		hm.addScore("Lisa",270);
 
-		Assert.assertEquals(hm.getHighscoreString(), 
+		assertEquals(hm.getHighscoreString(), 
 				"1.	Marge		300" + "\n" +
 						"2.	Lisa		270" + "\n" + 
 						"3.	Bart		240" + "\n" + 
