@@ -1,4 +1,4 @@
-package controller;
+package test;
 
 /******************************************************************************\
  * Author: Alberto Vaccari
@@ -15,9 +15,11 @@ import java.io.InputStreamReader;
 
 import com.leapmotion.leap.*;
 
-public final class LeapMouse {
+import controller.LeapMouseListener;
 
-	public final static void main(final String[] args) throws IOException {
+public final class LeapMouseTest {
+
+	public static void main(final String[] args) throws IOException {
 
 		// Create a sample listener and controller
 		final LeapMouseListener listener = new LeapMouseListener();
@@ -61,8 +63,7 @@ public final class LeapMouse {
 
 
 		}
-		catch(final IOException e)
-		{
+		catch(final IOException e){
 			e.printStackTrace();
 		}
 

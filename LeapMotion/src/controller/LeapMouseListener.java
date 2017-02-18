@@ -1,5 +1,13 @@
 package controller;
 
+/******************************************************************************\
+ * Author: Alberto Vaccari
+ * LeapMouse.java
+ * 
+ * This app simulates a mouse, based on the Sample.java for LeapMotion
+ *           
+ *           
+\******************************************************************************/
 import java.awt.AWTException;
 import java.awt.Robot;
 import java.awt.event.InputEvent;
@@ -10,54 +18,58 @@ import com.leapmotion.leap.*;
 public final class LeapMouseListener extends Listener {
 
 	//True for Debugging
-	boolean DEBUG = false;
+	private boolean DEBUG = false;
 
 	//0 = Key Tap 
 	//1 = Finger Tap
-	int CLICK_TYPE = 0;
+	private int CLICK_TYPE = 0;
 
-
-	boolean USE_CALIBRATED_SCREEN = true;
+	private boolean USE_CALIBRATED_SCREEN = true;
 
 	//Just to control the speed, it can be changed accordingly to needs
-	int SLOW = 10;
+	private final int SLOW = 10;
 
 	//Screen resolution, it should match the current screen resolution for more precise movements
-	int SCREEN_X = java.awt.GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds().width;
-	int SCREEN_Y = java.awt.GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds().height;
+	private final int SCREEN_X = java.awt.GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds().width;
+	private final int SCREEN_Y = java.awt.GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds().height;
 
 
-	float cur_x = 0, cur_y = 0;
+	private float cur_x = 0, cur_y = 0;
 
-	int fingers_count = 0;
-	int prev_fingers_count = 0;
+	private int fingers_count = 0;
+	private int prev_fingers_count = 0;
 
-	boolean Lclicked = false;
-	boolean Rclicked = false;
-	boolean keystroke = false;
-	boolean LHold = false;
+	private boolean Lclicked = false;
+	private boolean Rclicked = false;
+	private boolean keystroke = false;
+	private boolean LHold = false;
 
-	boolean Swype = false;
-	boolean Circle = false;
+	private boolean Swype = false;
+	private boolean Circle = false;
 
-	public void onInit(Controller controller) {
+	@Override
+	public void onInit(final Controller controller) {
 		System.out.println("Initialized");
 		System.out.println("Current screen resolution: " + SCREEN_X +"x" + SCREEN_Y);
 	}
 
-	public void onConnect(Controller controller) {
+	@Override
+	public void onConnect(final Controller controller) {
 		System.out.println("Connected");
 	}
 
-	public void onDisconnect(Controller controller) {
+	@Override
+	public void onDisconnect(final Controller controller) {
 		System.out.println("Disconnected");
 	}
 
-	public void onExit(Controller controller) {
+	@Override
+	public void onExit(final Controller controller) {
 		System.out.println("Exited");
 	}
 
-	public void onFrame(Controller controller) {
+	@Override
+	public void onFrame(final Controller controller) {
 		// Get the most recent frame and report some basic information
 		Frame frame = controller.frame();
 
@@ -302,7 +314,7 @@ public final class LeapMouseListener extends Listener {
 		}
 	}
 
-	public void moveMouse(float x, float y)
+	public void moveMouse(final float x,final float y)
 	{
 		Robot mouseHandler;
 
@@ -316,7 +328,7 @@ public final class LeapMouseListener extends Listener {
 				mouseHandler = new Robot();
 				mouseHandler.mouseMove((int)x, (int)y);
 
-			} catch (AWTException e) {
+			} catch (final AWTException e) {
 				e.printStackTrace();
 			}
 		}
@@ -327,7 +339,7 @@ public final class LeapMouseListener extends Listener {
 	// 0: Left
 	// 1: Right
 	// 2: Middle  -not implemented yet-
-	public void clickMouse(int value)
+	public void clickMouse(final int value)
 	{
 		int input;
 
@@ -357,7 +369,7 @@ public final class LeapMouseListener extends Listener {
 	// 0: Left
 	// 1: Right
 	// 2: Middle  -not implemented yet-
-	public void releaseMouse(int value)
+	public void releaseMouse(final int value)
 	{
 		int input;
 
@@ -468,15 +480,15 @@ public final class LeapMouseListener extends Listener {
 
 	}
 
-	public void setDebug(boolean d){
+	public void setDebug(final boolean d){
 		DEBUG = d;
 	}
 
-	public void setClickType(int i){
+	public void setClickType(final int i){
 		CLICK_TYPE = i;
 	}
 
-	public void setCalibratedScren(boolean d){
+	public void setCalibratedScren(final boolean d){
 		USE_CALIBRATED_SCREEN = d;
 	}
 }
