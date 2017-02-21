@@ -11,15 +11,7 @@ import classifier.MovingAverageFilter;
 
 @RunWith(Parameterized.class)
 public class MovingAverageFilterTest {
-
-	@Parameters
-	public static Collection<Object[]> data() {
-		return Arrays.asList(new Object[][] {     
-			{ 2, 3, new double[]{2,4}},
-			{ 3, 3, new double[]{3,3,3}},
-		});
-	}
-
+	
 	private final int period;
 	private final double expected;
 	private final double[] input;
@@ -29,6 +21,14 @@ public class MovingAverageFilterTest {
 		this.period=period;
 		this.input= input;
 		this.expected= expected;
+	}
+	
+	@Parameters
+	public static Collection<Object[]> data() {
+		return Arrays.asList(new Object[][] {     
+			{ 2, 3, new double[]{2,4}},
+			{ 3, 3, new double[]{3,3,3}},
+		});
 	}
 
 	@Test
