@@ -18,9 +18,10 @@ public abstract class AbstractGeneralGUI extends AbstractGUI{
 				if(button.isMouseOver()){
 					if(!button.isTimerRunning())
 						button.startCountdown();
-					final int percent=(int) (button.getCountdown()*100);
-					if(percent==100)
+					int percent=button.getCountdown();
+					if(percent>100)
 						break outerif;
+					percent+=5;
 					final int xCoordinate=674;
 					final int yCoordinate=593;
 					page.setDefaultBackground();			  

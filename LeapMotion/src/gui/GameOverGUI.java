@@ -31,13 +31,11 @@ public final class GameOverGUI extends AbstractGeneralGUI{
 		gameOverPanel = new GPanel(page, 245, 182, 442, 232, "                                                        Game Over!");
 		gameOverPanel.setDraggable(false);
 		gameOverPanel.setCollapsible(false);
-		//gameOverPanel.setText("                                                        Game Over!");
 		gameOverPanel.setTextBold();
 		gameOverPanel.setLocalColorScheme(GCScheme.CYAN_SCHEME);
 		gameOverPanel.setOpaque(true);
 		gameOverPanel.clearDragArea();
-		userInputName = new GTextField(page, 71, 148, 192, 21, 
-				G4P.SCROLLBARS_NONE);
+		userInputName = new GTextField(page, 71, 148, 192, 21, G4P.SCROLLBARS_NONE);
 		userInputName.setOpaque(true);
 		userInputName.addEventHandler(this, "userInputFieldEventHandle");
 		submitButton = new GButton(page, 294, 148, 63, 23);
@@ -64,29 +62,29 @@ public final class GameOverGUI extends AbstractGeneralGUI{
 		gameOverPanel.addControl(label3);
 	}
 
-	public final void submitButtonClicked(final GButton source,final GEvent event){
+	public void submitButtonClicked(final GButton source,final GEvent event){
 		new HighScoreManager().addScore(userInputName.getText(), score);
 		new LeaderboardCommand(getPage()).process();
 	} 
 
-	public final void userInputFieldEventHandle(final GTextField source,
+	public void userInputFieldEventHandle(final GTextField source,
 			final GEvent event) { 
 		if(event.toString().equals("ENTERED"))
 			submitButtonClicked(null, null);
 	}
 
 	@Override
-	public final boolean isWarningRequired(){
+	public boolean isWarningRequired(){
 		return false;
 	}
 
 	@Override
-	public final void dispose() {
+	public void dispose() {
 		objectDisposal(gameOverPanel);
 	}
 
 	@Override
-	public final void render() {
+	public void render() {
 		//No action needed
 	}
 }

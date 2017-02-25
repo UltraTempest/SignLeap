@@ -6,40 +6,48 @@ import java.util.TimerTask;
 import command.ICommand;
 
 public final class ButtonTimer {
-	private double countdownVariable;
+	private int countdownVariable=-5;
 	private Timer timer;
-	private final int period;
-	private final ICommand command;
-	private final double increment;
-	private final double limit;
+	private ICommand command;
+	private boolean timerRunning=false;
+	private final int period=90;
+	private final int increment=5;
+	private final int limit=100;
 
-	public ButtonTimer(final int period,final ICommand command,
-			final double increment,final double limit){
-		this.period=period;
+	public ButtonTimer(final ICommand command){
 		this.command=command;
-		this.increment=increment;
-		this.limit=limit;
 	}  
+	
+	public void setCommand(final ICommand command){
+		this.command=command;
+	}
 
-	public final void schuedule(){
+	public void schuedule(){
 		timer= new Timer();
+		timerRunning=true;
 		timer.scheduleAtFixedRate(new TimerTask() {
 			public void run() {
 				countdownVariable+=increment;
 				if(countdownVariable>limit){
-					this.cancel();
+					cancel();
+					cancelTask();
 					command.process();
 				}
 			}
 		},0, period);
 	}
 
-	public final double getCountdown(){
-		return this.countdownVariable;
+	public int getCountdown(){
+		return countdownVariable;
+	}
+	
+	public boolean isTimerRunning(){
+		return timerRunning;
 	}
 
-	public final void cancel(){
-		countdownVariable=0.0;
+	public void cancelTask(){
+		timerRunning=false;
+		countdownVariable=-5;
 		timer.cancel();
 		timer.purge();
 	}

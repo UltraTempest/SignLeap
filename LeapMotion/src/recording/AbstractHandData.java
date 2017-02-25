@@ -29,7 +29,7 @@ public abstract class AbstractHandData implements IHandData{
 
 	public final Handedness getHandedness() {
 		final Hand hand=controller.frame().hands().frontmost();
-		System.out.println("Confidence: " + hand.confidence());
+		//System.out.println("Confidence: " + hand.confidence());
 		if(hand.isValid())
 			return hand.isLeft() ? Handedness.LEFT : Handedness.RIGHT;	
 		else

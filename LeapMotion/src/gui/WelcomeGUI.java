@@ -39,7 +39,7 @@ public final class WelcomeGUI extends AbstractGeneralGUI{
 		page.image(img,31, 7, 886, 482);
 	}
 
-	private final void changeStateIfRequired(){
+	private void changeStateIfRequired(){
 		final Page page= getPage();
 		if(handData.checkIfHandPlacedOverLeap()){
 			frameCount++;
@@ -56,22 +56,22 @@ public final class WelcomeGUI extends AbstractGeneralGUI{
 		}
 	}
 
-	private final boolean checkLeaderBoardFileExistence(){
+	private boolean checkLeaderBoardFileExistence(){
 		return new File(HighScoreManager.HIGHSCORE_FILE).exists();
 	}
 
 	@Override
-	public final boolean isWarningRequired(){
+	public boolean isWarningRequired(){
 		return false;
 	}
 
 	@Override
-	public final void render() {
+	public void render() {
 		changeStateIfRequired();
 	}
 
 	@Override
-	public final void dispose() {
+	public void dispose() {
 		objectDisposal(PreferredHandText);
 	}
 }

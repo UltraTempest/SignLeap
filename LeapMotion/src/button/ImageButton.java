@@ -1,28 +1,39 @@
 package button;
 
+import classifier.SignClassifier;
 import command.ChangeImageCommand;
 import command.ICommand;
 import g4p_controls.GImageButton;
 import g4p_controls.ImageManager;
+import gui.AbstractSignCharacterGUI;
+import gui.IImageSelectorGUI;
+import processing.Page;
 import processing.core.PApplet;
 import processing.core.PImage;
 
 public final class ImageButton extends GImageButton implements IButton{
 	private final ICommand command;
-
-	private boolean timerRunning=false;
 	private final ButtonTimer bTimer;
+	private final IImageSelectorGUI gui;
 
-	private final String tickFileName="tick.jpg";
+	private final static String tickFileName="tick.jpg";
 	private final String image;
-	private boolean ticked=false;
+	private final String signChar; 
+	private boolean ticked=true;
 
-	public ImageButton(final PApplet page,final  float arg1,final float arg2,
-			final float arg3,final float arg4,final String image) {
-		super(page, arg1, arg2, arg3, arg4, new String[]{image,image,image});
-		this.command=new ChangeImageCommand(page, this);
-		this.image=image;
-		bTimer=new ButtonTimer(100, command, 0.05, 1.0);
+	public ImageButton( final IImageSelectorGUI gui,final  float arg1,final float arg2,final float arg3,final float arg4,
+			final String signChar) {
+		super(gui.getPApplet(), arg1, arg2, arg3, arg4, new String[]{tickFileName,tickFileName,tickFileName});
+		this.gui=gui;
+		final Page page=gui.getPApplet();
+		final String imageName= SignClassifier.language+"/" + page.getHand() 
+				+"/%s"+ AbstractSignCharacterGUI.imageType;
+		this.signChar=signChar;
+		this.image=String.format(imageName, signChar);
+		this.command=new ChangeImageCommand(this);
+		ticked();
+		bTimer=new ButtonTimer(command);
+		addEventHandler(page, "handleButtonEvents");
 	}
 
 	@Override
@@ -30,40 +41,23 @@ public final class ImageButton extends GImageButton implements IButton{
 		return command;
 	}
 
-	public void ticked(){
-		if(!ticked){
-			setImage(new String[]{tickFileName,tickFileName,tickFileName});
-			ticked=true;
-		}
-		else{
-			setImage(new String[]{image,image,image});
-			ticked=false;
-		}
-	}
-	
-	public boolean isTicked() {
-		return ticked;
-	}
-
 	@Override
 	public boolean isTimerRunning(){
-		return timerRunning;
+		return bTimer.isTimerRunning();
 	}
 
 	@Override
 	public void cancelTimerTask(){
-		bTimer.cancel();
-		timerRunning=false;
+		bTimer.cancelTask();
 	}
 
 	@Override
 	public void startCountdown(){
 		bTimer.schuedule();
-		timerRunning=true;
 	}
 
 	@Override
-	public double getCountdown(){
+	public int getCountdown(){
 		return bTimer.getCountdown();
 	}
 
@@ -77,6 +71,23 @@ public final class ImageButton extends GImageButton implements IButton{
 
 		return (buttonX <= page.mouseX && page.mouseX <= buttonX+buttonWidth && 
 				buttonY <= page.mouseY && page.mouseY <= buttonY+buttonHeight);
+	}
+
+	public void ticked(){
+		if(!ticked){
+			setImage(new String[]{tickFileName,tickFileName,tickFileName});
+			gui.addSign(signChar);
+			ticked=true;
+		}
+		else{
+			setImage(new String[]{image,image,image});
+			gui.removeSign(signChar);
+			ticked=false;
+		}
+	}
+
+	public boolean isTicked() {
+		return ticked;
 	}
 
 	public void setImage(final String[] fnames) {

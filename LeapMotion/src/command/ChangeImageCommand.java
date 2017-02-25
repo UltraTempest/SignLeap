@@ -1,14 +1,13 @@
 package command;
 
 import button.ImageButton;
-import processing.core.PApplet;
 
 public final class ChangeImageCommand extends AbstractCommand{
 
 	private final ImageButton button;
 
-	public ChangeImageCommand(final PApplet page, final ImageButton button) {
-		super(page);
+	public ChangeImageCommand(final ImageButton button) {
+		super(button.getPApplet());
 		this.button=button;
 	}
 

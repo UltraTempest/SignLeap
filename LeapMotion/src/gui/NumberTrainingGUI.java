@@ -4,21 +4,24 @@ import processing.Page;
 import processing.core.PApplet;
 import recording.TwoHandData;
 
-public final class SignNumbersGUI extends AbstractTimedSignCharacterGUI{
-	private final static String[] numbersArray = {"1","2","3","4","5","6","7","8","9", "10"};
-
-	public SignNumbersGUI(final PApplet page) {
-		super(page,((Page) page).getNumberClassifier(),numbersArray);
+public final class NumberTrainingGUI extends AbstractSignCharacterGUI{
+	private final String[] array;
+	
+	public NumberTrainingGUI(final PApplet page, final String[] array) {
+		super(page,((Page) page).getNumberClassifier(),array);
+		this.array=array;
 	}
 
 	@Override
 	protected void displayNextCharacter(){
 		super.displayNextCharacter();
 		
-		if(this.currentLetterPosition==numbersArray.length)
-			currentLetterPosition=0;	
+		if(currentLetterPosition==array.length){
+			getPage().stateSwitch(new MainMenuGUI(getPage()));
+			return;
+		}
 		
-		if(numbersArray[this.currentLetterPosition].equals("6")){
+		if(array[currentLetterPosition].equals("6")){
 			final Page page=getPage();
 			setClassifier(page.getTwoHandNumberClassifier());
 			setHandData(new TwoHandData(page.getLeap()));

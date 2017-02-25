@@ -5,15 +5,15 @@ import g4p_controls.GButton;
 import processing.core.PApplet;
 
 public final class Button extends GButton implements IButton{
-    private final ICommand command;
-    private boolean timerRunning=false;
+    private ICommand command;
     private final ButtonTimer bTimer;
 	
 	public Button(final PApplet arg0,final  float arg1,final float arg2,
 			final float arg3,final float arg4,final ICommand command) {
 		super(arg0, arg1, arg2, arg3, arg4);
 		this.command=command;
-		bTimer=new ButtonTimer(100, command, 0.05, 1.0);
+		bTimer=new ButtonTimer(command);
+		addEventHandler(arg0, "handleButtonEvents");
 	}
     
 	@Override
@@ -21,25 +21,28 @@ public final class Button extends GButton implements IButton{
     	return command;
     }
     
+	public void setCommand(final ICommand command){
+		this.command=command;
+		bTimer.setCommand(command);
+	}
+	
 	@Override
     public boolean isTimerRunning(){
-    	return timerRunning;
+    	return bTimer.isTimerRunning();
     }
     
 	@Override
     public void cancelTimerTask(){
-    	bTimer.cancel();
-    	timerRunning=false;
+    	bTimer.cancelTask();
     }
     
 	@Override
     public void startCountdown(){
     	bTimer.schuedule();
-    	timerRunning=true;
     }
     
 	@Override
-    public double getCountdown(){
+    public int getCountdown(){
     	return bTimer.getCountdown();
     }
     

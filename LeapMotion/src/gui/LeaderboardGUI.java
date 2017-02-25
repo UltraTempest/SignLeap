@@ -22,7 +22,6 @@ public final class LeaderboardGUI extends AbstractGeneralGUI{
 		homeButton.setText("Home");
 		homeButton.setTextBold();
 		homeButton.setLocalColorScheme(GCScheme.CYAN_SCHEME);
-		homeButton.addEventHandler(page, "handleButtonEvents");
 		renderLeaderBoard(page);
 	}
 

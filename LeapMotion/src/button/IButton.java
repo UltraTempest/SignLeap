@@ -7,6 +7,6 @@ public interface IButton {
 	public boolean isTimerRunning();
 	public void cancelTimerTask();
 	public void startCountdown(); 
-	public double getCountdown();  
+	public int getCountdown();  
 	public boolean isMouseOver();
 }

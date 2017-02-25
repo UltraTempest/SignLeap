@@ -28,13 +28,11 @@ public final class IntroductionGUI extends AbstractGeneralGUI{
 		introText.setText(introTextArray[postionOfStringDisplayed]);
 		introText.setFont(new Font("Dialog", Font.PLAIN, 30));
 		introText.setOpaque(false);
-		continueButton = new Button(page, 226, 436, 500, 120, 
-				new IntroductionInfoCommand(page, this));
+		continueButton = new Button(page, 226, 436, 500, 120, new IntroductionInfoCommand(page, this));
 		continueButton.setText("Continue");
 		continueButton.setTextBold();
 		continueButton.setLocalColorScheme(GCScheme.CYAN_SCHEME);
 		continueButton.setFont(new Font("Dialog", Font.PLAIN, 30));
-		continueButton.addEventHandler(page, "handleButtonEvents");
 	}
 
 	public void changeTextDisplayed(){

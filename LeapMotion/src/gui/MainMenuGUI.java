@@ -37,25 +37,21 @@ public final class MainMenuGUI extends AbstractGeneralGUI{
 		numbersButton.setText("Numbers");
 		numbersButton.setFont(new Font("Dialog", Font.PLAIN, 30));
 		numbersButton.setLocalColorScheme(GCScheme.CYAN_SCHEME);
-		numbersButton.addEventHandler(page, "handleButtonEvents");
 
 		practiceButton = new Button(page, 150, 276, 612, 100, 
 				new SelectNumbersCommand(page));
 		practiceButton.setText("Practice");
 		practiceButton.setFont(new Font("Dialog", Font.PLAIN, 30));
 		practiceButton.setLocalColorScheme(GCScheme.CYAN_SCHEME);
-		practiceButton.addEventHandler(page, "handleButtonEvents");
 
 		preferredHandText = new GLabel(page,309, 572, 187, 34);
 		preferredHandText.setText("Your preferred hand is " + 
 				hand.toString().toUpperCase());
 		preferredHandText.setOpaque(false);
-		changeHandButton = new Button(page,480, 568, 181, 42,
-				new ChangeHandCommand(page));
+		changeHandButton = new Button(page,480, 568, 181, 42,new ChangeHandCommand(page));
 		changeHandButton.setText("Change");
 		changeHandButton.setTextBold();
 		changeHandButton.setLocalColorScheme(GCScheme.YELLOW_SCHEME);
-		changeHandButton.addEventHandler(page, "handleButtonEvents");
 	} 
 
 	@Override

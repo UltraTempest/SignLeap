@@ -2,14 +2,10 @@ package gui;
 
 import java.awt.Font;
 import java.util.Map;
-import java.util.Timer;
-import java.util.TimerTask;
-
 import com.leapmotion.leap.Controller;
 import com.leapmotion.leap.Frame;
 
 import classifier.SignClassifier;
-import command.GameOverCommand;
 import g4p_controls.G4P;
 import g4p_controls.GAlign;
 import g4p_controls.GCScheme;
@@ -34,14 +30,11 @@ public abstract class AbstractSignCharacterGUI extends AbstractGUI{
 	protected int currentLetterPosition=0;
 	private PImage img;
 	protected final GTextField signInstruction;
-	private final GTextField scoreTimerText;
 	private final GSlider slider;
 	private GLabel sliderAcceptance;
 	private final GLabel sliderAcceptance2;
 	private final GLabel sliderExplanation;
-	private int userScore=0;
-	private final Timer timer = new Timer();
-	private int currentTime=0;
+	
 	private SignClassifier classifier;
 	private IHandData handData= new OneHandData(leap);
 	private String previousChar;
@@ -52,18 +45,12 @@ public abstract class AbstractSignCharacterGUI extends AbstractGUI{
 		super(papplet);
 		this.classifier=signClassifier;
 		this.array=array;
-
 		final Page page=getPage();
-		signInstruction = new GTextField(page, 217, 513, 492, 81, 
-				G4P.SCROLLBARS_NONE);
+		signInstruction = new GTextField(page, 217, 513, 492, 81, G4P.SCROLLBARS_NONE);
 		signInstruction.setOpaque(false);
 		signInstruction.setFont(new Font("Dialog", Font.PLAIN, 58));
 		signInstruction.setTextEditEnabled(false);
-		scoreTimerText = new GTextField(page, 259, 6, 331, 20);
-		scoreTimerText.setText("Score:                       Time left:");
-		scoreTimerText.setOpaque(false);
-		scoreTimerText.setFont(new Font("Dialog", Font.PLAIN, 16));
-		scoreTimerText.setTextEditEnabled(false);
+		
 		slider = new GSlider(page,  931, 49, 568, 110,(float) 10.0);
 		slider.setRotation(PConstants.PI/2, GControlMode.CORNER);
 		slider.setNumberFormat(G4P.INTEGER, 0);
@@ -87,7 +74,6 @@ public abstract class AbstractSignCharacterGUI extends AbstractGUI{
 		sliderExplanation.setLocalColorScheme(GCScheme.GREEN_SCHEME);
 		sliderExplanation.setOpaque(false);
 		page.turnOffLeapMouseControl();
-		time();
 	}
 
 	private void setSliderAcceptance(){
@@ -103,24 +89,6 @@ public abstract class AbstractSignCharacterGUI extends AbstractGUI{
 		slider.setValue(50-value);
 	}
 
-	private void time(){
-		timer.scheduleAtFixedRate(new TimerTask() {
-			int i = 61;//defined for a 60 second countdown
-			public void run() {
-				i--;
-				currentTime=i;
-				if (i<= 0){
-					timer.cancel();
-					new GameOverCommand(getPage(), userScore).process();
-				}
-			}
-		}, 0, 1000);
-	}
-
-	private void incrementUserScore(){
-		this.userScore+=1000;
-	}
-
 	protected final void setHandData(final IHandData handData){
 		this.handData=handData;
 	}
@@ -129,13 +97,10 @@ public abstract class AbstractSignCharacterGUI extends AbstractGUI{
 		this.classifier=classifier;
 	}
 
-	protected void updateSignCharactersGUI(final String currentCharacter, 
-			final String imageName){
+	protected void updateSignCharactersGUI(final String currentCharacter, final String imageName){
 		final Page page = getPage();
 		img=page.loadImage(imageName);
 		page.image(img,136, 65, 657, 408);
-		scoreTimerText.setText("Score:        " + userScore +
-				"               Time left:" + currentTime);
 	}
 
 	private void signCharacters(){	
@@ -158,7 +123,6 @@ public abstract class AbstractSignCharacterGUI extends AbstractGUI{
 	}
 
 	protected void displayNextCharacter(){
-		incrementUserScore();
 		this.currentLetterPosition++;
 		//To be implemented by subclass
 	}
@@ -180,8 +144,7 @@ public abstract class AbstractSignCharacterGUI extends AbstractGUI{
 	}
 
 	@Override
-	public final void dispose(){
-		objectDisposal(slider, signInstruction, scoreTimerText,
-				sliderAcceptance, sliderAcceptance2, sliderExplanation);
+	public void dispose(){
+		objectDisposal(slider, signInstruction,sliderAcceptance, sliderAcceptance2, sliderExplanation);
 	}
 }

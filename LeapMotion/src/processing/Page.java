@@ -1,10 +1,7 @@
 package processing;
-import com.leapmotion.leap.Controller;
-import com.leapmotion.leap.Frame;
-import com.leapmotion.leap.Gesture;
-import com.leapmotion.leap.Image;
-import com.leapmotion.leap.ImageList;
 
+import com.leapmotion.leap.Controller;
+import com.leapmotion.leap.Gesture;
 import button.Button;
 import button.IButton;
 import button.ImageButton;
@@ -31,8 +28,7 @@ public final class Page extends PApplet{
 	private final static Controller controller = new Controller();
 	private Handedness hand;
 	private final IHandData handInfo= new OneHandData(controller);
-	private final String leapWarning="Warning! Please keep your %s hand "
-			+ "placed over the Leap Motion";
+	private final String leapWarning="Warning! Please keep your %s hand placed over the Leap Motion";
 	private final LeapMouseListener leapListen= new LeapMouseListener();
 	private boolean isWarningDisplayed;
 
@@ -65,16 +61,14 @@ public final class Page extends PApplet{
 		surface.setTitle(appTitle);
 		final PImage image=loadImage(appIcon);
 		surface.setIcon(image);
-		controller.enableGesture(Gesture.Type.TYPE_KEY_TAP);
-		//controller.setPolicy(Controller.PolicyFlag.POLICY_IMAGES);
 		initializeClassifiers();
 		cursor(image);
+		controller.enableGesture(Gesture.Type.TYPE_KEY_TAP);
 		currentGUIDisplayed=new WelcomeGUI(this);
 	}
 
 	@Override
 	public void draw(){
-		// displayLeapImages();
 		renderLeapWarning();
 		currentGUIDisplayed.render();
 		//println(frameRate);
@@ -82,7 +76,7 @@ public final class Page extends PApplet{
 
 	public void stateSwitch(final IGUI gui){
 		currentGUIDisplayed.dispose();
-		this.currentGUIDisplayed=gui;
+		currentGUIDisplayed=gui;
 	} 
 
 	public Controller getLeap(){
@@ -100,11 +94,11 @@ public final class Page extends PApplet{
 	}
 
 	public double getDifficulty(){
-		return this.difficulty;
+		return difficulty;
 	}
 
 	public Handedness getHand(){
-		return this.hand;
+		return hand;
 	}
 
 	public SignClassifier getNumberClassifier(){
@@ -161,11 +155,9 @@ public final class Page extends PApplet{
 		handleButtonEvents(((IButton)button));
 	}
 
-	public void handlePanelEvents(final GPanel panel,final GEvent event){
-	/* Not called */ }
+	public void handlePanelEvents(final GPanel panel,final GEvent event){/* Not called */ }
 
-	public void handleSliderEvents(final GValueControl slider,
-			final GEvent event) { /* Not called */ }
+	public void handleSliderEvents(final GValueControl slider,final GEvent event) { /* Not called */ }
 
 	private void initializeClassifiers(){
 		new AlphabetClassifier(Handedness.RIGHT);
@@ -174,37 +166,5 @@ public final class Page extends PApplet{
 		num2Classifier=new SignClassifier(null, "num2");
 		//		new SignClassifier(Handedness.LEFT, "alpha");
 		//		new SignClassifier(Handedness.LEFT, "num");
-	}
-
-	@SuppressWarnings("unused")
-	private void displayLeapImages(){
-		final Frame frame = controller.frame();
-		if(frame.isValid()){
-			final ImageList images = frame.images();
-			for(final Image image : images)
-			{
-				final PImage[] cameras = new PImage[2];
-				//Processing PImage class
-				PImage camera = cameras[image.id()];
-				camera = createImage(image.width(), image.height(), RGB);
-				camera.loadPixels();
-
-				//Get byte array containing the image data from Image object
-				final byte[] imageData = image.data();
-
-				//Copy image data into display object, in this case PImage defined in Processing
-				int r,g,b;
-				for(int i = 0; i < image.width() * image.height(); i++){
-					r = (imageData[i] & 0xFF) << 16; //convert to unsigned and shift into place
-					g = (imageData[i] & 0xFF) << 8;
-					b = imageData[i] & 0xFF;
-					camera.pixels[i] =  r | g | b; 
-				}
-
-				//Show the image
-				camera.updatePixels();
-				image(camera, 640 * image.id(), 0);  
-			}
-		}
 	}
 }
