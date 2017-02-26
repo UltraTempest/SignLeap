@@ -9,7 +9,7 @@ import command.GameOverCommand;
 import g4p_controls.GTextField;
 import processing.core.PApplet;
 
-public class AbstractTimedSignCharacterGUI extends AbstractSignCharacterGUI{
+public abstract class AbstractTimedSignCharacterGUI extends AbstractSignCharacterGUI{
 	
 	private int userScore;
 	private final Timer timer = new Timer();
@@ -61,6 +61,6 @@ public class AbstractTimedSignCharacterGUI extends AbstractSignCharacterGUI{
 	@Override
 	public final void dispose(){
 		super.dispose();
-		objectDisposal(signInstruction);
+		objectDisposal(signInstruction, scoreTimerText);
 	}
 }

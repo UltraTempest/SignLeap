@@ -3,9 +3,9 @@ package command;
 import gui.GUIFactory;
 import processing.core.PApplet;
 
-public final class NumberGUICommand extends AbstractCommand{
+public final class SignNumberCommand extends AbstractCommand{
 
-	public NumberGUICommand(final PApplet page) {
+	public SignNumberCommand(final PApplet page) {
 		super(page);
 	}
 

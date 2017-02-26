@@ -3,20 +3,18 @@ package command;
 import java.util.ArrayList;
 import java.util.List;
 
-import gui.NumberTrainingGUI;
 import processing.core.PApplet;
 
-public final class TrainingCommand extends AbstractCommand{
+public abstract class AbstractTrainingCommand extends AbstractCommand{
 
 	private final List<String> signList = new ArrayList<String>();
 
-	public TrainingCommand(final PApplet page) {
+	public AbstractTrainingCommand(final PApplet page) {
 		super(page);
 	}
-
-	@Override
-	public void process() {
-		executeCommand(new NumberTrainingGUI(getPage(), signList.toArray(new String[signList.size()])));
+	
+	protected String[] getSigns(){
+		return signList.toArray(new String[getNumberOfSigns()]);
 	}
 
 	public void addSign(final String s) {

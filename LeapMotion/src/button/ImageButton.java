@@ -21,13 +21,12 @@ public final class ImageButton extends GImageButton implements IButton{
 	private final String signChar; 
 	private boolean ticked=true;
 
-	public ImageButton( final IImageSelectorGUI gui,final  float arg1,final float arg2,final float arg3,final float arg4,
+	public ImageButton(final IImageSelectorGUI gui,final  float arg1,final float arg2,final float arg3,final float arg4,
 			final String signChar) {
 		super(gui.getPApplet(), arg1, arg2, arg3, arg4, new String[]{tickFileName,tickFileName,tickFileName});
 		this.gui=gui;
 		final Page page=gui.getPApplet();
-		final String imageName= SignClassifier.language+"/" + page.getHand() 
-				+"/%s"+ AbstractSignCharacterGUI.imageType;
+		final String imageName= SignClassifier.language+"/" + page.getHand() +"/%s"+ AbstractSignCharacterGUI.imageType;
 		this.signChar=signChar;
 		this.image=String.format(imageName, signChar);
 		this.command=new ChangeImageCommand(this);

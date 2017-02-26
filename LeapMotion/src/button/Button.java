@@ -8,12 +8,11 @@ public final class Button extends GButton implements IButton{
     private ICommand command;
     private final ButtonTimer bTimer;
 	
-	public Button(final PApplet arg0,final  float arg1,final float arg2,
-			final float arg3,final float arg4,final ICommand command) {
-		super(arg0, arg1, arg2, arg3, arg4);
+	public Button(final PApplet page,final  float arg1,final float arg2,final float arg3,final float arg4,final ICommand command){
+		super(page, arg1, arg2, arg3, arg4);
 		this.command=command;
 		bTimer=new ButtonTimer(command);
-		addEventHandler(arg0, "handleButtonEvents");
+		addEventHandler(page, "handleButtonEvents");
 	}
     
 	@Override

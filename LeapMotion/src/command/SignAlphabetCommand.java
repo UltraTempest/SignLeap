@@ -3,9 +3,9 @@ package command;
 import gui.GUIFactory;
 import processing.core.PApplet;
 
-public final class AlphabetGUICommand extends AbstractCommand{
+public final class SignAlphabetCommand extends AbstractCommand{
 
-	public AlphabetGUICommand(final PApplet page) {
+	public SignAlphabetCommand(final PApplet page) {
 		super(page);
 	}
 
