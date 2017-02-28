@@ -25,8 +25,7 @@ public abstract class AbstractSignCharacterGUI extends AbstractGUI{
 	private final double difficulty=getPage().getDifficulty();
 	private final Controller leap=getPage().getLeap();
 	public static final String imageType=".jpg";
-	private final String imageName=SignClassifier.language +  
-			"/" + getPage().getHand() +"/";
+	private final String imageName=SignClassifier.language +  "/" + getPage().getHand() +"/";
 	protected int currentLetterPosition=0;
 	private PImage img;
 	protected final GTextField signInstruction;
@@ -46,6 +45,7 @@ public abstract class AbstractSignCharacterGUI extends AbstractGUI{
 		this.classifier=signClassifier;
 		this.array=array;
 		final Page page=getPage();
+		page.turnOffLeapMouseControl();
 		signInstruction = new GTextField(page, 217, 513, 492, 81, G4P.SCROLLBARS_NONE);
 		signInstruction.setOpaque(false);
 		signInstruction.setFont(new Font("Dialog", Font.PLAIN, 58));
@@ -73,7 +73,8 @@ public abstract class AbstractSignCharacterGUI extends AbstractGUI{
 		sliderExplanation.setText("indicates point when your sign is accepted");
 		sliderExplanation.setLocalColorScheme(GCScheme.GREEN_SCHEME);
 		sliderExplanation.setOpaque(false);
-		page.turnOffLeapMouseControl();
+		
+		//TODO add button to skip or add it after certain amount of attempts
 	}
 
 	private void setSliderAcceptance(){

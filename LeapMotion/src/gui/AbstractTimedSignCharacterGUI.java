@@ -24,6 +24,7 @@ public abstract class AbstractTimedSignCharacterGUI extends AbstractSignCharacte
 		scoreTimerText.setFont(new Font("Dialog", Font.PLAIN, 16));
 		scoreTimerText.setTextEditEnabled(false);
 		time();
+		//TODO pause timer if hand not over leap. Display PAUSED on screen
 	}
 	
 	private void time(){

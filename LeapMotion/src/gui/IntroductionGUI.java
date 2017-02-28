@@ -33,6 +33,8 @@ public final class IntroductionGUI extends AbstractGeneralGUI{
 		continueButton.setTextBold();
 		continueButton.setLocalColorScheme(GCScheme.CYAN_SCHEME);
 		continueButton.setFont(new Font("Dialog", Font.PLAIN, 30));
+		//TODO Introduction should give a sample of what the user will be tasked to do without a time limit.
+		//TODO Information on ideal distance hands should be from the leap motion. Try to keep users hands on the leap and not away. 
 	}
 
 	public void changeTextDisplayed(){

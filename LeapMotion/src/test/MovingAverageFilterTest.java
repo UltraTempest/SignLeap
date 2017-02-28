@@ -16,8 +16,7 @@ public class MovingAverageFilterTest {
 	private final double expected;
 	private final double[] input;
 
-	public MovingAverageFilterTest(final int period,final double expected,
-			final double... input) {
+	public MovingAverageFilterTest(final int period,final double expected,final double... input) {
 		this.period=period;
 		this.input= input;
 		this.expected= expected;
@@ -35,7 +34,6 @@ public class MovingAverageFilterTest {
 	public void test() {
 		final MovingAverageFilter mov = new MovingAverageFilter(period);
 		mov.add(input);
-		assertEquals(Double.doubleToLongBits(expected),Double.doubleToLongBits(
-				mov.getAverage()));
+		assertEquals(Double.doubleToLongBits(expected),Double.doubleToLongBits(mov.getAverage()));
 	}
 }
