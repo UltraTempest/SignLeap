@@ -1,33 +1,17 @@
 package command;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import processing.core.PApplet;
+import gui.AbstractSelectCharactersGUI;
 
 public abstract class AbstractTrainingCommand extends AbstractCommand{
-
-	private final List<String> signList = new ArrayList<String>();
-
-	public AbstractTrainingCommand(final PApplet page) {
-		super(page);
+	
+	private final AbstractSelectCharactersGUI gui;
+	
+	public AbstractTrainingCommand(final AbstractSelectCharactersGUI gui) {
+		super(gui.getPApplet());
+		this.gui=gui;
 	}
 	
-	protected String[] getSigns(){
-		return signList.toArray(new String[getNumberOfSigns()]);
+	protected AbstractSelectCharactersGUI getGUI(){
+		return gui;
 	}
-
-	public void addSign(final String s) {
-		signList.add(s);
-	}
-
-	public void removeSign(final String s) {
-		if(signList.contains(s))
-		signList.remove(s);
-	}
-	
-	public int getNumberOfSigns(){
-		return signList.size();
-	}
-
 }

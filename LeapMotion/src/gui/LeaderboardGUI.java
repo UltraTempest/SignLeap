@@ -23,6 +23,7 @@ public final class LeaderboardGUI extends AbstractGeneralGUI{
 		homeButton.setTextBold();
 		homeButton.setLocalColorScheme(GCScheme.CYAN_SCHEME);
 		renderLeaderBoard(page);
+		//TODO sort out username selction with Leap
 	}
 
 	private void renderLeaderBoard(final PApplet page){

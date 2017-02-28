@@ -1,15 +1,16 @@
 package command;
 
+import gui.AbstractSelectCharactersGUI;
 import gui.NumberTrainingGUI;
-import processing.core.PApplet;
 
 public final class TrainingNumbersCommand extends AbstractTrainingCommand{
-	public TrainingNumbersCommand(final PApplet page) {
-		super(page);
+	
+	public TrainingNumbersCommand(final AbstractSelectCharactersGUI gui) {
+		super(gui);
 	}
 
 	@Override
 	public void process() {
-		executeCommand(new NumberTrainingGUI(getPage(),getSigns()));
+		executeCommand(new NumberTrainingGUI(getPage(), getGUI().getSigns()));
 	}
 }

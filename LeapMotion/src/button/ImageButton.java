@@ -17,8 +17,9 @@ public final class ImageButton extends GImageButton implements IButton{
 	private final IImageSelectorGUI gui;
 
 	private final static String tickFileName="tick.jpg";
-	private final String image;
-	private final String signChar; 
+	private final String imageName;
+	private String image;
+	private String signChar; 
 	private boolean ticked=true;
 
 	public ImageButton(final IImageSelectorGUI gui,final  float arg1,final float arg2,final float arg3,final float arg4,
@@ -26,10 +27,10 @@ public final class ImageButton extends GImageButton implements IButton{
 		super(gui.getPApplet(), arg1, arg2, arg3, arg4, new String[]{tickFileName,tickFileName,tickFileName});
 		this.gui=gui;
 		final Page page=gui.getPApplet();
-		final String imageName= SignClassifier.language+"/" + page.getHand() +"/%s"+ AbstractSignCharacterGUI.imageType;
+		imageName= SignClassifier.language+"/" + page.getHand() +"/%s"+ AbstractSignCharacterGUI.imageType;
 		this.signChar=signChar;
-		this.image=String.format(imageName, signChar);
-		this.command=new ChangeImageCommand(this);
+		image=String.format(imageName, signChar);
+		command=new ChangeImageCommand(this);
 		ticked();
 		bTimer=new ButtonTimer(command);
 		addEventHandler(page, "handleButtonEvents");
@@ -70,6 +71,18 @@ public final class ImageButton extends GImageButton implements IButton{
 
 		return (buttonX <= page.mouseX && page.mouseX <= buttonX+buttonWidth && 
 				buttonY <= page.mouseY && page.mouseY <= buttonY+buttonHeight);
+	}
+
+	public void changeImage(final String change){
+		ticked=false;
+		signChar=change;
+		image=String.format(imageName, signChar);
+		if(gui.containSign(signChar)){
+			setImage(new String[]{tickFileName,tickFileName,tickFileName});
+			ticked=true;
+		}
+		else
+			setImage(new String[]{image,image,image});
 	}
 
 	public void ticked(){

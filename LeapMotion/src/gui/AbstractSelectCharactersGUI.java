@@ -1,9 +1,12 @@
 package gui;
 
 import java.awt.Font;
+import java.util.ArrayList;
+import java.util.List;
+
 import button.Button;
-import command.MainMenuCommand;
-import command.AbstractTrainingCommand;
+import command.SubMenuCommand;
+import command.SelectAlphabetCommand;
 import g4p_controls.GCScheme;
 import processing.Page;
 import processing.core.PApplet;
@@ -11,21 +14,20 @@ import processing.core.PApplet;
 public abstract class AbstractSelectCharactersGUI extends AbstractGeneralGUI implements IImageSelectorGUI{
 
 	private final Button backButton; 
-	private final Button selectButton; 
-	private final AbstractTrainingCommand command;
+	protected final Button selectButton; 
+	private final List<String> signList = new ArrayList<String>();
 
-	public AbstractSelectCharactersGUI(final PApplet papplet, final AbstractTrainingCommand command) {
-		super(papplet);
-		final Page page=getPage();
-		this.command= command;
+	public AbstractSelectCharactersGUI(final PApplet page) {
+		super(page);
 
-		backButton = new Button(page,3, 535, 325, 90, new MainMenuCommand(page));
-		backButton.setText("Back");
+		backButton = new Button(page,3, 535, 325, 90,new SubMenuCommand(page,new SelectAlphabetCommand(page)));
+		backButton.setText("<--");
 		backButton.setTextBold();
+		backButton.setTextItalic();
 		backButton.setFont(new Font("Dialog", Font.PLAIN, 25));
 		backButton.setLocalColorScheme(GCScheme.YELLOW_SCHEME);
 		
-		selectButton = new Button(page, 335, 535, 325, 90, this.command);
+		selectButton = new Button(page, 335, 535, 325, 90, null);
 		selectButton.setText("Select (0)");
 		selectButton.setTextBold();
 		selectButton.setFont(new Font("Dialog", Font.PLAIN, 25));
@@ -34,8 +36,7 @@ public abstract class AbstractSelectCharactersGUI extends AbstractGeneralGUI imp
 
 	@Override
 	public void render(){
-		selectButton.setText(String.format("Select (%s)",command.getNumberOfSigns()));
-		selectButton.setCommand(command);
+		selectButton.setText(String.format("Select (%s)",signList.size()));
 		handleMouseOverButton(backButton, selectButton);
 	}
 
@@ -44,14 +45,25 @@ public abstract class AbstractSelectCharactersGUI extends AbstractGeneralGUI imp
 		objectDisposal(backButton, selectButton);
 	}
 
+	
+	public String[] getSigns(){
+		return signList.toArray(new String[signList.size()]);
+	}
+	
+	@Override
+	public boolean containSign(final String s){
+		return signList.contains(s);
+	}
+	
 	@Override
 	public void addSign(final String s) {
-		command.addSign(s);
+		signList.add(s);
 	}
 	
 	@Override
 	public void removeSign(final String s) {
-		command.removeSign(s);
+		if(signList.contains(s))
+		signList.remove(s);
 	}
 
 	@Override

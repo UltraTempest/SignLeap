@@ -5,5 +5,6 @@ import processing.Page;
 public interface IImageSelectorGUI {
 	public void addSign(String s);
 	public void removeSign(String s);
+	boolean containSign(String s);
 	public Page getPApplet();
 }
