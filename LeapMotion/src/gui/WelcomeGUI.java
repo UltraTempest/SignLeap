@@ -20,7 +20,6 @@ public final class WelcomeGUI extends AbstractGeneralGUI{
 
 	private final GLabel PreferredHandText; 
 	private final PImage img;
-	private int frameCount;
 	private final IHandData handData;
 
 	public WelcomeGUI(final PApplet papplet) {
@@ -42,13 +41,10 @@ public final class WelcomeGUI extends AbstractGeneralGUI{
 	private void changeStateIfRequired(){
 		final Page page= getPage();
 		if(handData.checkIfHandPlacedOverLeap()){
-			frameCount++;
-			if(frameCount<50)
-				return;
-			final Handedness hand=handData.getHandedness();
+			final Handedness hand=handData.getHandednessWithConfidence();
 			if(hand==null)
 				return;
-			page.setHand(handData.getHandedness());
+			page.setHand(hand);
 			if(!checkLeaderBoardFileExistence())
 				new IntroductionCommand(page).process();
 			else
@@ -58,11 +54,6 @@ public final class WelcomeGUI extends AbstractGeneralGUI{
 
 	private boolean checkLeaderBoardFileExistence(){
 		return new File(HighScoreManager.HIGHSCORE_FILE).exists();
-	}
-
-	@Override
-	public boolean isWarningRequired(){
-		return false;
 	}
 
 	@Override

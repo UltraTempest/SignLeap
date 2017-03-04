@@ -23,10 +23,10 @@ public final class LeaderboardGUI extends AbstractGeneralGUI{
 		homeButton.setTextBold();
 		homeButton.setLocalColorScheme(GCScheme.CYAN_SCHEME);
 		renderLeaderBoard(page);
-		//TODO sort out username selction with Leap
+		//TODO sort out username selection with Leap
 	}
 
-	private void renderLeaderBoard(final PApplet page){
+	private void renderLeaderBoard(final Page page){
 		page.fill(PApplet.RGB);
 		page.textSize(50);
 		page.text("Leaderboard", 50, 130);
@@ -43,6 +43,7 @@ public final class LeaderboardGUI extends AbstractGeneralGUI{
 			page.text(score.getScore(), 500, 240+60*i);
 			page.line(0, position+10, 575, position+10);
 		}
+		page.setTextSizeToDefault();
 	}
 
 	@Override
@@ -52,6 +53,7 @@ public final class LeaderboardGUI extends AbstractGeneralGUI{
 
 	@Override
 	public void render(){
+		super.render();
 		handleMouseOverButton(homeButton);
 		renderLeaderBoard(getPage());
 	}

@@ -42,6 +42,7 @@ public abstract class AbstractMenuGUI extends AbstractGeneralGUI{
 
 	@Override
 	public void render(){
+		super.render();
 		handChangeCheck();
 		handleMouseOverButton(changeHandButton);
 	}

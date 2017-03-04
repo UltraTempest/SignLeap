@@ -9,27 +9,27 @@ public final class GUIFactory {
 		GUIFactory.page=page;
 	}
 
-	public final IGUI createGameOverGUI(final int score){
+	public IGUI createGameOverGUI(final int score){
 		return new GameOverGUI(page, score);
 	}
 
-	public final IGUI createIntroductionGUI(){
+	public IGUI createIntroductionGUI(){
 		return new IntroductionGUI(page);
 	}
 
-	public final IGUI createSignAlphabetGUI(){
+	public IGUI createSignAlphabetGUI(){
 		return new SignAlphabetGUI(page);
 	}
 
-	public final IGUI createSignNumbersGUI(){
+	public IGUI createSignNumbersGUI(){
 		return new SignNumbersGUI(page);
 	}
 
-	public final IGUI createMainMenuGUI(){
+	public IGUI createMainMenuGUI(){
 		return new MainMenuGUI(page);
 	}
 
-	public final IGUI createLeaderboardGUI(){
+	public IGUI createLeaderboardGUI(){
 		return new LeaderboardGUI(page);
 	}
 }

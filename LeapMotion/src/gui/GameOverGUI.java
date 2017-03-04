@@ -74,11 +74,6 @@ public final class GameOverGUI extends AbstractGeneralGUI{
 	}
 
 	@Override
-	public boolean isWarningRequired(){
-		return false;
-	}
-
-	@Override
 	public void dispose() {
 		objectDisposal(gameOverPanel);
 	}

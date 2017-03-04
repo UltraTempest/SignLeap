@@ -37,6 +37,7 @@ public final class IntroductionGUI extends AbstractGeneralGUI {
 
 	public void changeTextDisplayed() {
 		postionOfStringDisplayed++;
+		introText.setText(introTextArray[postionOfStringDisplayed]);
 	}
 
 	public boolean isLastTextDisplayed() {
@@ -45,8 +46,8 @@ public final class IntroductionGUI extends AbstractGeneralGUI {
 
 	@Override
 	public void render() {
-		handleMouseOverButton(continueButton);
-		introText.setText(introTextArray[postionOfStringDisplayed]);
+		super.render();
+		handleMouseOverButton(continueButton);	
 	}
 
 	@Override

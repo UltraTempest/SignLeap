@@ -9,7 +9,12 @@ public abstract class AbstractGUI implements IGUI{
 
 	public AbstractGUI(final PApplet page){
 		AbstractGUI.page=page;
-		((Page) AbstractGUI.page).setDefaultBackground();
+		((Page)page).setDefaultBackground();
+	}
+	
+	@Override
+	public void render(){
+		getPage().renderLeapWarning();
 	}
 
 	protected final Page getPage(){
@@ -21,10 +26,5 @@ public abstract class AbstractGUI implements IGUI{
 			object.setVisible(false);
 			object.dispose();
 		}
-	}
-
-	@Override
-	public boolean isWarningRequired(){
-		return true;
 	}
 }

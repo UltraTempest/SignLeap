@@ -17,23 +17,36 @@ public abstract class AbstractHandData implements IHandData{
 	public AbstractHandData(final Controller controller){
 		AbstractHandData.controller=controller;
 	}
-
+	
+	@Override
 	public final boolean checkIfHandPlacedOverLeap(){
 		return controller.frame().hands().count()>0 ? true : false;
 	}
-
+	
+	@Override
 	public final boolean isCorrectHandPlacedOverLeap(final Handedness hand){
-		final Handedness current = getHandedness();
-		return hand.equals(current);	
+		return hand.equals(getHandedness());	
 	}
-
+	
+	@Override
 	public final Handedness getHandedness() {
 		final Hand hand=controller.frame().hands().frontmost();
-		//System.out.println("Confidence: " + hand.confidence());
+		return getHandy(hand);
+	}
+
+	private Handedness getHandy(final Hand hand){
 		if(hand.isValid())
 			return hand.isLeft() ? Handedness.LEFT : Handedness.RIGHT;	
-		else
-			return null;
+		return null;
+	}
+	
+	@Override
+	public final Handedness getHandednessWithConfidence() {
+		final Hand hand=controller.frame().hands().frontmost();
+		//System.out.println("Confidence: " + hand.confidence());
+		if(hand.confidence()>0.8)
+			return getHandy(hand);
+		return null;
 	}
 
 	protected final Controller getLeap() {
@@ -43,7 +56,7 @@ public abstract class AbstractHandData implements IHandData{
 	protected final List<Vector> getFingerList(){
 		final FingerList fingers = controller.frame().fingers();
 		final List<Vector>fingerBones = new ArrayList<Vector>();
-		for (Finger finger:fingers){
+		for (final Finger finger:fingers){
 			fingerBones.add(finger.bone(Bone.Type.TYPE_METACARPAL).nextJoint());
 			fingerBones.add(finger.bone(Bone.Type.TYPE_PROXIMAL).nextJoint());
 			fingerBones.add(finger.bone(Bone.Type.TYPE_INTERMEDIATE).nextJoint());

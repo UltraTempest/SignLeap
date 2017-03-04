@@ -109,7 +109,7 @@ public abstract class AbstractSignCharacterGUI extends AbstractGUI{
 		if(frame.hands().count()>0 && !getPage().isWarningDisplayed()){
 			Map<String, Float> data=handData.getHandPosition();
 			if(data!=null){
-				double score = classifier.score(data,previousChar);
+				final double score = classifier.score(data,previousChar);
 				setProgressBarValue((float) (score*100));
 				if(score>=difficulty){
 					displayNextCharacter();
@@ -130,6 +130,7 @@ public abstract class AbstractSignCharacterGUI extends AbstractGUI{
 
 	@Override
 	public final void render() {
+		super.render();
 		final String currentCharacter= array[currentLetterPosition];
 		final String image=imageName+currentCharacter+imageType;
 		updateSignCharactersGUI(currentCharacter, image);

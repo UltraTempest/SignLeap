@@ -11,6 +11,11 @@ public abstract class AbstractGeneralGUI extends AbstractGUI{
 		getPage().turnOnLeapMouse();
 	}
 
+	@Override
+	public void render(){
+		super.render();
+	}
+
 	protected final void handleMouseOverButton(final IButton... buttons){
 		final Page page=getPage();
 		for(final IButton button:buttons){
@@ -29,16 +34,16 @@ public abstract class AbstractGeneralGUI extends AbstractGUI{
 					page.rect(xCoordinate, yCoordinate, 204, 24);
 					final int fillX = percent*2; 
 					page.fill(100);
-					page.setTextSizeToDefault();
 					page.textAlign(PConstants.LEFT);
 					page.text ("LOADING " + percent + "%", xCoordinate, yCoordinate);
 					page.rect(xCoordinate+202, yCoordinate+2, fillX-200, 20);
-					return;
+					//return;
+					continue;
 				}
-			if(button.isTimerRunning()){
-				button.cancelTimerTask();
-				page.setDefaultBackground();
-			}
+		if(button.isTimerRunning()){
+			button.cancelTimerTask();
+			page.setDefaultBackground();
+		}
 		}
 	}
 }

@@ -1,7 +1,5 @@
 package command;
 
-import gui.GUIFactory;
-import processing.Page;
 import processing.core.PApplet;
 
 public final class MainMenuCommand extends AbstractCommand{
@@ -12,8 +10,7 @@ public final class MainMenuCommand extends AbstractCommand{
 
 	@Override
 	public void process() {
-		final Page page=getPage();
-		page.setTextSizeToDefault();
-		executeCommand(new GUIFactory(page).createMainMenuGUI());
+		getPage().setTextSizeToDefault();
+		executeCommand(getGUIFactory().createMainMenuGUI());
 	}
 }

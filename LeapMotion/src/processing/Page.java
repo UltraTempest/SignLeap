@@ -9,7 +9,9 @@ import classifier.AlphabetClassifier;
 import classifier.NumberClassifier;
 import classifier.SignClassifier;
 import controller.LeapMouseListener;
+import g4p_controls.GCScheme;
 import g4p_controls.GEvent;
+import g4p_controls.GLabel;
 import g4p_controls.GPanel;
 import g4p_controls.GValueControl;
 import gui.IGUI;
@@ -29,8 +31,8 @@ public final class Page extends PApplet{
 	private Handedness hand;
 	private final IHandData handInfo= new OneHandData(controller);
 	private final String leapWarning="Warning! Please keep your %s hand placed over the Leap Motion";
+	private GLabel warning;
 	private final LeapMouseListener leapListen= new LeapMouseListener();
-	private boolean isWarningDisplayed;
 
 
 	private SignClassifier alphaClassifier;
@@ -42,7 +44,7 @@ public final class Page extends PApplet{
 	public static final double HARD=0.4;
 	private final double difficulty=MEDIUM;
 
-	private IGUI currentGUIDisplayed;
+	private IGUI currentGUI;
 
 	private final float defaultTextSize=(float) 12.0;
 
@@ -64,19 +66,22 @@ public final class Page extends PApplet{
 		initializeClassifiers();
 		cursor(image);
 		controller.enableGesture(Gesture.Type.TYPE_KEY_TAP);
-		currentGUIDisplayed=new WelcomeGUI(this);
+		currentGUI=new WelcomeGUI(this);
+		warning =  new GLabel(this,250,40,403,27);
+		warning.setTextBold();
+		warning.setLocalColorScheme(GCScheme.RED_SCHEME);
 	}
 
 	@Override
 	public void draw(){
-		renderLeapWarning();
-		currentGUIDisplayed.render();
+		currentGUI.render();
 		//println(frameRate);
 	}
 
 	public void stateSwitch(final IGUI gui){
-		currentGUIDisplayed.dispose();
-		currentGUIDisplayed=gui;
+		currentGUI.dispose();
+		setDefaultBackground();
+		currentGUI=gui;
 	} 
 
 	public Controller getLeap(){
@@ -91,6 +96,7 @@ public final class Page extends PApplet{
 		this.hand=hand;
 		numClassifier=new NumberClassifier(hand);
 		alphaClassifier=new AlphabetClassifier(hand);
+		warning.setText(String.format(leapWarning,hand));
 	}
 
 	public double getDifficulty(){
@@ -113,22 +119,15 @@ public final class Page extends PApplet{
 		return this.alphaClassifier;
 	}
 
-	private void renderLeapWarning(){
-		if(currentGUIDisplayed.isWarningRequired()){
-			setDefaultBackground();
-			if(!handInfo.isCorrectHandPlacedOverLeap(hand)){
-				setTextSizeToDefault();
-				fill(205, 48, 48);
-				text(String.format(leapWarning,hand),250, 50);
-				isWarningDisplayed=true;
-			}
-			else
-				isWarningDisplayed=false;
-		}
+	public void renderLeapWarning(){
+		if(!handInfo.isCorrectHandPlacedOverLeap(hand) && !isWarningDisplayed())
+			warning.setVisible(true);
+		else
+			warning.setVisible(false);
 	}
 
 	public boolean isWarningDisplayed() {
-		return isWarningDisplayed;
+		return warning.isVisible();
 	}
 
 	public void turnOnLeapMouse(){

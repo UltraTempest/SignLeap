@@ -9,4 +9,5 @@ public interface IHandData {
 	public boolean checkIfHandPlacedOverLeap();
 	public boolean isCorrectHandPlacedOverLeap(Handedness hand);
 	public Handedness getHandedness();
+	public Handedness getHandednessWithConfidence();
 }
