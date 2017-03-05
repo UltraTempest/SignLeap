@@ -3,20 +3,27 @@ package leaderboard;
 import java.util.*;
 import java.io.*;
 
-public final class HighScoreManager {
+public abstract class HighScoreManager {
 	// An arraylist of the type "score" we will use to work with the scores inside the class
 	private ArrayList<Score> scores;
 
-	// The name of the file where the highscores will be saved
-	public static final String HIGHSCORE_FILE = "leaderboard.dat";
-
+	// The name of the file where the alphabet highscores will be saved
+	private final String highScoreFile;
+	
+	// The name of the file where the numbers highscores will be saved
+	public static final String NUM_HIGHSCORE_FILE = "numleaderboard.dat";
+	
+	// The name of the file where the alphabet highscores will be saved
+	public static final String ALPHA_HIGHSCORE_FILE = "alphaleaderboard.dat";
+	
 	//Initialising an in and outputStream for working with the file
 	private ObjectOutputStream outputStream;
 	private ObjectInputStream inputStream;
 
-	public HighScoreManager() {
+	public HighScoreManager(final String filename) {
 		//initialising the scores-arraylist
 		scores = new ArrayList<Score>();
+		highScoreFile=filename;
 	}
 
 	public final ArrayList<Score> getScores() {
@@ -34,13 +41,13 @@ public final class HighScoreManager {
 	@SuppressWarnings("unchecked")
 	private final void loadScoreFile() {
 		try {
-			File file = new File(HIGHSCORE_FILE);
+			File file = new File(highScoreFile);
 			if(!file.exists() || file.toString().equals("")){
-				PrintWriter writer = new PrintWriter(HIGHSCORE_FILE, "UTF-8");
+				PrintWriter writer = new PrintWriter(highScoreFile, "UTF-8");
 				writer.close();
 				return;
 			}
-			inputStream = new ObjectInputStream(new FileInputStream(HIGHSCORE_FILE));
+			inputStream = new ObjectInputStream(new FileInputStream(highScoreFile));
 			scores = (ArrayList<Score>) inputStream.readObject();
 		} catch (FileNotFoundException e) {
 			System.out.println("[Laad] FNF Error: " + e.getMessage());
@@ -65,7 +72,7 @@ public final class HighScoreManager {
 	private final void updateScoreFile() {
 		try {
 			outputStream = new ObjectOutputStream(
-					new FileOutputStream(HIGHSCORE_FILE));
+					new FileOutputStream(highScoreFile));
 			outputStream.writeObject(scores);
 		} catch (FileNotFoundException e) {
 			System.out.println("[Update] FNF Error: " + e.getMessage() +
@@ -87,8 +94,8 @@ public final class HighScoreManager {
 	}
 
 	public final String getHighscoreString() {
-		String highscoreString = "";
-		final int max = 10;
+		final StringBuilder highscoreSb = new StringBuilder();
+		final int max = 5;
 		getScores();
 
 		int i = 0;
@@ -97,10 +104,10 @@ public final class HighScoreManager {
 			x = max;
 		}
 		while (i < x) {
-			highscoreString = (i + 1) + ".\t" + scores.get(i).getName() 
-					+ "\t\t" + scores.get(i).getScore() + "\n";
+			highscoreSb.append( (i + 1) + ".\t" + scores.get(i).getName() 
+					+ "\t\t" + scores.get(i).getScore() + "\n");
 			i++;
 		}
-		return highscoreString;
+		return highscoreSb.toString();
 	}
 }

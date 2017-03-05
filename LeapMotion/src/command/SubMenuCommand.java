@@ -1,6 +1,5 @@
 package command;
 
-import gui.SubMenuGUI;
 import processing.core.PApplet;
 
 public final class SubMenuCommand extends AbstractCommand{
@@ -14,6 +13,6 @@ public final class SubMenuCommand extends AbstractCommand{
 
 	@Override
 	public void process() {
-		executeCommand(new SubMenuGUI(getPage(),command));
+		getGUIManager().setSubMainMenuGUI(command);
 	}
 }

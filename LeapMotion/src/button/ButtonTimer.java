@@ -1,8 +1,6 @@
 package button;
 
 import java.util.Timer;
-import java.util.TimerTask;
-
 import command.ICommand;
 
 public final class ButtonTimer {
@@ -25,8 +23,8 @@ public final class ButtonTimer {
 	public void schuedule(){
 		timer= new Timer();
 		timerRunning=true;
-		timer.scheduleAtFixedRate(new TimerTask() {
-			public void run() {
+		timer.scheduleAtFixedRate(new ButtonTask() {
+			public synchronized void run() {
 				countdownVariable+=increment;
 				if(countdownVariable>limit){
 					cancel();

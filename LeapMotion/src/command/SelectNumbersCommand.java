@@ -1,6 +1,5 @@
 package command;
 
-import gui.SelectNumbersGUI;
 import processing.core.PApplet;
 
 public final class SelectNumbersCommand extends AbstractCommand{
@@ -11,6 +10,6 @@ public final class SelectNumbersCommand extends AbstractCommand{
 
 	@Override
 	public void process() {
-		executeCommand(new SelectNumbersGUI(getPage()));
+		getGUIManager().setSelectNumberGUI();
 	}
 }

@@ -4,12 +4,11 @@ import processing.Page;
 import processing.core.PApplet;
 import recording.TwoHandData;
 
-public final class NumberTrainingGUI extends AbstractSignCharacterGUI{
-	private final String[] array;
+public final class TrainingNumbersGUI extends AbstractSignCharacterGUI{
 	
-	public NumberTrainingGUI(final PApplet page, final String[] array) {
+	public TrainingNumbersGUI(final PApplet page, final String... array) {
 		super(page,((Page) page).getNumberClassifier(),array);
-		this.array=array;
+		signCharacterChange();
 	}
 
 	@Override
@@ -17,7 +16,7 @@ public final class NumberTrainingGUI extends AbstractSignCharacterGUI{
 		super.displayNextCharacter();
 		
 		if(currentLetterPosition==array.length){
-			getPage().stateSwitch(new MainMenuGUI(getPage()));
+			getPage().getGUIManager().setMainMenuGUI();
 			return;
 		}
 		

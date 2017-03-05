@@ -11,7 +11,7 @@ public abstract class AbstractTrainingCommand extends AbstractCommand{
 		this.gui=gui;
 	}
 	
-	protected AbstractSelectCharactersGUI getGUI(){
-		return gui;
+	protected final String[] getSigns(){
+		return gui.getSigns();
 	}
 }

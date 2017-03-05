@@ -1,7 +1,6 @@
 package command;
 
 import gui.AbstractSelectCharactersGUI;
-import gui.NumberTrainingGUI;
 
 public final class TrainingNumbersCommand extends AbstractTrainingCommand{
 	
@@ -11,6 +10,6 @@ public final class TrainingNumbersCommand extends AbstractTrainingCommand{
 
 	@Override
 	public void process() {
-		executeCommand(new NumberTrainingGUI(getPage(), getGUI().getSigns()));
+		getGUIManager().setTrainingNumbersGUI(getSigns());
 	}
 }

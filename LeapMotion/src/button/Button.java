@@ -48,7 +48,7 @@ public final class Button extends GButton implements IButton{
 
 	@Override
 	public boolean isMouseOver(){
-		if(isVisible()==false)
+		if(!isVisible())
 			return false;
 		final PApplet page= getPApplet();
 		final float buttonX=getX();

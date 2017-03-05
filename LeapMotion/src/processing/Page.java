@@ -1,5 +1,7 @@
 package processing;
 
+import java.awt.Font;
+
 import com.leapmotion.leap.Controller;
 import com.leapmotion.leap.Gesture;
 import button.Button;
@@ -14,8 +16,8 @@ import g4p_controls.GEvent;
 import g4p_controls.GLabel;
 import g4p_controls.GPanel;
 import g4p_controls.GValueControl;
+import gui.GUIManager;
 import gui.IGUI;
-import gui.WelcomeGUI;
 import processing.core.PApplet;
 import processing.core.PImage;
 import recording.AbstractHandData.Handedness;
@@ -26,14 +28,13 @@ public final class Page extends PApplet{
 
 	private final String appTitle="Irish Sign Language Tool";
 	private final String appIcon="hand.png";
-
+	
 	private final static Controller controller = new Controller();
 	private Handedness hand;
 	private final IHandData handInfo= new OneHandData(controller);
 	private final String leapWarning="Warning! Please keep your %s hand placed over the Leap Motion";
 	private GLabel warning;
 	private final LeapMouseListener leapListen= new LeapMouseListener();
-
 
 	private SignClassifier alphaClassifier;
 	private SignClassifier numClassifier;
@@ -45,6 +46,9 @@ public final class Page extends PApplet{
 	private final double difficulty=MEDIUM;
 
 	private IGUI currentGUI;
+	private GUIManager guiManage;
+	
+	private String username;
 
 	private final float defaultTextSize=(float) 12.0;
 
@@ -66,10 +70,14 @@ public final class Page extends PApplet{
 		initializeClassifiers();
 		cursor(image);
 		controller.enableGesture(Gesture.Type.TYPE_KEY_TAP);
-		currentGUI=new WelcomeGUI(this);
-		warning =  new GLabel(this,250,40,403,27);
+		warning =  new GLabel(this,220,40,475,27);
 		warning.setTextBold();
 		warning.setLocalColorScheme(GCScheme.RED_SCHEME);
+		warning.setVisible(false);
+		warning.setFont(new Font("Monospaced", Font.PLAIN, 12));
+		warning.setOpaque(true);
+		guiManage= new GUIManager(this);
+		guiManage.setWelcomeGUI();
 	}
 
 	@Override
@@ -78,11 +86,31 @@ public final class Page extends PApplet{
 		//println(frameRate);
 	}
 
-	public void stateSwitch(final IGUI gui){
+	public void changeGUI(final IGUI gui){
+		currentGUI=gui;
+		warning.setVisible(false);
+	} 
+	
+	public void currentGUIDisposal(){
 		currentGUI.dispose();
 		setDefaultBackground();
-		currentGUI=gui;
-	} 
+	}
+	
+	public IGUI getCurrentGUI(){
+		return currentGUI;
+	}
+	
+	public GUIManager getGUIManager(){
+		return guiManage;
+	}
+	
+	public void setUsername(final String username){
+		this.username=username;
+	}
+	
+	public String getUsername(){
+		return username;
+	}
 
 	public Controller getLeap(){
 		return controller;
@@ -120,7 +148,7 @@ public final class Page extends PApplet{
 	}
 
 	public void renderLeapWarning(){
-		if(!handInfo.isCorrectHandPlacedOverLeap(hand) && !isWarningDisplayed())
+		if(!handInfo.isCorrectHandPlacedOverLeap(hand))
 			warning.setVisible(true);
 		else
 			warning.setVisible(false);
@@ -142,7 +170,8 @@ public final class Page extends PApplet{
 		background(230);
 	}
 
-	public void handleButtonEvents(final IButton button){ 
+	public void handleButtonEvents(final IButton button){
+		button.cancelTimerTask();
 		button.getCommand().process();
 	}
 

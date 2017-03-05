@@ -11,6 +11,6 @@ public final class MainMenuCommand extends AbstractCommand{
 	@Override
 	public void process() {
 		getPage().setTextSizeToDefault();
-		executeCommand(getGUIFactory().createMainMenuGUI());
+		getGUIManager().setMainMenuGUI();
 	}
 }

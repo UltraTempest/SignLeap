@@ -1,6 +1,5 @@
 package command;
 
-import gui.SelectAlphabetGUI;
 import processing.core.PApplet;
 
 public final class SelectAlphabetCommand extends AbstractCommand{
@@ -11,6 +10,6 @@ public final class SelectAlphabetCommand extends AbstractCommand{
 
 	@Override
 	public void process() {
-		executeCommand(new SelectAlphabetGUI(getPage()));
+		getGUIManager().setSelectAlphabetGUI();
 	}
 }

@@ -1,19 +1,20 @@
 package command;
 
-import gui.GUIFactory;
 import processing.core.PApplet;
 
 public final class GameOverCommand extends AbstractCommand{
-	
+
 	private final int score;
-	
-	public GameOverCommand(final PApplet page,final int score) {
+	private final boolean leaderboardFlag;
+
+	public GameOverCommand(final PApplet page,final int score,final boolean leaderboardFlag) {
 		super(page);
 		this.score=score;
+		this.leaderboardFlag=leaderboardFlag;
 	}
 
 	@Override
 	public void process() {
-		executeCommand(new GUIFactory(getPage()).createGameOverGUI(score));
+		getGUIManager().setGameOverGUI(score,leaderboardFlag);
 	}
 }

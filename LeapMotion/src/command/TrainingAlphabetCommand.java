@@ -1,7 +1,6 @@
 package command;
 
 import gui.AbstractSelectCharactersGUI;
-import gui.AlphabetTrainingGUI;
 
 public final class TrainingAlphabetCommand extends AbstractTrainingCommand{
 	
@@ -11,6 +10,6 @@ public final class TrainingAlphabetCommand extends AbstractTrainingCommand{
 
 	@Override
 	public void process() {
-		executeCommand(new AlphabetTrainingGUI(getPage(), getGUI().getSigns()));
+		getGUIManager().setTrainingAlphabetGUI(getSigns());
 	}
 }

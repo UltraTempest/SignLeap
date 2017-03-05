@@ -42,18 +42,18 @@ public final class WelcomeGUI extends AbstractGeneralGUI{
 		final Page page= getPage();
 		if(handData.checkIfHandPlacedOverLeap()){
 			final Handedness hand=handData.getHandednessWithConfidence();
-			if(hand==null)
-				return;
+			if(hand==null) return;
 			page.setHand(hand);
 			if(!checkLeaderBoardFileExistence())
-				new IntroductionCommand(page).process();
+				new IntroductionCommand(page,0).process();
 			else
 				new MainMenuCommand(page).process();
 		}
 	}
 
 	private boolean checkLeaderBoardFileExistence(){
-		return new File(HighScoreManager.HIGHSCORE_FILE).exists();
+		return new File(HighScoreManager.ALPHA_HIGHSCORE_FILE).exists() 
+				|| new File(HighScoreManager.NUM_HIGHSCORE_FILE).exists();
 	}
 
 	@Override

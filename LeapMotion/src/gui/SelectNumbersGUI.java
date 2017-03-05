@@ -19,6 +19,8 @@ public final class SelectNumbersGUI extends AbstractSelectCharactersGUI{
 
 	public SelectNumbersGUI(final PApplet papplet) {
 		super(papplet);
+		if(papplet==null)
+			System.out.println("here");
 		selectButton.setCommand(new TrainingNumbersCommand(this));
 		imgButton1 = new ImageButton(this,14, 83, 150, 200,"1");
 		imgButton2 = new ImageButton(this,197, 83, 150, 200,"2");

@@ -33,11 +33,14 @@ public abstract class AbstractSignCharacterGUI extends AbstractGUI{
 	private GLabel sliderAcceptance;
 	private final GLabel sliderAcceptance2;
 	private final GLabel sliderExplanation;
-	
+	protected int attempts=500;
+	private final String attemptsText="Skip in %s more attempts";
+	private final GLabel attemptsLabel;
 	private SignClassifier classifier;
 	private IHandData handData= new OneHandData(leap);
 	private String previousChar;
-	private final String[] array;
+	protected final String[] array;
+	private int renderCount;
 
 	public AbstractSignCharacterGUI(final PApplet papplet,
 			final SignClassifier signClassifier,final String[] array) {
@@ -46,11 +49,11 @@ public abstract class AbstractSignCharacterGUI extends AbstractGUI{
 		this.array=array;
 		final Page page=getPage();
 		page.turnOffLeapMouseControl();
-		signInstruction = new GTextField(page, 217, 513, 492, 81, G4P.SCROLLBARS_NONE);
+		signInstruction = new GTextField(page, 217, 513, 535, 81, G4P.SCROLLBARS_NONE);
 		signInstruction.setOpaque(false);
 		signInstruction.setFont(new Font("Dialog", Font.PLAIN, 58));
 		signInstruction.setTextEditEnabled(false);
-		
+
 		slider = new GSlider(page,  931, 49, 568, 110,(float) 10.0);
 		slider.setRotation(PConstants.PI/2, GControlMode.CORNER);
 		slider.setNumberFormat(G4P.INTEGER, 0);
@@ -73,7 +76,14 @@ public abstract class AbstractSignCharacterGUI extends AbstractGUI{
 		sliderExplanation.setText("indicates point when your sign is accepted");
 		sliderExplanation.setLocalColorScheme(GCScheme.GREEN_SCHEME);
 		sliderExplanation.setOpaque(false);
-		
+
+		attemptsLabel = new GLabel(page, 10, 119, 109, 282);
+		attemptsLabel.setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
+		attemptsLabel.setText(String.format(attemptsText,attempts));
+		attemptsLabel.setTextBold();
+		attemptsLabel.setLocalColorScheme(GCScheme.RED_SCHEME);
+		attemptsLabel.setOpaque(true);
+		attemptsLabel.setFont(new Font("Dialog", Font.PLAIN, 30));
 		//TODO add button to skip or add it after certain amount of attempts
 	}
 
@@ -110,11 +120,14 @@ public abstract class AbstractSignCharacterGUI extends AbstractGUI{
 			Map<String, Float> data=handData.getHandPosition();
 			if(data!=null){
 				final double score = classifier.score(data,previousChar);
-				setProgressBarValue((float) (score*100));
-				if(score>=difficulty){
+				setProgressBarValue((float) (score*100));	
+				if(score>=difficulty || attempts==0){
 					displayNextCharacter();
+					attempts=500;
 					classifier.resetRollingAverage();
 				}
+				else
+					attemptsLabel.setText(String.format(attemptsText,--attempts));
 			}
 			else
 				setProgressBarValue((float)0);
@@ -124,29 +137,38 @@ public abstract class AbstractSignCharacterGUI extends AbstractGUI{
 	}
 
 	protected void displayNextCharacter(){
-		this.currentLetterPosition++;
+		++currentLetterPosition;
+		signCharacterChange();
 		//To be implemented by subclass
 	}
 
-	@Override
-	public final void render() {
-		super.render();
-		final String currentCharacter= array[currentLetterPosition];
-		final String image=imageName+currentCharacter+imageType;
-		updateSignCharactersGUI(currentCharacter, image);
-		if(!currentCharacter.equals(previousChar)){
-			previousChar=currentCharacter;
-			try {
-				Thread.sleep(500);
-			} catch (final InterruptedException e) {
-				e.printStackTrace();
+	public final void signCharacterChange(){
+		if(currentLetterPosition<array.length){
+			final String currentCharacter= array[currentLetterPosition];
+			final String image=imageName+currentCharacter+imageType;
+			updateSignCharactersGUI(currentCharacter, image);
+			if(!currentCharacter.equals(previousChar)){
+				previousChar=currentCharacter;
+				try {
+					Thread.sleep(500);
+				} catch (final InterruptedException e) {
+					e.printStackTrace();
+				}
 			}
 		}
+	}
+
+	@Override
+	public void render() {
+		super.render();
+		if(++renderCount==3)
+			signCharacterChange();
 		signCharacters();
 	}
 
 	@Override
 	public void dispose(){
-		objectDisposal(slider, signInstruction,sliderAcceptance, sliderAcceptance2, sliderExplanation);
+		objectDisposal(slider, signInstruction,sliderAcceptance, sliderAcceptance2, 
+				sliderExplanation, attemptsLabel);
 	}
 }

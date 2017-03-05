@@ -1,5 +1,6 @@
 package gui;
 
+import java.awt.Font;
 import java.util.ArrayList;
 
 import button.Button;
@@ -13,20 +14,23 @@ import processing.core.PApplet;
 public final class LeaderboardGUI extends AbstractGeneralGUI{
 
 	private final Button homeButton;
-	private final ArrayList<Score> scores=new HighScoreManager().getScores();
+	private final ArrayList<Score> scores;
 
-	public LeaderboardGUI(final PApplet papplet) {
+	public LeaderboardGUI(final PApplet papplet,final  HighScoreManager scoreManager) {
 		super(papplet);
 		final Page page = getPage();
-		homeButton = new Button(page, 736, 38, 131, 53, new MainMenuCommand(page));
+		scores= scoreManager.getScores();
+		homeButton = new Button(page, 730, 5, 200, 142, new MainMenuCommand(page));
 		homeButton.setText("Home");
 		homeButton.setTextBold();
 		homeButton.setLocalColorScheme(GCScheme.CYAN_SCHEME);
-		renderLeaderBoard(page);
-		//TODO sort out username selection with Leap
+		homeButton.setFont(new Font("Monospaced", Font.PLAIN, 25));
+		renderLeaderBoard();
+		//TODO fix render leap warning bug
 	}
 
-	private void renderLeaderBoard(final Page page){
+	private void renderLeaderBoard(){
+		final Page page=getPage();
 		page.fill(PApplet.RGB);
 		page.textSize(50);
 		page.text("Leaderboard", 50, 130);
@@ -55,6 +59,6 @@ public final class LeaderboardGUI extends AbstractGeneralGUI{
 	public void render(){
 		super.render();
 		handleMouseOverButton(homeButton);
-		renderLeaderBoard(getPage());
+		renderLeaderBoard();
 	}
 }

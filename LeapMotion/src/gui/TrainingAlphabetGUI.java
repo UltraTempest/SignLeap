@@ -3,12 +3,11 @@ package gui;
 import processing.Page;
 import processing.core.PApplet;
 
-public final class AlphabetTrainingGUI extends AbstractSignCharacterGUI{
-	private final String[] array;
+public final class TrainingAlphabetGUI extends AbstractSignCharacterGUI{
 	
-	public AlphabetTrainingGUI(final PApplet page, final String[] array) {
+	public TrainingAlphabetGUI(final PApplet page, final String... array) {
 		super(page,((Page) page).getAlphabetClassifier(),array);
-		this.array=array;
+		signCharacterChange();
 	}
 
 	@Override
@@ -16,11 +15,10 @@ public final class AlphabetTrainingGUI extends AbstractSignCharacterGUI{
 		super.displayNextCharacter();
 		
 		if(currentLetterPosition==array.length){
-			getPage().stateSwitch(new MainMenuGUI(getPage()));
+			getPage().getGUIManager().setMainMenuGUI();
 			return;
 		}	 
 	}
-
 
 	@Override
 	protected void updateSignCharactersGUI(final String currentLetter,final String imageName){

@@ -1,6 +1,5 @@
 package command;
 
-import gui.GUIFactory;
 import processing.core.PApplet;
 
 public final class SignAlphabetCommand extends AbstractCommand{
@@ -11,7 +10,7 @@ public final class SignAlphabetCommand extends AbstractCommand{
 
 	@Override
 	public void process() {
-		executeCommand(new GUIFactory(getPage()).createSignAlphabetGUI());
+		getGUIManager().setSignAlphabetGUI();
 	}
    
 }

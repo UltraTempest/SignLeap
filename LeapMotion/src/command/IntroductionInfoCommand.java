@@ -1,22 +1,19 @@
 package command;
 
-import gui.IntroductionGUI;
+import gui.ITextChanger;
 import processing.core.PApplet;
 
-public final class IntroductionInfoCommand extends AbstractCommand{
+public final class IntroductionInfoCommand extends AbstractTextCommand{
 
-	private final IntroductionGUI gui;
-
-	public IntroductionInfoCommand(final PApplet page,final IntroductionGUI gui) {
-		super(page);
-		this.gui=gui;
+	public IntroductionInfoCommand(final PApplet page,final ITextChanger gui) {
+		super(page,gui);
 	}
 
 	@Override
 	public void process() {
-		if(gui.isLastTextDisplayed())
+		if(getChanger().isLastTextDisplayed())
 			new MainMenuCommand(getPage()).process();
 		else
-			gui.changeTextDisplayed();	
+			getChanger().changeTextDisplayed();	
 	}
 }

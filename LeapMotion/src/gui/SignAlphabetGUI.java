@@ -8,6 +8,7 @@ public final class SignAlphabetGUI extends AbstractTimedSignCharacterGUI{
 
 	public SignAlphabetGUI(final PApplet page) {
 		super(page,((Page) page).getAlphabetClassifier(), AlphabetTrainer.alphabet);
+		signCharacterChange();
 	}
 
 	@Override

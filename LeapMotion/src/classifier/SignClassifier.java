@@ -116,8 +116,7 @@ public class SignClassifier {
 		try {
 			final double[] fDistribution = classifier.distributionForInstance(
 					sampleInstance);
-			final double probabilityForExpected=getProbabilityForClass(
-					expectedChar, fDistribution);
+			final double probabilityForExpected=getProbabilityForClass(expectedChar, fDistribution);
 			classify(fDistribution,sampleInstance);
 			System.out.println("Expected: "+ expectedChar + " : " + 
 					probabilityForExpected);

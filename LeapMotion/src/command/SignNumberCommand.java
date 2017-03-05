@@ -1,6 +1,5 @@
 package command;
 
-import gui.GUIFactory;
 import processing.core.PApplet;
 
 public final class SignNumberCommand extends AbstractCommand{
@@ -11,7 +10,6 @@ public final class SignNumberCommand extends AbstractCommand{
 
 	@Override
 	public void process() {
-		executeCommand(new GUIFactory(getPage()).createSignNumbersGUI());
+		getGUIManager().setSignNumbersGUI();
 	}
-   
 }

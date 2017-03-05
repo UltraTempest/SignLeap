@@ -1,15 +1,17 @@
 package gui;
 
+import button.Button;
 import command.LeaderboardCommand;
 import g4p_controls.G4P;
 import g4p_controls.GAlign;
-import g4p_controls.GButton;
 import g4p_controls.GCScheme;
 import g4p_controls.GEvent;
 import g4p_controls.GLabel;
 import g4p_controls.GPanel;
 import g4p_controls.GTextField;
+import leaderboard.AlphabetHighScoreManager;
 import leaderboard.HighScoreManager;
+import leaderboard.NumbersHighScoreManager;
 import processing.Page;
 import processing.core.PApplet;
 
@@ -18,16 +20,20 @@ public final class GameOverGUI extends AbstractGeneralGUI{
 	private final int score;
 	private final GPanel gameOverPanel; 
 	private final GTextField userInputName; 
-	private final GButton submitButton; 
+	private final Button submitButton; 
 	private final GLabel label1; 
 	private final GLabel label2; 
 	private final GLabel label3; 
+	private final HighScoreManager scoreManager;
 
-	public GameOverGUI(final PApplet papplet,final int score) {
+	public GameOverGUI(final PApplet papplet,final int score,final boolean leaderboardFlag) {
 		super(papplet);
 		final Page page=getPage();
 		this.score=score;
-		page.setDefaultBackground();
+		if(leaderboardFlag)
+			scoreManager= new NumbersHighScoreManager();
+		else
+			scoreManager=new AlphabetHighScoreManager();
 		gameOverPanel = new GPanel(page, 245, 182, 442, 232, "                                                        Game Over!");
 		gameOverPanel.setDraggable(false);
 		gameOverPanel.setCollapsible(false);
@@ -37,8 +43,10 @@ public final class GameOverGUI extends AbstractGeneralGUI{
 		gameOverPanel.clearDragArea();
 		userInputName = new GTextField(page, 71, 148, 192, 21, G4P.SCROLLBARS_NONE);
 		userInputName.setOpaque(true);
+		userInputName.setFocus(true);
+		userInputName.setText(page.getUsername());
 		userInputName.addEventHandler(this, "userInputFieldEventHandle");
-		submitButton = new GButton(page, 294, 148, 63, 23);
+		submitButton = new Button(page, 294, 148, 63, 23,new LeaderboardCommand(getPage(),this));
 		submitButton.setText("Submit");
 		submitButton.setLocalColorScheme(GCScheme.GREEN_SCHEME);
 		submitButton.addEventHandler(this, "submitButtonClicked");
@@ -60,17 +68,21 @@ public final class GameOverGUI extends AbstractGeneralGUI{
 		gameOverPanel.addControl(label1);
 		gameOverPanel.addControl(label2);
 		gameOverPanel.addControl(label3);
+		//TODO Redo GameOverGUI
 	}
 
-	public void submitButtonClicked(final GButton source,final GEvent event){
-		new HighScoreManager().addScore(userInputName.getText(), score);
-		new LeaderboardCommand(getPage()).process();
+	public void submitButtonClicked(final Button source,final GEvent event){	
+		scoreManager.addScore(userInputName.getText(), score);
+		getPage().getGUIManager().setLeaderboardGUI(scoreManager);
 	} 
-
-	public void userInputFieldEventHandle(final GTextField source,
-			final GEvent event) { 
+	
+	public HighScoreManager getHighScoreManager(){
+		return scoreManager;
+	}
+	
+	public void userInputFieldEventHandle(final GTextField source,final GEvent event) { 
 		if(event.toString().equals("ENTERED"))
-			submitButtonClicked(null, null);
+			submitButtonClicked(null,null);
 	}
 
 	@Override
@@ -80,6 +92,7 @@ public final class GameOverGUI extends AbstractGeneralGUI{
 
 	@Override
 	public void render() {
-		//No action needed
+		super.render();
+		handleMouseOverButton(submitButton);
 	}
 }

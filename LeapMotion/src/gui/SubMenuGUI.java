@@ -47,12 +47,12 @@ public final class SubMenuGUI extends AbstractMenuGUI{
 	@Override
 	public void dispose() {
 		super.dispose();
-		objectDisposal(alphabetButton, numbersButton, backButton);
+		objectDisposal(backButton, alphabetButton, numbersButton);
 	}
 
 	@Override
 	public void render(){
 		super.render();
-		handleMouseOverButton(alphabetButton,numbersButton,backButton);
+		handleMouseOverButton(backButton, alphabetButton,numbersButton);
 	}
 }
