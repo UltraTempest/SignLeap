@@ -68,8 +68,8 @@ public final class ImageButton extends GImageButton implements IButton{
 		final float buttonY=getY();
 		final float buttonHeight=getHeight();
 		final float buttonWidth = getWidth();
-
-		return (buttonX <= page.mouseX && page.mouseX <= buttonX+buttonWidth && 
+		
+		return page!=null && (buttonX <= page.mouseX && page.mouseX <= buttonX+buttonWidth && 
 				buttonY <= page.mouseY && page.mouseY <= buttonY+buttonHeight);
 	}
 
