@@ -82,8 +82,7 @@ public class SignClassifier {
 		return sampleInstance;
 	}
 
-	protected final String classify(final Map<String, Float> data,
-			final String previousChar){
+	protected final String classify(final Map<String, Float> data,final String previousChar){
 		final Instance sampleInstance=createInstanceFromData(data);
 		try {
 			final double i = classifier.classifyInstance(sampleInstance);

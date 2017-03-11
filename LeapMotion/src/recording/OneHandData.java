@@ -51,16 +51,17 @@ public final class OneHandData extends AbstractHandData{
 		Vector normalizedJoint;
 		for(int i=0; i< fingerBones.size();i++){
 			normalizedJoint = fingerBones.get(i).minus(handCentre);
+			int w=i*3;
 			for(int j=0; j<3;j++)
 				if(j==0)
 					calibratedFingerBones.put("feat" + 
-							Integer.toString(i*3+j),normalizedJoint.getX());
+							Integer.toString(w+j),normalizedJoint.getX());
 				else if(j==1)
 					calibratedFingerBones.put("feat" + 
-							Integer.toString(i*3+j),normalizedJoint.getY());
+							Integer.toString(w+j),normalizedJoint.getY());
 				else
 					calibratedFingerBones.put("feat" + 
-							Integer.toString(i*3+j),normalizedJoint.getZ());
+							Integer.toString(w+j),normalizedJoint.getZ());
 		}
 
 		return calibratedFingerBones;
