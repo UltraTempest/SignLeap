@@ -5,8 +5,7 @@ import com.leapmotion.leap.Controller;
 import recording.OneHandData;
 import recording.AbstractHandData.Handedness;
 
-public abstract class OneHandTrainer extends AbstractHandTrainer implements
-ITrainer{
+public abstract class OneHandTrainer extends AbstractHandTrainer{
 
 	public static final int ONE_HAND_NUM_FEATURES = 60;
 

@@ -19,7 +19,7 @@ public abstract class AbstractHandData implements IHandData{
 	}
 	
 	@Override
-	public final boolean checkIfHandPlacedOverLeap(){
+	public final boolean isHandPlacedOverLeap(){
 		return controller.frame().hands().count()>0 ? true : false;
 	}
 	

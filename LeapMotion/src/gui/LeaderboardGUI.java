@@ -26,7 +26,6 @@ public final class LeaderboardGUI extends AbstractGeneralGUI{
 		homeButton.setLocalColorScheme(GCScheme.CYAN_SCHEME);
 		homeButton.setFont(new Font("Monospaced", Font.PLAIN, 25));
 		renderLeaderBoard();
-		//TODO fix render leap warning bug
 	}
 
 	private void renderLeaderBoard(){

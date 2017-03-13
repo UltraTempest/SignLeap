@@ -12,18 +12,18 @@ import classifier.SignClassifier;
 import processing.core.PApplet;
 import processing.core.PImage;
 import recording.AbstractHandData.Handedness;
+import trainer.AlphabetTrainer;
 import trainer.ITrainer;
-import trainer.NumberTrainer;
 
 
 public final class SignTrainer extends PApplet{
 
 	private String charToTrain;
-	private final Handedness hand= Handedness.LEFT;
+	private final Handedness hand= Handedness.RIGHT;
 	private final static Controller controller = new Controller();
 
-	//private final ITrainer trainer = new AlphabetTrainer(controller,hand);
-	private final ITrainer trainer = new NumberTrainer(controller,hand);
+	private final ITrainer trainer = new AlphabetTrainer(controller,hand);
+	//private final ITrainer trainer = new NumberTrainer(controller,hand);
 	//private final ITrainer trainer = new TwoHandTrainer(controller);
 
 	private PImage charImage; 
@@ -31,6 +31,7 @@ public final class SignTrainer extends PApplet{
 	private boolean timerSet=false;
 	private Timer timer;
 	private int currentTime;
+	final String filename=SignClassifier.language +  "/" + hand+"/%s.jpg";
 
 	public static void main(final String[] args) {
 		PApplet.main("processing.SignTrainer");
@@ -49,40 +50,39 @@ public final class SignTrainer extends PApplet{
 		fill(0);
 		textSize(30);
 		charToTrain=trainer.getCurrentCharacter();
-		timer();
+		charImage= loadImage(String.format(filename,charToTrain));
+		timerUpdate();
 	}
 	
 	@Override
 	public void draw(){
 		if(timerSet){
-			timer();
+			timerUpdate();
 			return;}
 		displayLeapImages();
 		final String c=trainer.train();
 		if(!c.equals(charToTrain)){
-			timer();
 			charToTrain=c;
+			charImage= loadImage(String.format(filename,charToTrain));
+			timerUpdate();
 		}
 		renderImage();
 	}
 
 	private void renderImage(){
-		final String filename=SignClassifier.language +  "/" + hand+"/" 
-				+ charToTrain + ".jpg";
-		charImage= loadImage(filename);
 		image(charImage,0, 301, 600, 300);
 	}
 
-	private void timer(){
+	private void timerUpdate(){
 		background(255);
 		if(!timerSet){
-			time();
+			startTimer();
 			timerSet=true;}
 		text(currentTime +" second(s), next sign is "+ charToTrain, 125, 150);
 		renderImage();
 	}
 
-	private void time(){
+	private void startTimer(){
 		timer=new Timer();
 		timer.scheduleAtFixedRate(new TimerTask() {
 			int i = 6;//defined for a 5 second countdown
@@ -103,10 +103,7 @@ public final class SignTrainer extends PApplet{
 			final ImageList images = frame.images();
 			for(final Image image : images)
 			{
-				final PImage[] cameras = new PImage[2];
-				//Processing PImage class
-				PImage camera = cameras[image.id()];
-				camera = createImage(image.width(), image.height(), RGB);
+				PImage camera = createImage(image.width(), image.height(), RGB);
 				camera.loadPixels();
 
 				//Get byte array containing the image data from Image object

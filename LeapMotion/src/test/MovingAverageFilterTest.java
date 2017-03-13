@@ -1,39 +1,53 @@
 package test;
-
-import static org.junit.Assert.assertEquals;
-import java.util.Arrays;
-import java.util.Collection;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameters;
+//http://stackoverflow.com/questions/3793400/is-there-a-function-in-java-to-get-moving-average
 import classifier.MovingAverageFilter;
+import junit.framework.TestCase;
 
-@RunWith(Parameterized.class)
-public class MovingAverageFilterTest {
-	
-	private final int period;
-	private final double expected;
-	private final double[] input;
+public class MovingAverageFilterTest extends TestCase {
 
-	public MovingAverageFilterTest(final int period,final double expected,final double... input) {
-		this.period=period;
-		this.input= input;
-		this.expected= expected;
-	}
-	
-	@Parameters
-	public static Collection<Object[]> data() {
-		return Arrays.asList(new Object[][] {     
-			{ 2, 3, new double[]{2,4}},
-			{ 3, 3, new double[]{3,3,3}},
-		});
-	}
+    private final static int SIZE = 5;
+    private static final double FULL_SUM = 12.5d;
 
-	@Test
-	public void test() {
-		final MovingAverageFilter mov = new MovingAverageFilter(period);
-		mov.add(input);
-		assertEquals(Double.doubleToLongBits(expected),Double.doubleToLongBits(mov.getAverage()));
-	}
+    private MovingAverageFilter r;
+    
+    @Override
+    public void setUp() {
+        r = new MovingAverageFilter(SIZE);
+    }
+
+    public void testInitial() {
+        assertEquals(0d, r.getAverage());
+    }
+
+    public void testOne() {
+        r.add(3.5d);
+        assertEquals(3.5d / SIZE, r.getAverage());
+    }
+
+    public void testFillBuffer() {
+        fillBufferAndTest();
+    }
+
+    public void testForceOverWrite() {
+        fillBufferAndTest();
+
+        double newVal = SIZE + .5d;
+        r.add(newVal);
+        // get the 'full sum' from fillBufferAndTest(), add the value we just added,
+        // and subtract off the value we anticipate overwriting.
+        assertEquals((FULL_SUM + newVal - .5d) / SIZE, r.getAverage());
+    }
+
+    public void testManyValues() {
+        for (int i = 0; i < 1003; i++) r.add((double) i);
+        fillBufferAndTest();
+    }
+
+
+    private void fillBufferAndTest() {
+        // Don't write a zero value so we don't confuse an initialized
+        // buffer element with a data element.
+        for (int i = 0; i < SIZE; i++) r.add(i + .5d);
+        assertEquals(FULL_SUM / SIZE, r.getAverage());
+    }
 }

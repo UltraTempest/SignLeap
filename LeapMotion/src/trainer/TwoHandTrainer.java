@@ -6,7 +6,7 @@ import com.leapmotion.leap.Controller;
 import recording.TwoHandData;
 
 
-public class TwoHandTrainer extends AbstractHandTrainer implements ITrainer{
+public class TwoHandTrainer extends AbstractHandTrainer{
 
 	public static final int TWO_HAND_NUM_FEATURES = 120;
 	private final  static String[] numbers={"6","7","8","9","10"};

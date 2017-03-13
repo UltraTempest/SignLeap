@@ -14,20 +14,23 @@ public final class MovingAverageFilter {
 	public MovingAverageFilter(final int period) {
 		assert period > 0 : "Period must be a positive integer";
 		this.period = period;
+		fillWindowWithZeros();
 	}
 
-	private void add(final double num) {
-		final BigDecimal bd=new BigDecimal(num);
-		sum = sum.add(bd);
-		window.add(bd);
-		if (window.size() > period) {
-			sum = sum.subtract(window.remove());
-		}
+	private void fillWindowWithZeros(){
+		for(int i=0;i<period;++i)
+			window.add(BigDecimal.ZERO);
 	}
 
 	public void add(final double... num) {
-		for(final double i:num)
-			add(i);
+		for(final double i:num){
+			final BigDecimal bd=new BigDecimal(i);
+			sum = sum.add(bd);
+			window.add(bd);
+			if (window.size() > period) {
+				sum = sum.subtract(window.remove());
+			}
+		}
 	}
 
 	public double getAverage() {

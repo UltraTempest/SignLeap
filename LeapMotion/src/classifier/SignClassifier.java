@@ -1,6 +1,8 @@
 package classifier;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.util.Map;
 import java.util.Random;
 
@@ -29,9 +31,33 @@ public class SignClassifier {
 	private MovingAverageFilter move;
 
 	public static void main(String args[]){
-		new SignClassifier(Handedness.RIGHT, "alpha").evaluate();
-		//new SignClassifier(Handedness.RIGHT, "num").evaluate();
-		//new SignClassifier(null, "num2").evaluate();
+		new SignClassifier(null, "num2").evaluate();
+	}
+
+	public static void initialise(final Handedness hand, final String type){		
+		String name;
+		if(hand!=null)
+			name=type +hand;
+		else
+			name=type;
+		final String filename=language +name+ ".model";
+		final File f = new File(filename);
+		if(f.exists() && !f.isDirectory()) return;  
+		try {
+			DataSource source = new DataSource("SignData/TrainingData/"+name+ ".arff");
+			final Instances trainingSet= source.getDataSet();
+			source= new DataSource("SignData/TestingData/"+name+".arff");
+			final Instances testingSet= source.getDataSet();
+			final int numberOfFeatures=trainingSet.numAttributes()-1;
+			trainingSet.setClassIndex(numberOfFeatures);
+			testingSet.setClassIndex(numberOfFeatures);
+			final Classifier classifier= new RandomForest();
+			classifier.buildClassifier(trainingSet);
+			// serialize model
+			weka.core.SerializationHelper.write(filename, classifier);
+		} catch (final Exception e) {
+			System.err.println("Error during classifier building:"+ e);
+		}
 	}
 
 	public SignClassifier(final Handedness hand, final String type){
@@ -94,9 +120,9 @@ public class SignClassifier {
 		} catch (final Exception e) {
 			e.printStackTrace();
 		}
-		return "";
+		return null;
 	}
-	
+
 	protected final String classify(final double[] fDistribution,
 			final Instance sampleInstance){
 		try {
@@ -107,7 +133,7 @@ public class SignClassifier {
 		} catch (final Exception e) {
 			e.printStackTrace();
 		}
-		return "";
+		return null;
 	}
 
 	public double score(Map<String, Float> data,final String expectedChar){
@@ -135,8 +161,6 @@ public class SignClassifier {
 
 	public final void resetRollingAverage(){
 		move=new MovingAverageFilter(movingAverageFilterPeriods);
-		for(int i=0; i<movingAverageFilterPeriods;i++)
-			move.add(0.0);
 	}
 
 	private final int getLabelDistributionPosition(final String charToFind,
@@ -156,36 +180,43 @@ public class SignClassifier {
 
 	public final void evaluate(){	
 		// training using a collection of classifiers (NaiveBayes, SMO (AKA SVM), KNN and Decision trees.)
-		final String[] algorithms = {"nb","smo","knn","j48", "libSVM","Random Forest"};
-		for(int w=0; w<algorithms.length;w++){
-			if(algorithms[w].equals("nb"))
-				classifier = new NaiveBayes();
-			else if(algorithms[w].equals("smo"))
-				classifier = new SMO();
-			else if(algorithms[w].equals("knn"))
-				classifier = new IBk();
-			else if(algorithms[w].equals("j48"))
-				classifier = new J48();
-			else if(algorithms[w].equals("libSVM"))
-				classifier = new LibSVM();
-			else if(algorithms[w].equals("Random Forest"))
-				classifier = new RandomForest();
+		//final String[] algorithms = {"nb","smo","knn","j48", "libSVM","Random Forest"};
+		final String[] algorithms = {"libSVM","Random Forest"};
+		try {
+			final FileWriter fw= new FileWriter("Evaluation.txt");
+			@SuppressWarnings("resource")
+			final BufferedWriter bw = new BufferedWriter(fw);
+			for(int w=0; w<algorithms.length;w++){
+				if(algorithms[w].equals("nb"))
+					classifier = new NaiveBayes();
+				else if(algorithms[w].equals("smo"))
+					classifier = new SMO();
+				else if(algorithms[w].equals("knn"))
+					classifier = new IBk();
+				else if(algorithms[w].equals("j48"))
+					classifier = new J48();
+				else if(algorithms[w].equals("libSVM"))
+					classifier = new LibSVM();
+				else if(algorithms[w].equals("Random Forest"))
+					classifier = new RandomForest();
+				System.out.println("==========================================================================");
+				System.out.println("training using " + algorithms[w] + " classifier");
+				bw.write("==========================================================================");
+				bw.write("training using " + algorithms[w] + " classifier");
+				bw.write("==========================================================================");
+				//perform 10 fold cross validation
 
-			System.out.println("==========================================================================");
-			System.out.println("training using " + algorithms[w] + " classifier");
-
-			//perform 10 fold cross validation
-			try {
 				final Evaluation eval = new Evaluation(trainingSet);
 				classifier.buildClassifier(trainingSet);
 				eval.crossValidateModel(classifier, testingSet, 10, new Random(1));
-				System.out.println(classifier);
-				System.out.println(eval.toSummaryString());
-				System.out.println(eval.toMatrixString());
-				System.out.println(eval.toClassDetailsString());
-			} catch (final Exception e) {
-				e.printStackTrace();
+				bw.write(classifier.toString());
+				bw.write(eval.toSummaryString());
+				bw.write(eval.toMatrixString());
+				bw.write(eval.toClassDetailsString());
 			}
+		}
+		catch (final Exception e) {
+			e.printStackTrace();
 		}
 	}
 }

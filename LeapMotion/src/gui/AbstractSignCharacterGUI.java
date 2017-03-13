@@ -84,7 +84,6 @@ public abstract class AbstractSignCharacterGUI extends AbstractGUI{
 		attemptsLabel.setLocalColorScheme(GCScheme.RED_SCHEME);
 		attemptsLabel.setOpaque(true);
 		attemptsLabel.setFont(new Font("Dialog", Font.PLAIN, 30));
-		//TODO add button to skip or add it after certain amount of attempts
 	}
 
 	private void setSliderAcceptance(){
@@ -116,15 +115,15 @@ public abstract class AbstractSignCharacterGUI extends AbstractGUI{
 
 	private void signCharacters(){	
 		final Frame frame = leap.frame();
-		if(frame.hands().count()>0 && !getPage().isWarningDisplayed()){
-			Map<String, Float> data=handData.getHandPosition();
+		if(frame.hands().count()>0 && getPage().isLeapSeesYouMessageDisplayed()){
+			final Map<String, Float> data=handData.getHandPosition();
 			if(data!=null){
 				final double score = classifier.score(data,previousChar);
 				setProgressBarValue((float) (score*100));	
 				if(score>=difficulty || attempts==0){
-					displayNextCharacter();
 					attempts=500;
 					classifier.resetRollingAverage();
+					displayNextCharacter();
 				}
 				else
 					attemptsLabel.setText(String.format(attemptsText,--attempts));

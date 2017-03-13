@@ -12,7 +12,7 @@ public final class ButtonTimer {
 	private boolean timerRunning=false;
 	private final int period=90;
 	private final int increment=5;
-	private final int limit=100;
+	private final int limit=95;
 
 	public ButtonTimer(final ICommand command){
 		this.command=command;

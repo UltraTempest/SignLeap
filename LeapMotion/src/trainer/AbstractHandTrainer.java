@@ -10,7 +10,7 @@ import java.util.Map;
 import recording.IHandData;
 import recording.AbstractHandData.Handedness;
 
-public abstract class AbstractHandTrainer{
+public abstract class AbstractHandTrainer implements ITrainer{
 	private final Handedness hand;
 	protected int numSamples;
 	protected String trainingChar; 
@@ -61,32 +61,37 @@ public abstract class AbstractHandTrainer{
 			return trainingChar;
 		}
 
-		String toInsert = "\n" + formatString(sample.values())+ trainingChar;
+		final String toInsert = "\n" + formatString(sample.values())+ trainingChar;
 
-		try {
+		if(count>=numSamples/2)
+			writeToFile(testPath, toInsert);
+		else
+			writeToFile(trainPath, toInsert);
 
-			if(count>=numSamples/2)
-				Files.write(testPath, toInsert.getBytes(), StandardOpenOption.APPEND);
-			else
-				Files.write(trainPath, toInsert.getBytes(), StandardOpenOption.APPEND);
-
-		} catch (final IOException e) {
-			e.printStackTrace();
-		}
 		System.out.println("Inserted " + trainingChar +" no." + count + ": " + sample);
 		count++;
 		return trainingChar;
 	}
 
+	private void writeToFile(final Path path, final String toInsert){
+		try {
+			Files.write(path, toInsert.getBytes(), StandardOpenOption.APPEND);
+		} catch (final IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
 	public final String train(){
 		try {
 			return training(handData.getHandPosition());
-		} catch (InterruptedException e) {
+		} catch (final InterruptedException e) {
 			e.printStackTrace();
 		}
 		return "";
 	}
 
+	@Override
 	public final String getCurrentCharacter(){
 		return array[currentPosition];
 	}

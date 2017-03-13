@@ -40,7 +40,7 @@ public final class WelcomeGUI extends AbstractGeneralGUI{
 
 	private void changeStateIfRequired(){
 		final Page page= getPage();
-		if(handData.checkIfHandPlacedOverLeap()){
+		if(handData.isHandPlacedOverLeap()){
 			final Handedness hand=handData.getHandednessWithConfidence();
 			if(hand==null) return;
 			page.setHand(hand);

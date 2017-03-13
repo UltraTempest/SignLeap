@@ -14,87 +14,77 @@ public final class GUIManager {
 	}
 
 	public void setGameOverGUI(final int score, final boolean leaderboardFlag){
-		updatePage(GameOverGUI.class, score, leaderboardFlag);
+		changeState(GameOverGUI.class, score, leaderboardFlag);
 	}
 
 	public void setSubMainMenuGUI(final ICommand command) {
-		updatePage(SubMenuGUI.class, command);
+		changeState(SubMenuGUI.class, command);
 	}
-	
+
 	public void setIntroductionSignCharacterGUI(){
-		updatePage(IntroductionSignCharacterGUI.class);
+		changeState(IntroductionSignCharacterGUI.class);
 	}
 
 	public void setIntroductionGUI(final int index){
-		updatePage(IntroductionGUI.class,index);
+		changeState(IntroductionGUI.class,index);
 	}
 
 	public void setWelcomeGUI(){
-		updatePage(WelcomeGUI.class);
+		changeState(WelcomeGUI.class);
 	}
 
 	public void setTrainingNumbersGUI(final String[] signs){
-		switchTrainingGUI(TrainingNumbersGUI.class, signs);
-	}
-	
-	public void setTrainingAlphabetGUI(final String[] signs){
-		switchTrainingGUI(TrainingAlphabetGUI.class, signs);
+		changeState(TrainingNumbersGUI.class,(Object []) signs);
 	}
 
-	private void switchTrainingGUI(final Class<?> clazz,final String[] signs){
-			deleteCurrentGUI();
-		try {
-			final Constructor<?> constructor = clazz.getConstructors()[0];
-			changeCurrentGUI((IGUI) constructor.newInstance(page, signs),clazz);
-		} catch (final Exception e) {
-			e.printStackTrace();
-		}
+	public void setTrainingAlphabetGUI(final String[] signs){
+		changeState(TrainingAlphabetGUI.class,(Object []) signs);
 	}
 
 	public void setSelectAlphabetGUI(){
-		updatePage(SelectAlphabetGUI.class);
+		changeState(SelectAlphabetGUI.class);
 	}
 
 	public void setSelectNumberGUI(){
-		updatePage(SelectNumbersGUI.class);
+		changeState(SelectNumbersGUI.class);
 	}
 
 	public void setSignAlphabetGUI(){
-		updatePage(SignAlphabetGUI.class);
+		changeState(SignAlphabetGUI.class);
 	}
 
 	public void setSignNumbersGUI(){
-		updatePage(SignNumbersGUI.class);
+		changeState(SignNumbersGUI.class);
 	}
 
 	public void setMainMenuGUI(){
-		updatePage(MainMenuGUI.class);
+		changeState(MainMenuGUI.class);
 	}
 
 	public void setLeaderboardGUI(final HighScoreManager scoreManager){
-		updatePage(LeaderboardGUI.class,scoreManager);
-	}
-
-	private void updatePage(final Class<?> clazz, final Object...objs){
-		if(classCheck(clazz))
-			changeState(clazz,objs);
-	}
-
-	private void changeCurrentGUI(final IGUI gui, final Class<?> clazz){
-		page.changeGUI(gui);
-		currentGUIclass=clazz;
+		changeState(LeaderboardGUI.class,scoreManager);
 	}
 
 	private void deleteCurrentGUI(){
 		if(currentGUIclass!=null)
-		page.currentGUIDisposal();
+			page.currentGUIDisposal();
 	}
 
 	private void changeState(final Class<?> clazz,final Object... objs){
+		if(classCheck(clazz)){
 			deleteCurrentGUI();
-		try {
 			final Constructor<?> constructor = clazz.getConstructors()[0];
-			changeCurrentGUI((IGUI) constructor.newInstance(concat(new Object[] { page},objs)),clazz);
+			if(objs instanceof String[])
+				changeCurrentGUI(constructor,page,objs);
+			else
+				changeCurrentGUI(constructor,concat(objs,page));
+			currentGUIclass=clazz;
+		}
+	}
+
+	private void changeCurrentGUI(final Constructor<?> constructor,final Object... objs){
+		try {
+			page.changeGUI((IGUI) constructor.newInstance(objs));
 		} catch (final Exception e) {
 			e.printStackTrace();
 		}
@@ -104,13 +94,13 @@ public final class GUIManager {
 		return !obj.equals(currentGUIclass);
 	}
 
-	private Object[] concat(final Object[] a,final  Object[] b) {
-		if(b==null) return a;
+	private Object[] concat(final Object[] a,final  Object... b) {
+		if(a.length==0) return b;
 		int aLen = a.length;
 		int bLen = b.length;
-		Object[] c= new Object[aLen+bLen];
-		System.arraycopy(a, 0, c, 0, aLen);
-		System.arraycopy(b, 0, c, aLen, bLen);
+		final Object[] c= new Object[aLen+bLen];
+		System.arraycopy(b, 0, c, 0, bLen);
+		System.arraycopy(a, 0, c, bLen, aLen);
 		return c;
 	}
 }

@@ -11,6 +11,7 @@ import classifier.AlphabetClassifier;
 import classifier.NumberClassifier;
 import classifier.SignClassifier;
 import controller.LeapMouseListener;
+import g4p_controls.GAlign;
 import g4p_controls.GCScheme;
 import g4p_controls.GEvent;
 import g4p_controls.GLabel;
@@ -24,16 +25,20 @@ import recording.AbstractHandData.Handedness;
 import recording.IHandData;
 import recording.OneHandData;
 
-public final class Page extends PApplet{
+public class Page extends PApplet{
 
 	private final String appTitle="Irish Sign Language Tool";
 	private final String appIcon="hand.png";
-	
+
 	private final static Controller controller = new Controller();
 	private Handedness hand;
 	private final IHandData handInfo= new OneHandData(controller);
-	private final String leapWarning="Warning! Please keep your %s hand placed over the Leap Motion";
+
+	private final String leapWarning="Leap cannot see your %s hand";
+	private String leapWarningWithHand;
+	private final String leapDetectionText="Leap sees you!";
 	private GLabel warning;
+	private boolean leapSeesYou=true;
 	private final LeapMouseListener leapListen= new LeapMouseListener();
 
 	private SignClassifier alphaClassifier;
@@ -47,7 +52,7 @@ public final class Page extends PApplet{
 
 	private IGUI currentGUI;
 	private GUIManager guiManage;
-	
+
 	private String username;
 
 	private final float defaultTextSize=(float) 12.0;
@@ -70,14 +75,17 @@ public final class Page extends PApplet{
 		initializeClassifiers();
 		cursor(image);
 		controller.enableGesture(Gesture.Type.TYPE_KEY_TAP);
-		warning =  new GLabel(this,220,40,475,27);
-		warning.setTextBold();
-		warning.setLocalColorScheme(GCScheme.RED_SCHEME);
-		warning.setVisible(false);
-		warning.setFont(new Font("Monospaced", Font.PLAIN, 12));
+		//warning =  new GLabel(this,220,40,475,27);
+		warning =  new GLabel(this,253, 32, 391, 29);
+		warning.setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
+		warning.setLocalColorScheme(GCScheme.GREEN_SCHEME);
+		warning.setFont(new Font("Monospaced", Font.PLAIN, 20));
 		warning.setOpaque(true);
+		warning.setText(leapDetectionText);
+		warning.setTextBold();
 		guiManage= new GUIManager(this);
 		guiManage.setWelcomeGUI();
+		warning.setVisible(false);
 	}
 
 	@Override
@@ -88,26 +96,26 @@ public final class Page extends PApplet{
 
 	public void changeGUI(final IGUI gui){
 		currentGUI=gui;
-		warning.setVisible(false);
+		warning.setVisible(true);
 	} 
-	
+
 	public void currentGUIDisposal(){
 		currentGUI.dispose();
 		setDefaultBackground();
 	}
-	
+
 	public IGUI getCurrentGUI(){
 		return currentGUI;
 	}
-	
+
 	public GUIManager getGUIManager(){
 		return guiManage;
 	}
-	
+
 	public void setUsername(final String username){
 		this.username=username;
 	}
-	
+
 	public String getUsername(){
 		return username;
 	}
@@ -124,7 +132,7 @@ public final class Page extends PApplet{
 		this.hand=hand;
 		numClassifier=new NumberClassifier(hand);
 		alphaClassifier=new AlphabetClassifier(hand);
-		warning.setText(String.format(leapWarning,hand));
+		leapWarningWithHand=String.format(leapWarning,hand);
 	}
 
 	public double getDifficulty(){
@@ -136,26 +144,36 @@ public final class Page extends PApplet{
 	}
 
 	public SignClassifier getNumberClassifier(){
-		return this.numClassifier;
+		return numClassifier;
 	}
 
 	public SignClassifier getTwoHandNumberClassifier(){
-		return this.num2Classifier;
+		return num2Classifier;
 	}
 
 	public SignClassifier getAlphabetClassifier(){
-		return this.alphaClassifier;
+		return alphaClassifier;
 	}
 
 	public void renderLeapWarning(){
-		if(!handInfo.isCorrectHandPlacedOverLeap(hand))
-			warning.setVisible(true);
-		else
-			warning.setVisible(false);
+		if(handInfo.isCorrectHandPlacedOverLeap(hand)){
+			if(!leapSeesYou){
+				warning.setLocalColorScheme(GCScheme.GREEN_SCHEME);
+				warning.setText(leapDetectionText);
+				warning.setTextBold();
+				leapSeesYou=true;
+			}
+		}
+		else if(leapSeesYou){
+			warning.setLocalColorScheme(GCScheme.RED_SCHEME);
+			warning.setText(leapWarningWithHand);
+			warning.setTextBold();
+			leapSeesYou=false;
+		}
 	}
 
-	public boolean isWarningDisplayed() {
-		return warning.isVisible();
+	public boolean isLeapSeesYouMessageDisplayed() {
+		return leapSeesYou;
 	}
 
 	public void turnOnLeapMouse(){
@@ -188,11 +206,8 @@ public final class Page extends PApplet{
 	public void handleSliderEvents(final GValueControl slider,final GEvent event) { /* Not called */ }
 
 	private void initializeClassifiers(){
-		new AlphabetClassifier(Handedness.RIGHT);
-		new NumberClassifier(Handedness.RIGHT);
-		new NumberClassifier(Handedness.LEFT);
-		num2Classifier=new SignClassifier(null, "num2");
-		//		new SignClassifier(Handedness.LEFT, "alpha");
-		//		new SignClassifier(Handedness.LEFT, "num");
+		AlphabetClassifier.initialise();
+		NumberClassifier.initialise();
+		num2Classifier= new SignClassifier(null, "num2");
 	}
 }

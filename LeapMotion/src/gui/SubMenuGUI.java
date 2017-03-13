@@ -31,13 +31,13 @@ public final class SubMenuGUI extends AbstractMenuGUI{
 		alphabetButton.setFont(new Font("Dialog", Font.PLAIN, 30));
 		alphabetButton.setLocalColorScheme(GCScheme.CYAN_SCHEME); 
 
-		numbersButton = new Button(page,144, 331, 685, 186, commandNum);
+		numbersButton = new Button(page,144, 312, 685, 186, commandNum);
 		numbersButton.setText("Numbers");
 		numbersButton.setFont(new Font("Dialog", Font.PLAIN, 30));
 		numbersButton.setLocalColorScheme(GCScheme.CYAN_SCHEME);
 
-		backButton = new Button(page, 9, 541, 289, 93, new MainMenuCommand(page));
-		backButton.setText("<--");
+		backButton = new Button(page, 5, 516, 320, 113, new MainMenuCommand(page));
+		backButton.setText("Back");
 		backButton.setFont(new Font("Dialog", Font.PLAIN, 30));
 		backButton.setTextBold();
 		backButton.setTextItalic();

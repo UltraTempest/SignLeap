@@ -24,7 +24,7 @@ public abstract class AbstractGeneralGUI extends AbstractGUI{
 					if(!button.isTimerRunning())
 						button.startCountdown();
 					int percent=button.getCountdown();
-					if(percent>100)
+					if(percent>95)
 						break outerif;
 					percent+=5;
 					final int xCoordinate=674;
