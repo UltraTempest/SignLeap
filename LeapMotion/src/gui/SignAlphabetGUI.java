@@ -8,14 +8,14 @@ public final class SignAlphabetGUI extends AbstractTimedSignCharacterGUI{
 
 	public SignAlphabetGUI(final PApplet page) {
 		super(page,((Page) page).getAlphabetClassifier(), AlphabetTrainer.alphabet);
-		signCharacterChange();
+		updateSignCharacterDisplay();
 	}
 
 	@Override
 	protected void displayNextCharacter(){
 		super.displayNextCharacter();
-		if(this.currentLetterPosition==26)
-			this.currentLetterPosition=0;	 
+		if(currentLetterPosition==26)
+			currentLetterPosition=0;	 
 	}
 
 	@Override

@@ -9,7 +9,7 @@ public final class SignNumbersGUI extends AbstractTimedSignCharacterGUI{
 
 	public SignNumbersGUI(final PApplet page) {
 		super(page,((Page) page).getNumberClassifier(),numbersArray);
-		signCharacterChange();
+		updateSignCharacterDisplay();
 	}
 
 	@Override

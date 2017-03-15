@@ -5,25 +5,15 @@ import processing.Page;
 import processing.core.PApplet;
 
 public abstract class AbstractGUI implements IGUI{
-	private static PApplet page;
-	private boolean rendered=false;
+	private static Page page;
 	
 	public AbstractGUI(final PApplet page){
-		AbstractGUI.page=page;
-		((Page) page).setDefaultBackground();
-	}
-	
-	@Override
-	public void render(){
-		getPage().renderLeapWarning();
-		if(!rendered){
-			getPage().setDefaultBackground();
-			rendered=true;
-		}
+		AbstractGUI.page=(Page) page;
+		AbstractGUI.page.setDefaultBackground();
 	}
 
 	protected final Page getPage(){
-		return (Page) AbstractGUI.page;
+		return AbstractGUI.page;
 	}
 
 	protected final void objectDisposal(final GAbstractControl... objects){

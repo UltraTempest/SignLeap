@@ -8,7 +8,7 @@ public final class TrainingNumbersGUI extends AbstractSignCharacterGUI{
 	
 	public TrainingNumbersGUI(final PApplet page, final String... array) {
 		super(page,((Page) page).getNumberClassifier(),array);
-		signCharacterChange();
+		updateSignCharacterDisplay();
 	}
 
 	@Override

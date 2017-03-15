@@ -38,13 +38,13 @@ public final class LeaderboardGUI extends AbstractGeneralGUI{
 		page.text("Score", 500, 180);
 		page.textSize(30);
 		int position=240;
-		page.line(0, position-45, 575, position-45);
+		page.line(0, position-45, 960, position-45);
 		for(int i=0; i< scores.size();i++) {
 			final Score score=scores.get(i);
 			position=240+60*i;
 			page.text(score.getName(), 50, 240+60*i);
 			page.text(score.getScore(), 500, 240+60*i);
-			page.line(0, position+10, 575, position+10);
+			page.line(0, position+10, 960, position+10);
 		}
 		page.setTextSizeToDefault();
 	}
@@ -56,7 +56,6 @@ public final class LeaderboardGUI extends AbstractGeneralGUI{
 
 	@Override
 	public void render(){
-		super.render();
 		handleMouseOverButton(homeButton);
 		renderLeaderBoard();
 	}

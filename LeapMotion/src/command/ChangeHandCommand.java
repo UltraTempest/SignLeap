@@ -12,7 +12,7 @@ public final class ChangeHandCommand extends AbstractCommand{
 
 	@Override
 	public void process() {
-		Page page=getPage();
+		final Page page=getPage();
 		if(page.getHand().equals(Handedness.RIGHT))
 			page.setHand(Handedness.LEFT);
 		else

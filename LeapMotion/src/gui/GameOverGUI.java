@@ -1,5 +1,7 @@
 package gui;
 
+import java.awt.Font;
+
 import button.Button;
 import command.LeaderboardCommand;
 import g4p_controls.G4P;
@@ -7,7 +9,6 @@ import g4p_controls.GAlign;
 import g4p_controls.GCScheme;
 import g4p_controls.GEvent;
 import g4p_controls.GLabel;
-import g4p_controls.GPanel;
 import g4p_controls.GTextField;
 import leaderboard.AlphabetHighScoreManager;
 import leaderboard.HighScoreManager;
@@ -18,12 +19,10 @@ import processing.core.PApplet;
 public final class GameOverGUI extends AbstractGeneralGUI{
 
 	private final int score;
-	private final GPanel gameOverPanel; 
 	private final GTextField userInputName; 
 	private final Button submitButton; 
-	private final GLabel label1; 
-	private final GLabel label2; 
-	private final GLabel label3; 
+	private final GLabel label4; 
+	private final GLabel label5; 
 	private final HighScoreManager scoreManager;
 
 	public GameOverGUI(final PApplet papplet,final int score,final boolean leaderboardFlag) {
@@ -34,65 +33,49 @@ public final class GameOverGUI extends AbstractGeneralGUI{
 			scoreManager= new NumbersHighScoreManager();
 		else
 			scoreManager=new AlphabetHighScoreManager();
-		gameOverPanel = new GPanel(page, 245, 182, 442, 232, "                                                        Game Over!");
-		gameOverPanel.setDraggable(false);
-		gameOverPanel.setCollapsible(false);
-		gameOverPanel.setTextBold();
-		gameOverPanel.setLocalColorScheme(GCScheme.CYAN_SCHEME);
-		gameOverPanel.setOpaque(true);
-		gameOverPanel.clearDragArea();
-		userInputName = new GTextField(page, 71, 148, 192, 21, G4P.SCROLLBARS_NONE);
+		final int fontSize=35;
+		userInputName = new GTextField(page, 23, 372, 597, 150, G4P.SCROLLBARS_NONE);
 		userInputName.setOpaque(true);
 		userInputName.setFocus(true);
 		userInputName.setText(page.getUsername());
+		userInputName.setFont(new Font("Monospaced", Font.PLAIN, 70));
 		userInputName.addEventHandler(this, "userInputFieldEventHandle");
-		submitButton = new Button(page, 294, 148, 63, 23,new LeaderboardCommand(getPage(),this));
+		submitButton = new Button(page, 704, 357, 220, 209,new LeaderboardCommand(page,this));
 		submitButton.setText("Submit");
+		submitButton.setTextBold();
 		submitButton.setLocalColorScheme(GCScheme.GREEN_SCHEME);
-		submitButton.addEventHandler(this, "submitButtonClicked");
-		label1 = new GLabel(page, 87, 61, 233, 23);
-		label1.setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
-		label1.setText("You scored " + score +  " points!");
-		label1.setOpaque(false);
-		label2 = new GLabel(page, 87, 88, 235, 20);
-		label2.setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
-		label2.setText("What is your name?");
-		label2.setOpaque(false);
-		label3 = new GLabel(page, 65, 126, 52, 23);
-		label3.setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
-		label3.setText("Name:");
-		label3.setTextBold();
-		label3.setOpaque(false);
-		gameOverPanel.addControl(userInputName);
-		gameOverPanel.addControl(submitButton);
-		gameOverPanel.addControl(label1);
-		gameOverPanel.addControl(label2);
-		gameOverPanel.addControl(label3);
-		//TODO Redo GameOverGUI
+		submitButton.setFont(new Font("Monospaced", Font.PLAIN, 35));
+		label4 = new GLabel(page, 227, 67, 353, 128);
+		label4.setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
+		label4.setText("You scored " + score +  " points!");
+		label4.setTextBold();
+		label4.setFont(new Font("Monospaced", Font.PLAIN,fontSize));
+		label4.setOpaque(false);
+		label5 = new GLabel(page, 42, 262, 500, 153);
+		label5.setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
+		label5.setText("What is your username?");
+		label5.setTextBold();
+		label5.setFont(new Font("Monospaced", Font.PLAIN, fontSize));
+		label5.setOpaque(false);
 	}
 
-	public void submitButtonClicked(final Button source,final GEvent event){	
+	public void submitButtonClicked(){	
 		scoreManager.addScore(userInputName.getText(), score);
 		getPage().getGUIManager().setLeaderboardGUI(scoreManager);
 	} 
 	
-	public HighScoreManager getHighScoreManager(){
-		return scoreManager;
-	}
-	
 	public void userInputFieldEventHandle(final GTextField source,final GEvent event) { 
 		if(event.toString().equals("ENTERED"))
-			submitButtonClicked(null,null);
+			submitButtonClicked();
 	}
 
 	@Override
 	public void dispose() {
-		objectDisposal(gameOverPanel);
+		objectDisposal(userInputName,submitButton,label4,label5);
 	}
 
 	@Override
 	public void render() {
-		super.render();
 		handleMouseOverButton(submitButton);
 	}
 }

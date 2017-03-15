@@ -5,7 +5,7 @@ import processing.core.PApplet;
 
 public class MenuUserNameCommand extends AbstractTextCommand{
 
-	public MenuUserNameCommand(PApplet page, ITextChanger changer) {
+	public MenuUserNameCommand(final PApplet page,final ITextChanger changer) {
 		super(page, changer);
 	}
 

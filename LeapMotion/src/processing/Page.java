@@ -3,7 +3,6 @@ package processing;
 import java.awt.Font;
 
 import com.leapmotion.leap.Controller;
-import com.leapmotion.leap.Gesture;
 import button.Button;
 import button.IButton;
 import button.ImageButton;
@@ -19,6 +18,7 @@ import g4p_controls.GPanel;
 import g4p_controls.GValueControl;
 import gui.GUIManager;
 import gui.IGUI;
+import gui.IGUIListener;
 import processing.core.PApplet;
 import processing.core.PImage;
 import recording.AbstractHandData.Handedness;
@@ -31,7 +31,7 @@ public class Page extends PApplet{
 	private final String appIcon="hand.png";
 
 	private final static Controller controller = new Controller();
-	private Handedness hand;
+	private Handedness hand=Handedness.RIGHT;
 	private final IHandData handInfo= new OneHandData(controller);
 
 	private final String leapWarning="Leap cannot see your %s hand";
@@ -52,6 +52,7 @@ public class Page extends PApplet{
 
 	private IGUI currentGUI;
 	private GUIManager guiManage;
+	private IGUIListener guiListen;
 
 	private String username;
 
@@ -74,8 +75,7 @@ public class Page extends PApplet{
 		surface.setIcon(image);
 		initializeClassifiers();
 		cursor(image);
-		controller.enableGesture(Gesture.Type.TYPE_KEY_TAP);
-		//warning =  new GLabel(this,220,40,475,27);
+		//controller.enableGesture(Gesture.Type.TYPE_KEY_TAP);
 		warning =  new GLabel(this,253, 32, 391, 29);
 		warning.setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
 		warning.setLocalColorScheme(GCScheme.GREEN_SCHEME);
@@ -91,7 +91,12 @@ public class Page extends PApplet{
 	@Override
 	public void draw(){
 		currentGUI.render();
+		renderLeapWarning();
 		//println(frameRate);
+	}
+
+	public void setGUIListener(final IGUIListener guiListen){
+		this.guiListen=guiListen;
 	}
 
 	public void changeGUI(final IGUI gui){
@@ -133,6 +138,8 @@ public class Page extends PApplet{
 		numClassifier=new NumberClassifier(hand);
 		alphaClassifier=new AlphabetClassifier(hand);
 		leapWarningWithHand=String.format(leapWarning,hand);
+		if(guiListen!=null)
+			guiListen.actionPerformed();
 	}
 
 	public double getDifficulty(){

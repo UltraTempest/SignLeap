@@ -7,7 +7,7 @@ public final class TrainingAlphabetGUI extends AbstractSignCharacterGUI{
 	
 	public TrainingAlphabetGUI(final PApplet page, final String... array) {
 		super(page,((Page) page).getAlphabetClassifier(),array);
-		signCharacterChange();
+		updateSignCharacterDisplay();
 	}
 
 	@Override

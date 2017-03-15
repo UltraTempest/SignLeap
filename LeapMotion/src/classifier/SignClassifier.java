@@ -172,16 +172,14 @@ public class SignClassifier {
 		return -1;
 	}
 
-	protected final double getProbabilityForClass(final String charToFind,
-			final double[] fDistribution){
+	protected final double getProbabilityForClass(final String charToFind,final double[] fDistribution){
 		int position=getLabelDistributionPosition(charToFind, fDistribution);
 		return fDistribution[position];
 	}
 
 	public final void evaluate(){	
 		// training using a collection of classifiers (NaiveBayes, SMO (AKA SVM), KNN and Decision trees.)
-		//final String[] algorithms = {"nb","smo","knn","j48", "libSVM","Random Forest"};
-		final String[] algorithms = {"libSVM","Random Forest"};
+		final String[] algorithms = {"nb","smo","knn","j48", "libSVM","Random Forest"};
 		try {
 			final FileWriter fw= new FileWriter("Evaluation.txt");
 			@SuppressWarnings("resource")
@@ -209,6 +207,10 @@ public class SignClassifier {
 				final Evaluation eval = new Evaluation(trainingSet);
 				classifier.buildClassifier(trainingSet);
 				eval.crossValidateModel(classifier, testingSet, 10, new Random(1));
+//				System.out.println(classifier.toString());
+//				System.out.println(eval.toSummaryString());
+//				System.out.println(eval.toMatrixString());
+//				System.out.println(eval.toClassDetailsString());
 				bw.write(classifier.toString());
 				bw.write(eval.toSummaryString());
 				bw.write(eval.toMatrixString());

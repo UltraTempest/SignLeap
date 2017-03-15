@@ -8,7 +8,7 @@ public final class IntroductionSignCharacterGUI extends AbstractSignCharacterGUI
 
 	public IntroductionSignCharacterGUI(final PApplet page) {
 		super(page,((Page) page).getNumberClassifier(),array);
-		signCharacterChange();
+		updateSignCharacterDisplay();
 	}
 
 	@Override
@@ -16,7 +16,7 @@ public final class IntroductionSignCharacterGUI extends AbstractSignCharacterGUI
 		super.displayNextCharacter();
 
 		if(currentLetterPosition==array.length){
-			getPage().getGUIManager().setIntroductionGUI(3);
+			getPage().getGUIManager().setIntroductionGUI(4);
 			return;
 		}
 

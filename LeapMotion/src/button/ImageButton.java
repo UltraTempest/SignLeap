@@ -5,7 +5,6 @@ import command.ChangeImageCommand;
 import command.ICommand;
 import g4p_controls.GImageButton;
 import g4p_controls.ImageManager;
-import gui.AbstractSignCharacterGUI;
 import gui.IImageSelectorGUI;
 import processing.Page;
 import processing.core.PApplet;
@@ -27,7 +26,7 @@ public final class ImageButton extends GImageButton implements IButton{
 		super(gui.getPApplet(), arg1, arg2, arg3, arg4, new String[]{tickFileName,tickFileName,tickFileName});
 		this.gui=gui;
 		final Page page=gui.getPApplet();
-		imageName= SignClassifier.language+"/" + page.getHand() +"/%s"+ AbstractSignCharacterGUI.imageType;
+		imageName= SignClassifier.language+"/" + page.getHand() +"/%s.jpg";
 		this.signChar=signChar;
 		image=String.format(imageName, signChar);
 		command=new ChangeImageCommand(this);

@@ -6,7 +6,7 @@ import com.leapmotion.leap.Hand;
 import com.leapmotion.leap.HandList;
 import com.leapmotion.leap.Vector;
 
-import java.util.LinkedHashMap;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -32,8 +32,6 @@ public final class OneHandData extends AbstractHandData{
 
 		if (frame.fingers().isEmpty())
 			return null;
-		//		while (frame.fingers().isEmpty())
-		//	        frame = controller.frame();
 
 		final List<Vector> fingerBones=getFingerList();
 
@@ -46,12 +44,12 @@ public final class OneHandData extends AbstractHandData{
 		if(handCentre==null)
 			return null;
 
-		final Map<String,Float> calibratedFingerBones = new 
-				LinkedHashMap<String,Float>();
+		final Map<String,Float> calibratedFingerBones = new HashMap<String,Float>();
 		Vector normalizedJoint;
+		int w;
 		for(int i=0; i< fingerBones.size();i++){
 			normalizedJoint = fingerBones.get(i).minus(handCentre);
-			int w=i*3;
+			w=i*3;
 			for(int j=0; j<3;j++)
 				if(j==0)
 					calibratedFingerBones.put("feat" + 

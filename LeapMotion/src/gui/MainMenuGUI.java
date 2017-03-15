@@ -52,7 +52,7 @@ public final class MainMenuGUI extends AbstractMenuGUI implements ITextChanger{
 	public void changeTextDisplayed() {
 		if(isLastTextDisplayed())
 			usernameIndex=-1;
-		String currentUserName=usernames[++usernameIndex];
+		final String currentUserName=usernames[++usernameIndex];
 		usernameButton.setText(String.format(userNameText,currentUserName));
 		usernameButton.setTextBold();
 		getPage().setUsername(currentUserName);

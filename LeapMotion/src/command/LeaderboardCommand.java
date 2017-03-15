@@ -13,6 +13,6 @@ public final class LeaderboardCommand extends AbstractCommand{
 
 	@Override
 	public void process() {
-		gui.submitButtonClicked(null,null);
+		gui.submitButtonClicked();
 	}
 }
