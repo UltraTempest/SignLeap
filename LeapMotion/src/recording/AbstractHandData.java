@@ -74,7 +74,8 @@ public abstract class AbstractHandData implements IHandData{
 		private Handedness(final String s) {
 			name = s;
 		}
-
+		
+		@Override
 		public final String toString() {
 			return this.name;
 		}

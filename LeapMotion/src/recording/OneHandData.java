@@ -37,7 +37,7 @@ public final class OneHandData extends AbstractHandData{
 
 		final HandList hands = controller.frame().hands();
 		Vector handCentre = null;
-		for (Hand hand : hands){
+		for (final Hand hand : hands){
 			handCentre = hand.palmPosition();
 		}
 

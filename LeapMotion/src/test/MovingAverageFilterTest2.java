@@ -12,12 +12,12 @@ import classifier.MovingAverageFilter;
 @RunWith(Parameterized.class)
 public class MovingAverageFilterTest2 {
 	
-	private final int period;
+	final MovingAverageFilter mov;
 	private final double expected;
 	private final double[] input;
 
 	public MovingAverageFilterTest2(final int period,final double expected,final double... input) {
-		this.period=period;
+		mov = new MovingAverageFilter(period);
 		this.input= input;
 		this.expected= expected;
 	}
@@ -31,8 +31,7 @@ public class MovingAverageFilterTest2 {
 	}
 
 	@Test
-	public void test() {
-		final MovingAverageFilter mov = new MovingAverageFilter(period);
+	public void test() {	
 		mov.add(input);
 		assertEquals(Double.doubleToLongBits(expected),Double.doubleToLongBits(mov.getAverage()));
 	}

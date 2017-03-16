@@ -31,7 +31,7 @@ public class MovingAverageFilterTest extends TestCase {
     public void testForceOverWrite() {
         fillBufferAndTest();
 
-        double newVal = SIZE + .5d;
+        final double newVal = SIZE + .5d;
         r.add(newVal);
         // get the 'full sum' from fillBufferAndTest(), add the value we just added,
         // and subtract off the value we anticipate overwriting.
