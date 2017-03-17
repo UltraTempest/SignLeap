@@ -27,7 +27,7 @@ public class SignClassifier {
 	private int numberOfFeatures;
 	private Instances trainingSet;
 	private Instances testingSet;
-	private final int movingAverageFilterPeriods=8;
+	private final int movingAverageFilterPeriods=10;
 	private MovingAverageFilter move;
 
 	public static void main(String args[]){
@@ -136,7 +136,7 @@ public class SignClassifier {
 		return null;
 	}
 
-	public double score(Map<String, Float> data,final String expectedChar){
+	public double score(final Map<String, Float> data,final String expectedChar){
 		final Instance sampleInstance=createInstanceFromData(data);
 		try {
 			final double[] fDistribution = classifier.distributionForInstance(
@@ -145,7 +145,7 @@ public class SignClassifier {
 			classify(fDistribution,sampleInstance);
 			System.out.println("Expected: "+ expectedChar + " : " + 
 					probabilityForExpected);
-			double rollingAverage=rollingTotal(probabilityForExpected);
+			final double rollingAverage=rollingTotal(probabilityForExpected);
 			System.out.println("Rolling Average: " + rollingAverage + "\n");
 			return rollingAverage;
 		} catch (final Exception e) {

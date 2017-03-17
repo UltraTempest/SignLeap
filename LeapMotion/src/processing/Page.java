@@ -45,9 +45,9 @@ public class Page extends PApplet{
 	private SignClassifier numClassifier;
 	private SignClassifier num2Classifier;
 
-	public static final double EASY=0.25;
-	public static final double MEDIUM=0.3;
-	public static final double HARD=0.4;
+	public static final double EASY=0.5;
+	public static final double MEDIUM=0.6;
+	public static final double HARD=0.8;
 	private final double difficulty=MEDIUM;
 
 	private IGUI currentGUI;
@@ -165,18 +165,20 @@ public class Page extends PApplet{
 	public void renderLeapWarning(){
 		if(handInfo.isCorrectHandPlacedOverLeap(hand)){
 			if(!leapSeesYou){
-				warning.setLocalColorScheme(GCScheme.GREEN_SCHEME);
-				warning.setText(leapDetectionText);
-				warning.setTextBold();
+				setLeapText(GCScheme.GREEN_SCHEME, leapDetectionText);
 				leapSeesYou=true;
 			}
 		}
 		else if(leapSeesYou){
-			warning.setLocalColorScheme(GCScheme.RED_SCHEME);
-			warning.setText(leapWarningWithHand);
-			warning.setTextBold();
+			setLeapText(GCScheme.RED_SCHEME, leapWarningWithHand);
 			leapSeesYou=false;
 		}
+	}
+	
+	private void setLeapText(final int scheme, final String text){
+		warning.setLocalColorScheme(scheme);
+		warning.setText(text);
+		warning.setTextBold();
 	}
 
 	public boolean isLeapSeesYouMessageDisplayed() {

@@ -76,6 +76,7 @@ public final class GameOverGUI extends AbstractGeneralGUI{
 
 	@Override
 	public void render() {
+		super.render();
 		handleMouseOverButton(submitButton);
 	}
 }

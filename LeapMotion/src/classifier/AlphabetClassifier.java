@@ -19,7 +19,7 @@ public final class AlphabetClassifier extends SignClassifier{
 
 	public final static void initialise() {
 		SignClassifier.initialise(Handedness.RIGHT, type);
-		//nSignClassifier.initialise(Handedness.LEFT, type);
+		//SignClassifier.initialise(Handedness.LEFT, type);
 	}
 
 	@Override
@@ -39,7 +39,7 @@ public final class AlphabetClassifier extends SignClassifier{
 				}
 				rollingAverage=rollingTotal(rollingAverage);
 			}
-			return rollingAverage;
+			return rollingAverage*2;
 		} catch (final Exception e) {
 			e.printStackTrace();
 		}	

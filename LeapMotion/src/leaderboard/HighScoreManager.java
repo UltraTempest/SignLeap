@@ -5,7 +5,7 @@ import java.io.*;
 
 public abstract class HighScoreManager {
 	// An arraylist of the type "score" we will use to work with the scores inside the class
-	private ArrayList<Score> scores;
+	private List<Score> scores;
 
 	// The name of the file where the alphabet highscores will be saved
 	private final String highScoreFile;
@@ -26,7 +26,7 @@ public abstract class HighScoreManager {
 		highScoreFile=filename;
 	}
 
-	public final ArrayList<Score> getScores() {
+	public final List<Score> getScores() {
 		loadScoreFile();
 		Collections.sort(scores);
 		return scores;
@@ -106,7 +106,7 @@ public abstract class HighScoreManager {
 		while (i < x) {
 			highscoreSb.append( (i + 1) + ".\t" + scores.get(i).getName() 
 					+ "\t\t" + scores.get(i).getScore() + "\n");
-			i++;
+			++i;
 		}
 		return highscoreSb.toString();
 	}

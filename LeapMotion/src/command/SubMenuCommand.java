@@ -13,6 +13,6 @@ public final class SubMenuCommand extends AbstractCommand{
 
 	@Override
 	public void process() {
-		getGUIManager().setSubMainMenuGUI(command);
+		getGUIManager().setSubMenuGUI(command);
 	}
 }

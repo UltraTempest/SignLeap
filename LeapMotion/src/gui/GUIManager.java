@@ -17,8 +17,12 @@ public final class GUIManager {
 		changeState(GameOverGUI.class, score, leaderboardFlag);
 	}
 
-	public void setSubMainMenuGUI(final ICommand command) {
+	public void setSubMenuGUI(final ICommand command) {
 		changeState(SubMenuGUI.class, command);
+	}
+	
+	public void setGameSubMenuGUI(final ICommand command) {
+		changeState(GameSubMenuGUI.class, command);
 	}
 
 	public void setIntroductionSignCharacterGUI(){

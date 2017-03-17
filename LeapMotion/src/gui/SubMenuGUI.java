@@ -4,6 +4,7 @@ import java.awt.Font;
 
 import button.Button;
 import command.SignAlphabetCommand;
+import command.GameSubMenuCommand;
 import command.ICommand;
 import command.MainMenuCommand;
 import command.SignNumberCommand;
@@ -17,12 +18,14 @@ public final class SubMenuGUI extends AbstractMenuGUI{
 	private final Button numbersButton;
 	private final Button backButton;
 
-	public SubMenuGUI(final PApplet papplet, final ICommand commandAlpha) {
+	public SubMenuGUI(final PApplet papplet,ICommand commandAlpha) {
 		super(papplet);
 		final Page page=getPage();
 		ICommand commandNum;
-		if(commandAlpha instanceof SignAlphabetCommand)
-			commandNum = new SignNumberCommand(page);
+		if(commandAlpha instanceof SignAlphabetCommand){
+			commandNum = new GameSubMenuCommand(page, new SignNumberCommand(page));
+			commandAlpha= new GameSubMenuCommand(page, commandAlpha);
+		}
 		else
 			commandNum = new SelectNumbersCommand(page);
 

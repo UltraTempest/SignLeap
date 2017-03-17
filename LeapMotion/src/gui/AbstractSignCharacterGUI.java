@@ -22,7 +22,7 @@ public abstract class AbstractSignCharacterGUI extends AbstractGUI{
 
 	private final double difficulty=getPage().getDifficulty();
 	private final Controller leap=getPage().getLeap();
-	private final String imageName=SignClassifier.language +  "/" + getPage().getHand() +"/%s.jpg";
+	private final String imageName=SignClassifier.language +"/%s.jpg";
 	protected int currentLetterPosition=0;
 
 	private PImage img;
@@ -37,6 +37,8 @@ public abstract class AbstractSignCharacterGUI extends AbstractGUI{
 
 	private final int initialNumberOfAttempts=500;
 	protected int attempts=initialNumberOfAttempts;
+	private boolean firstPass=false;
+	private int renderCount;
 
 	private SignClassifier classifier;
 	private IHandData handData= new OneHandData(leap);
@@ -58,9 +60,9 @@ public abstract class AbstractSignCharacterGUI extends AbstractGUI{
 		similaritySlider = new GSlider(page, 918, 135, 354, 72,(float) 10.0);
 		similaritySlider.setRotation(PConstants.PI/2, GControlMode.CORNER);
 		similaritySlider.setNumberFormat(G4P.INTEGER, 0);
-		similaritySlider.setLimits(0,0,50);
+		similaritySlider.setLimits(0,0,100);
 		similaritySlider.setOpaque(false);
-		//slider.setShowValue(true);
+		//similaritySlider.setShowValue(true);
 
 		attemptSlider = new GSlider(page, 85, 135, 354, 72, (float) 10.0);
 		attemptSlider.setRotation(PConstants.PI/2, GControlMode.CORNER);
@@ -69,7 +71,6 @@ public abstract class AbstractSignCharacterGUI extends AbstractGUI{
 		attemptSlider.setOpaque(false);
 
 		setSliderAcceptance();
-		sliderAcceptance = new GLabel(page, 853, 181, 59, 15);
 		sliderAcceptance.setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
 		sliderAcceptance.setText("_______");
 		sliderAcceptance.setTextBold();
@@ -90,29 +91,27 @@ public abstract class AbstractSignCharacterGUI extends AbstractGUI{
 		similarityLabel = new GLabel(page, 806, 80, 147, 65);
 		similarityLabel.setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
 		similarityLabel.setText("Similarity meter");
-		similarityLabel.setTextBold();
 		similarityLabel.setFont(new Font("Monospaced", Font.PLAIN, 20));
 		similarityLabel.setOpaque(false);
 
 		attemptsLabel = new GLabel(page, 2, 35, 139, 125);
 		attemptsLabel.setText("Attempts remaining");
-		attemptsLabel.setTextBold();
 		attemptsLabel.setLocalColorScheme(GCScheme.RED_SCHEME);
 		attemptsLabel.setOpaque(false);
 		attemptsLabel.setFont(new Font("Monospaced", Font.PLAIN, 22));
 	}
 
 	private void setSliderAcceptance(){
-		int y=325;
+		int y=305;
 		if(difficulty==Page.MEDIUM)
-			y= 260;
+			y= 265;
 		else if(difficulty==Page.HARD)
-			y= 155;
+			y= 205;
 		sliderAcceptance = new GLabel(getPage(),853, y, 59, 15);
 	}
 
 	private void setSimilaritySliderValue(final float value){
-		similaritySlider.setValue(50-value);
+		similaritySlider.setValue(100-value);
 	}
 
 	private void decrementAttemptsRemaining(){
@@ -142,7 +141,10 @@ public abstract class AbstractSignCharacterGUI extends AbstractGUI{
 				final double score = classifier.score(data,currentChar);
 				setSimilaritySliderValue((float) (score*100));
 				if(score>=difficulty || attempts==0)
-					signAccepted();
+					if(firstPass)
+						signAccepted();
+					else
+						firstPass=true;
 				else
 					decrementAttemptsRemaining();
 			}
@@ -158,6 +160,7 @@ public abstract class AbstractSignCharacterGUI extends AbstractGUI{
 		decrementAttemptsRemaining();
 		classifier.resetRollingAverage();
 		displayNextCharacter();
+		firstPass=false;
 	}
 
 	private void isPauseRequired() {
@@ -184,7 +187,12 @@ public abstract class AbstractSignCharacterGUI extends AbstractGUI{
 
 	@Override
 	public void render() {
+		if(renderCount==3){
+			getPage().setDefaultBackground();
+			updateSignCharacterDisplay();
+		}
 		signCharacters();
+		++renderCount;
 	}
 
 	@Override

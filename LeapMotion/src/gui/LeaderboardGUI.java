@@ -1,7 +1,7 @@
 package gui;
 
 import java.awt.Font;
-import java.util.ArrayList;
+import java.util.List;
 
 import button.Button;
 import command.MainMenuCommand;
@@ -14,9 +14,9 @@ import processing.core.PApplet;
 public final class LeaderboardGUI extends AbstractGeneralGUI{
 
 	private final Button homeButton;
-	private final ArrayList<Score> scores;
+	private final List<Score> scores;
 
-	public LeaderboardGUI(final PApplet papplet,final  HighScoreManager scoreManager) {
+	public LeaderboardGUI(final PApplet papplet,final HighScoreManager scoreManager) {
 		super(papplet);
 		final Page page = getPage();
 		scores= scoreManager.getScores();
@@ -39,8 +39,9 @@ public final class LeaderboardGUI extends AbstractGeneralGUI{
 		page.textSize(30);
 		int position=240;
 		page.line(0, position-45, 960, position-45);
+		Score score;
 		for(int i=0; i< scores.size();i++) {
-			final Score score=scores.get(i);
+			score=scores.get(i);
 			position=240+60*i;
 			page.text(score.getName(), 50, 240+60*i);
 			page.text(score.getScore(), 500, 240+60*i);
@@ -56,6 +57,7 @@ public final class LeaderboardGUI extends AbstractGeneralGUI{
 
 	@Override
 	public void render(){
+		super.render();
 		handleMouseOverButton(homeButton);
 		renderLeaderBoard();
 	}

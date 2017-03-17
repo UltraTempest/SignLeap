@@ -24,7 +24,6 @@ public abstract class AbstractTimedSignCharacterGUI extends AbstractSignCharacte
 		scoreTimerText.setOpaque(false);
 		scoreTimerText.setTextEditEnabled(false);
 		time(array[0].matches("-?\\d+(\\.\\d+)?"));  //match a number with optional '-' and decimal.);
-		//TODO pause timer if hand not over leap. Display PAUSED on screen
 	}
 
 	private void time(final boolean leaderboardFlag){

@@ -35,6 +35,7 @@ public abstract class AbstractSelectCharactersGUI extends AbstractGeneralGUI imp
 
 	@Override
 	public void render(){	
+		super.render();
 		handleMouseOverButton(backButton, selectButton);
 	}
 

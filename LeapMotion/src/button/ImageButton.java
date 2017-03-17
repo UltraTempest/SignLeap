@@ -26,7 +26,7 @@ public final class ImageButton extends GImageButton implements IButton{
 		super(gui.getPApplet(), arg1, arg2, arg3, arg4, new String[]{tickFileName,tickFileName,tickFileName});
 		this.gui=gui;
 		final Page page=gui.getPApplet();
-		imageName= SignClassifier.language+"/" + page.getHand() +"/%s.jpg";
+		imageName= SignClassifier.language+"/%s.jpg";
 		this.signChar=signChar;
 		image=String.format(imageName, signChar);
 		command=new ChangeImageCommand(this);

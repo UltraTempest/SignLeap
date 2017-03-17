@@ -7,11 +7,11 @@ public final class Score  implements Serializable, Comparable<Score>{
     private final int score;
     private final String name;
 
-    public final int getScore() {
+    public int getScore() {
         return score;
     }
 
-    public final String getName() {
+    public String getName() {
         return name;
     }
 
@@ -21,7 +21,7 @@ public final class Score  implements Serializable, Comparable<Score>{
     }    
     
     @Override
-    public final int compareTo(final Score score1) {              
+    public int compareTo(final Score score1) {              
         return ((Integer)(score1.getScore())).compareTo(getScore());
     }
 }

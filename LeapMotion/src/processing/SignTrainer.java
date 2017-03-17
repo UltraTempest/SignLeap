@@ -19,7 +19,7 @@ import trainer.ITrainer;
 public final class SignTrainer extends PApplet{
 
 	private String charToTrain;
-	private final Handedness hand= Handedness.RIGHT;
+	private final Handedness hand= Handedness.LEFT;
 	private final static Controller controller = new Controller();
 
 	private final ITrainer trainer = new AlphabetTrainer(controller,hand);
@@ -31,7 +31,7 @@ public final class SignTrainer extends PApplet{
 	private boolean timerSet=false;
 	private Timer timer;
 	private int currentTime;
-	final String filename=SignClassifier.language +  "/" + hand+"/%s.jpg";
+	final String filename=SignClassifier.language + "/%s.jpg";
 
 	public static void main(final String[] args) {
 		PApplet.main("processing.SignTrainer");

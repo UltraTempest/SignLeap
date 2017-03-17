@@ -13,6 +13,10 @@ public abstract class AbstractGeneralGUI extends AbstractGUI{
 		super(page);
 		getPage().turnOnLeapMouse();
 	}
+	
+	public void render(){
+		super.render();
+	}
 
 	protected final void handleMouseOverButton(final IButton... buttons){
 		final Page page=getPage();
