@@ -140,6 +140,7 @@ public class Page extends PApplet{
 		leapWarningWithHand=String.format(leapWarning,hand);
 		if(guiListen!=null)
 			guiListen.actionPerformed();
+		setDefaultBackground();
 	}
 
 	public double getDifficulty(){
