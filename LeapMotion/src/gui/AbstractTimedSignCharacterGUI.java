@@ -31,7 +31,7 @@ public abstract class AbstractTimedSignCharacterGUI extends AbstractSignCharacte
 			private int i = 61;//defined for a 60 second countdown
 			public void run() {
 				scoreTimerText.setText(String.format(scoreText, userScore,--i));
-				if (i<= 0){
+				if (i<0){
 					timer.cancel();
 					new GameOverCommand(getPage(), Integer.valueOf(userScore),leaderboardFlag).process();
 				}

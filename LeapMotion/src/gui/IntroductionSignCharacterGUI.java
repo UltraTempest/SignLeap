@@ -28,6 +28,9 @@ public final class IntroductionSignCharacterGUI extends AbstractSignCharacterGUI
 	@Override
 	protected void updateSignCharactersGUI(final String currentLetter,final String imageName){
 		super.updateSignCharactersGUI(currentLetter, imageName);
-		signInstruction.setText("Sign the character: " + currentLetter);
+		if(currentLetter.charAt(0)=='a')
+		signInstruction.setText("Sign the letter: " + currentLetter);
+		else
+			signInstruction.setText("Sign the number: " + currentLetter);
 	}
 }

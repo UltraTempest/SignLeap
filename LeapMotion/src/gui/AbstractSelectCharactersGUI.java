@@ -68,6 +68,7 @@ public abstract class AbstractSelectCharactersGUI extends AbstractGeneralGUI imp
 	@Override
 	public void removeSign(final String s) {
 		if(containSign(s)) signList.remove(s);
+		updateSelectButtonText();
 	}
 
 	@Override
