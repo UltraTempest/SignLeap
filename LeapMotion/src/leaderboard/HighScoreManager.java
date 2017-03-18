@@ -11,10 +11,10 @@ public abstract class HighScoreManager {
 	private final String highScoreFile;
 	
 	// The name of the file where the numbers highscores will be saved
-	public static final String NUM_HIGHSCORE_FILE = "numleaderboard.dat";
+	public static final String NUM_HIGHSCORE_FILE = "Leaderboard/numleaderboard.dat";
 	
 	// The name of the file where the alphabet highscores will be saved
-	public static final String ALPHA_HIGHSCORE_FILE = "alphaleaderboard.dat";
+	public static final String ALPHA_HIGHSCORE_FILE = "Leaderboard/alphaleaderboard.dat";
 	
 	//Initialising an in and outputStream for working with the file
 	private ObjectOutputStream outputStream;
@@ -37,11 +37,18 @@ public abstract class HighScoreManager {
 		scores.add(new Score(name, score));
 		updateScoreFile();
 	}
+	
+	private void createParentDirectory(final File f) {
+		final File parentDir = f.getParentFile();
+		 if(! parentDir.exists()) 
+		      parentDir.mkdirs();
+	}
 
 	@SuppressWarnings("unchecked")
 	private final void loadScoreFile() {
 		try {
-			File file = new File(highScoreFile);
+			final File file = new File(highScoreFile);
+			createParentDirectory(file);
 			if(!file.exists() || file.toString().equals("")){
 				PrintWriter writer = new PrintWriter(highScoreFile, "UTF-8");
 				writer.close();
