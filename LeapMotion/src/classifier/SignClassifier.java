@@ -40,8 +40,9 @@ public class SignClassifier {
 			name=type +hand;
 		else
 			name=type;
-		final String filename=language +name+ ".model";
+		final String filename="Classifiers/"+language +name+ ".model";
 		final File f = new File(filename);
+		createParentDirectory(f);
 		if(f.exists() && !f.isDirectory()) return;  
 		try {
 			DataSource source = new DataSource("SignData/TrainingData/"+name+ ".arff");
@@ -60,6 +61,12 @@ public class SignClassifier {
 		}
 	}
 
+	private static void createParentDirectory(final File f) {
+		final File parentDir = f.getParentFile();
+		 if(! parentDir.exists()) 
+		      parentDir.mkdirs();
+	}
+
 	public SignClassifier(final Handedness hand, final String type){
 		resetRollingAverage();
 		String name;
@@ -67,7 +74,7 @@ public class SignClassifier {
 			name=type +hand;
 		else
 			name=type;
-		final String filename=language +name+ ".model";
+		final String filename="Classifiers/"+language +name+ ".model";
 		try {
 			DataSource source = new DataSource("SignData/TrainingData/"+name+ 
 					".arff");
@@ -78,6 +85,7 @@ public class SignClassifier {
 			trainingSet.setClassIndex(numberOfFeatures);
 			testingSet.setClassIndex(numberOfFeatures);
 			final File f = new File(filename);
+			createParentDirectory(f);
 			if(f.exists() && !f.isDirectory())  
 				// deserialize model
 				classifier=(RandomForest) weka.core.SerializationHelper.read(
