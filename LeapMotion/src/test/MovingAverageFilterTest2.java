@@ -25,7 +25,7 @@ public class MovingAverageFilterTest2 {
 	@Parameters
 	public static Collection<Object[]> data() {
 		return Arrays.asList(new Object[][] {     
-			{ 2, 3, new double[]{2,4}},
+			{ 10, 13.5, new double[]{2,4,7,5,3,6,7,98,3}},
 			{ 3, 3, new double[]{3,3,3}},
 		});
 	}

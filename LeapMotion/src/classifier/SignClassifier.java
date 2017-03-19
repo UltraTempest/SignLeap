@@ -7,6 +7,9 @@ import java.util.Map;
 import java.util.Random;
 
 import recording.AbstractHandData.Handedness;
+import weka.attributeSelection.AttributeSelection;
+import weka.attributeSelection.PrincipalComponents;
+import weka.attributeSelection.Ranker;
 import weka.classifiers.Classifier;
 import weka.classifiers.Evaluation;
 import weka.classifiers.bayes.NaiveBayes;
@@ -46,13 +49,14 @@ public class SignClassifier {
 		if(f.exists() && !f.isDirectory()) return;  
 		try {
 			DataSource source = new DataSource("SignData/TrainingData/"+name+ ".arff");
-			final Instances trainingSet= source.getDataSet();
+			Instances trainingSet= source.getDataSet();
 			source= new DataSource("SignData/TestingData/"+name+".arff");
 			final Instances testingSet= source.getDataSet();
 			final int numberOfFeatures=trainingSet.numAttributes()-1;
 			trainingSet.setClassIndex(numberOfFeatures);
 			testingSet.setClassIndex(numberOfFeatures);
 			final Classifier classifier= new RandomForest();
+			trainingSet=PCA(trainingSet);
 			classifier.buildClassifier(trainingSet);
 			// serialize model
 			weka.core.SerializationHelper.write(filename, classifier);
@@ -83,6 +87,7 @@ public class SignClassifier {
 			testingSet= source.getDataSet();
 			numberOfFeatures=trainingSet.numAttributes()-1;
 			trainingSet.setClassIndex(numberOfFeatures);
+			trainingSet=PCA(trainingSet);
 			testingSet.setClassIndex(numberOfFeatures);
 			final File f = new File(filename);
 			createParentDirectory(f);
@@ -188,6 +193,7 @@ public class SignClassifier {
 	public final void evaluate(){	
 		// training using a collection of classifiers (NaiveBayes, SMO (AKA SVM), KNN and Decision trees.)
 		final String[] algorithms = {"nb","smo","knn","j48", "libSVM","Random Forest"};
+		trainingSet=PCA(trainingSet);
 		try {
 			final FileWriter fw= new FileWriter("Evaluation.txt");
 			@SuppressWarnings("resource")
@@ -228,5 +234,20 @@ public class SignClassifier {
 		catch (final Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	private static Instances PCA(final Instances trainingSet){
+		AttributeSelection selector = new AttributeSelection();
+		PrincipalComponents pca = new PrincipalComponents();
+		Ranker ranker = new Ranker();
+		selector.setEvaluator(pca);
+		selector.setSearch(ranker);
+		try { 
+		    selector.SelectAttributes(trainingSet);
+		    return selector.reduceDimensionality(trainingSet);
+		} catch (final Exception e ) {
+			e.printStackTrace();
+		}
+		return trainingSet;
 	}
 }
