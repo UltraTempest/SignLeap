@@ -3,24 +3,24 @@ package gui;
 import java.awt.Font;
 
 import button.Button;
-import command.ChangeHandCommand;
 import g4p_controls.GCScheme;
 import processing.Page;
 import processing.core.PApplet;
+import recording.AbstractHandData.Handedness;
 
-public abstract class AbstractMenuGUI extends AbstractGeneralGUI implements IGUIListener{
+public abstract class AbstractMenuGUI extends AbstractGeneralGUI{
 	private final Button changeHandButton;
 	private final String changeHandText="Your preferred hand is %s. Change?";
 
 	public AbstractMenuGUI(final PApplet papplet) {
 		super(papplet);
 		final Page page=getPage();
-		changeHandButton = new Button(page,340, 516, 320, 113,new ChangeHandCommand(page));
+		changeHandButton = new Button(page,340, 516, 320, 113,null);
 		changeHandButton.setText(String.format(changeHandText, page.getHand()));
 		changeHandButton.setTextBold();
 		changeHandButton.setLocalColorScheme(GCScheme.YELLOW_SCHEME);
 		changeHandButton.setFont(new Font("Monospaced", Font.PLAIN, 27));
-		page.setGUIListener(this);
+		changeHandButton.addEventHandler(this, "handChange");
 	} 
 
 	@Override
@@ -28,13 +28,13 @@ public abstract class AbstractMenuGUI extends AbstractGeneralGUI implements IGUI
 		objectDisposal(changeHandButton);
 	}
 
-	@Override
-	public void actionPerformed(){
-		handChange();
-	}
-
-	private void handChange(){
-		changeHandButton.setText(String.format(changeHandText, getPage().getHand()));
+	public void handChange(){
+		final Page page=getPage();
+		if(page.getHand().equals(Handedness.RIGHT))
+			page.setHand(Handedness.LEFT);
+		else
+			page.setHand(Handedness.RIGHT);
+		changeHandButton.setText(String.format(changeHandText, page.getHand()));
 		changeHandButton.setTextBold();
 	}
 

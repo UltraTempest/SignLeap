@@ -18,7 +18,6 @@ import g4p_controls.GPanel;
 import g4p_controls.GValueControl;
 import gui.GUIManager;
 import gui.IGUI;
-import gui.IGUIListener;
 import processing.core.PApplet;
 import processing.core.PImage;
 import recording.AbstractHandData.Handedness;
@@ -52,7 +51,6 @@ public class Page extends PApplet{
 
 	private IGUI currentGUI;
 	private GUIManager guiManage;
-	private IGUIListener guiListen;
 
 	private String username;
 
@@ -95,10 +93,6 @@ public class Page extends PApplet{
 		//println(frameRate);
 	}
 
-	public void setGUIListener(final IGUIListener guiListen){
-		this.guiListen=guiListen;
-	}
-
 	public void changeGUI(final IGUI gui){
 		currentGUI=gui;
 		warning.setVisible(true);
@@ -138,8 +132,6 @@ public class Page extends PApplet{
 		numClassifier=new NumberClassifier(hand);
 		alphaClassifier=new AlphabetClassifier(hand);
 		leapWarningWithHand=String.format(leapWarning,hand);
-		if(guiListen!=null)
-			guiListen.actionPerformed();
 		setDefaultBackground();
 	}
 
