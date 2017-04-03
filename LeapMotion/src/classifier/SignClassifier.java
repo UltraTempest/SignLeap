@@ -7,9 +7,6 @@ import java.util.Map;
 import java.util.Random;
 
 import recording.AbstractHandData.Handedness;
-import weka.attributeSelection.AttributeSelection;
-import weka.attributeSelection.PrincipalComponents;
-import weka.attributeSelection.Ranker;
 import weka.classifiers.Classifier;
 import weka.classifiers.Evaluation;
 import weka.classifiers.bayes.NaiveBayes;
@@ -23,18 +20,19 @@ import weka.core.Instance;
 import weka.core.Instances;
 import weka.core.converters.ConverterUtils.DataSource;
 
-public class SignClassifier {
+public class SignClassifier implements ISignClassifier{
 
 	public static final String language= "ISL";
 	protected Classifier classifier;
 	private int numberOfFeatures;
 	private Instances trainingSet;
 	private Instances testingSet;
-	private final int movingAverageFilterPeriods=10;
+	private final int movingAverageFilterPeriods=5;
 	private MovingAverageFilter move;
 
 	public static void main(String args[]){
-		new SignClassifier(null, "num2").evaluate();
+		//new SignClassifier(null, "num2").evaluate();
+		new SignClassifier(Handedness.RIGHT, "alpha").evaluate();
 	}
 
 	public static void initialise(final Handedness hand, final String type){		
@@ -48,15 +46,12 @@ public class SignClassifier {
 		createParentDirectory(f);
 		if(f.exists() && !f.isDirectory()) return;  
 		try {
-			DataSource source = new DataSource("SignData/TrainingData/"+name+ ".arff");
-			Instances trainingSet= source.getDataSet();
-			source= new DataSource("SignData/TestingData/"+name+".arff");
-			final Instances testingSet= source.getDataSet();
+			final DataSource source = new DataSource("SignData/TrainingData/"+name+ ".arff");
+			final Instances trainingSet= source.getDataSet();
 			final int numberOfFeatures=trainingSet.numAttributes()-1;
 			trainingSet.setClassIndex(numberOfFeatures);
-			testingSet.setClassIndex(numberOfFeatures);
 			final Classifier classifier= new RandomForest();
-			trainingSet=PCA(trainingSet);
+			//trainingSet=PCA(trainingSet);
 			classifier.buildClassifier(trainingSet);
 			// serialize model
 			weka.core.SerializationHelper.write(filename, classifier);
@@ -67,8 +62,8 @@ public class SignClassifier {
 
 	private static void createParentDirectory(final File f) {
 		final File parentDir = f.getParentFile();
-		 if(! parentDir.exists()) 
-		      parentDir.mkdirs();
+		if(! parentDir.exists()) 
+			parentDir.mkdirs();
 	}
 
 	public SignClassifier(final Handedness hand, final String type){
@@ -80,28 +75,21 @@ public class SignClassifier {
 			name=type;
 		final String filename="Classifiers/"+language +name+ ".model";
 		try {
-			DataSource source = new DataSource("SignData/TrainingData/"+name+ 
-					".arff");
+			DataSource source = new DataSource("SignData/TrainingData/"+name+ ".arff");
 			trainingSet= source.getDataSet();
 			source= new DataSource("SignData/TestingData/"+name+".arff");
 			testingSet= source.getDataSet();
 			numberOfFeatures=trainingSet.numAttributes()-1;
 			trainingSet.setClassIndex(numberOfFeatures);
-			trainingSet=PCA(trainingSet);
 			testingSet.setClassIndex(numberOfFeatures);
 			final File f = new File(filename);
 			createParentDirectory(f);
 			if(f.exists() && !f.isDirectory())  
 				// deserialize model
-				classifier=(RandomForest) weka.core.SerializationHelper.read(
-						filename);
-			//classifier=(LibSVM) weka.core.SerializationHelper.read(filename);
+				classifier=(RandomForest) weka.core.SerializationHelper.read(filename);
 			else{
 				// train classifier
 				classifier= new RandomForest();
-				//				classifier= new LibSVM();
-				//				String[] options = {"-B"};
-				//				((LibSVM) classifier).setOptions(options);
 				classifier.buildClassifier(trainingSet);
 
 				// serialize model
@@ -152,15 +140,16 @@ public class SignClassifier {
 	public double score(final Map<String, Float> data,final String expectedChar){
 		final Instance sampleInstance=createInstanceFromData(data);
 		try {
-			final double[] fDistribution = classifier.distributionForInstance(
-					sampleInstance);
-			final double probabilityForExpected=getProbabilityForClass(expectedChar, fDistribution);
-			classify(fDistribution,sampleInstance);
-			System.out.println("Expected: "+ expectedChar + " : " + 
-					probabilityForExpected);
-			final double rollingAverage=rollingTotal(probabilityForExpected);
-			System.out.println("Rolling Average: " + rollingAverage + "\n");
-			return rollingAverage;
+			final double[] fDistribution = classifier.distributionForInstance(sampleInstance);
+			double probabilityForExpected=getProbabilityForClass(expectedChar, fDistribution);
+			final String classified=classify(fDistribution,sampleInstance);
+			System.out.println("Expected: "+ expectedChar + " : " + probabilityForExpected);
+			if(classified.equals(expectedChar)||probabilityForExpected>0.3)
+				while(probabilityForExpected<0.5)
+					probabilityForExpected+=0.3;
+			probabilityForExpected=rollingTotal(probabilityForExpected);
+			System.out.println("Rolling Average: " + probabilityForExpected + "\n");
+			return probabilityForExpected;
 		} catch (final Exception e) {
 			e.printStackTrace();
 		}	
@@ -176,9 +165,9 @@ public class SignClassifier {
 		move=new MovingAverageFilter(movingAverageFilterPeriods);
 	}
 
-	private final int getLabelDistributionPosition(final String charToFind,
+	private int getLabelDistributionPosition(final String charToFind,
 			final double[] fDistribution){
-		for(int i=0; i<fDistribution.length;i++){
+		for(int i=0; i<fDistribution.length;++i){
 			if(charToFind.equals(testingSet.classAttribute().value(i)))
 				return i;
 		}
@@ -186,14 +175,13 @@ public class SignClassifier {
 	}
 
 	protected final double getProbabilityForClass(final String charToFind,final double[] fDistribution){
-		int position=getLabelDistributionPosition(charToFind, fDistribution);
+		final int position=getLabelDistributionPosition(charToFind, fDistribution);
 		return fDistribution[position];
 	}
 
 	public final void evaluate(){	
 		// training using a collection of classifiers (NaiveBayes, SMO (AKA SVM), KNN and Decision trees.)
 		final String[] algorithms = {"nb","smo","knn","j48", "libSVM","Random Forest"};
-		trainingSet=PCA(trainingSet);
 		try {
 			final FileWriter fw= new FileWriter("Evaluation.txt");
 			@SuppressWarnings("resource")
@@ -221,33 +209,17 @@ public class SignClassifier {
 				final Evaluation eval = new Evaluation(trainingSet);
 				classifier.buildClassifier(trainingSet);
 				eval.crossValidateModel(classifier, testingSet, 10, new Random(1));
-//				System.out.println(classifier.toString());
-//				System.out.println(eval.toSummaryString());
-//				System.out.println(eval.toMatrixString());
-//				System.out.println(eval.toClassDetailsString());
+				//				System.out.println(classifier.toString());
+				//				System.out.println(eval.toSummaryString());
+				//				System.out.println(eval.toMatrixString());
+				//				System.out.println(eval.toClassDetailsString());
 				bw.write(classifier.toString());
 				bw.write(eval.toSummaryString());
 				bw.write(eval.toMatrixString());
 				bw.write(eval.toClassDetailsString());
 			}
-		}
-		catch (final Exception e) {
+		}catch(final Exception e){
 			e.printStackTrace();
 		}
-	}
-	
-	private static Instances PCA(final Instances trainingSet){
-		AttributeSelection selector = new AttributeSelection();
-		PrincipalComponents pca = new PrincipalComponents();
-		Ranker ranker = new Ranker();
-		selector.setEvaluator(pca);
-		selector.setSearch(ranker);
-		try { 
-		    selector.SelectAttributes(trainingSet);
-		    return selector.reduceDimensionality(trainingSet);
-		} catch (final Exception e ) {
-			e.printStackTrace();
-		}
-		return trainingSet;
 	}
 }

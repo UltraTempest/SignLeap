@@ -1,7 +1,5 @@
 package classifier;
 
-import java.util.Map;
-
 import recording.AbstractHandData.Handedness;
 
 public final class NumberClassifier extends SignClassifier{
@@ -21,8 +19,8 @@ public final class NumberClassifier extends SignClassifier{
 		SignClassifier.initialise(Handedness.LEFT, type);
 	}
 	
-	@Override
-	public final double score(final Map<String, Float> data,final String expectedChar){
-		return 1.2*super.score(data, expectedChar);
-	}
+//	@Override
+//	public final double score(final Map<String, Float> data,final String expectedChar){
+//		return 1.2*super.score(data, expectedChar);
+//	}
 }

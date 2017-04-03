@@ -7,6 +7,7 @@ import button.Button;
 import button.IButton;
 import button.ImageButton;
 import classifier.AlphabetClassifier;
+import classifier.ISignClassifier;
 import classifier.NumberClassifier;
 import classifier.SignClassifier;
 import controller.LeapMouseListener;
@@ -40,9 +41,9 @@ public class Page extends PApplet{
 	private boolean leapSeesYou=true;
 	private final LeapMouseListener leapListen= new LeapMouseListener();
 
-	private SignClassifier alphaClassifier;
-	private SignClassifier numClassifier;
-	private SignClassifier num2Classifier;
+	private ISignClassifier alphaClassifier;
+	private ISignClassifier numClassifier;
+	private ISignClassifier num2Classifier;
 
 	public static final double EASY=0.5;
 	public static final double MEDIUM=0.6;
@@ -143,15 +144,15 @@ public class Page extends PApplet{
 		return hand;
 	}
 
-	public SignClassifier getNumberClassifier(){
+	public ISignClassifier getNumberClassifier(){
 		return numClassifier;
 	}
 
-	public SignClassifier getTwoHandNumberClassifier(){
+	public ISignClassifier getTwoHandNumberClassifier(){
 		return num2Classifier;
 	}
 
-	public SignClassifier getAlphabetClassifier(){
+	public ISignClassifier getAlphabetClassifier(){
 		return alphaClassifier;
 	}
 
@@ -167,7 +168,7 @@ public class Page extends PApplet{
 			leapSeesYou=false;
 		}
 	}
-	
+
 	private void setLeapText(final int scheme, final String text){
 		warning.setLocalColorScheme(scheme);
 		warning.setText(text);

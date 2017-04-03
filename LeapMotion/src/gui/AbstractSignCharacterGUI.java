@@ -3,6 +3,8 @@ package gui;
 import java.awt.Font;
 import java.util.Map;
 import com.leapmotion.leap.Controller;
+
+import classifier.ISignClassifier;
 import classifier.SignClassifier;
 import g4p_controls.G4P;
 import g4p_controls.GAlign;
@@ -40,15 +42,15 @@ public abstract class AbstractSignCharacterGUI extends AbstractGUI{
 	private boolean firstPass=false;
 	private int renderCount;
 
-	private SignClassifier classifier;
+	private ISignClassifier classifier;
 	private IHandData handData= new OneHandData(leap);
 	private String currentChar;
 	protected final String[] array;
 
 	public AbstractSignCharacterGUI(final PApplet papplet,
-			final SignClassifier signClassifier,final String[] array) {
+			final ISignClassifier signClassifier,final String[] array) {
 		super(papplet);
-		this.classifier=signClassifier;
+		classifier=signClassifier;
 		this.array=array;
 		final Page page=getPage();
 		page.turnOffLeapMouseControl();
@@ -122,7 +124,7 @@ public abstract class AbstractSignCharacterGUI extends AbstractGUI{
 		this.handData=handData;
 	}
 
-	protected final void setClassifier(final SignClassifier classifier){
+	protected final void setClassifier(final ISignClassifier classifier){
 		this.classifier=classifier;
 	}
 

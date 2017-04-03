@@ -13,13 +13,13 @@ public final class AlphabetClassifier extends SignClassifier{
 		super(hand, type);
 	}
 
-	public final static void main(final String args[]) {
+	public static void main(final String args[]) {
 		new AlphabetClassifier(Handedness.RIGHT).evaluate();
 	}
 
-	public final static void initialise() {
+	public static void initialise() {
 		SignClassifier.initialise(Handedness.RIGHT, type);
-		//SignClassifier.initialise(Handedness.LEFT, type);
+		SignClassifier.initialise(Handedness.LEFT, type);
 	}
 
 	@Override
@@ -27,19 +27,15 @@ public final class AlphabetClassifier extends SignClassifier{
 		final Instance sampleInstance=createInstanceFromData(data);
 		try {
 			final double[] fDistribution = classifier.distributionForInstance(sampleInstance);
-			final double probabilityForExpected=getProbabilityForClass(expectedChar,fDistribution);
+			double probabilityForExpected=getProbabilityForClass(expectedChar, fDistribution);
 			final String classified=classify(fDistribution,sampleInstance);
-			System.out.println("Expected: "+ expectedChar + " : "+ probabilityForExpected);
-			double rollingAverage=rollingTotal(probabilityForExpected);
-			System.out.println("Rolling Average: " + rollingAverage + "\n");
-			if((classified.equals(expectedChar) && rollingAverage<0.5)||
-					probabilityForExpected>0.2){
-				while(rollingAverage<0.5){
-					rollingAverage+=0.1;
-				}
-				rollingAverage=rollingTotal(rollingAverage);
-			}
-			return rollingAverage*2;
+			System.out.println("Expected: "+ expectedChar + " : " + probabilityForExpected);
+			if(classified.equals(expectedChar)||probabilityForExpected>0.2)
+				while(probabilityForExpected<0.5)
+					probabilityForExpected+=0.3;
+			probabilityForExpected=rollingTotal(probabilityForExpected);
+			System.out.println("Rolling Average: " + probabilityForExpected + "\n");
+			return 1.2*probabilityForExpected;
 		} catch (final Exception e) {
 			e.printStackTrace();
 		}	

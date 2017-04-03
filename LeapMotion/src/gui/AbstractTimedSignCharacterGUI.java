@@ -4,7 +4,7 @@ import java.awt.Font;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import classifier.SignClassifier;
+import classifier.ISignClassifier;
 import command.GameOverCommand;
 import g4p_controls.GTextField;
 import processing.core.PApplet;
@@ -16,8 +16,8 @@ public abstract class AbstractTimedSignCharacterGUI extends AbstractSignCharacte
 	private final GTextField scoreTimerText;
 	private final String scoreText="Score:        %1$s           Time left:%2$d";
 
-	public AbstractTimedSignCharacterGUI(final PApplet page,final SignClassifier signClassifier,final String[] array){
-		super(page, signClassifier, array);
+	public AbstractTimedSignCharacterGUI(final PApplet page,final ISignClassifier iSignClassifier,final String[] array){
+		super(page, iSignClassifier, array);
 		scoreTimerText = new GTextField(page,  300, 6, 300, 28);
 		scoreTimerText.setText("Score:0     Time left:60");
 		scoreTimerText.setFont(new Font("Dialog", Font.PLAIN, 18));
