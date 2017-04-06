@@ -15,7 +15,6 @@ import weka.classifiers.functions.SMO;
 import weka.classifiers.lazy.IBk;
 import weka.classifiers.trees.J48;
 import weka.classifiers.trees.RandomForest;
-import weka.core.DenseInstance;
 import weka.core.Instance;
 import weka.core.Instances;
 import weka.core.converters.ConverterUtils.DataSource;
@@ -101,7 +100,7 @@ public class SignClassifier implements ISignClassifier{
 	}
 
 	protected final Instance createInstanceFromData(final Map<String, Float> data){
-		final Instance sampleInstance = new DenseInstance(numberOfFeatures+1);
+		final Instance sampleInstance = new Instance(numberOfFeatures+1);
 		for(int i=0; i<numberOfFeatures;i++){
 			sampleInstance.setValue(i, data.get("feat"+i));
 		}
